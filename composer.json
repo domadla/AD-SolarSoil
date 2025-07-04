@@ -1,0 +1,16 @@
+{
+    "name": "mark/ad-solar-soil",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Mark\\AdSolarSoil\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MarkGamboa",
+            "email": "202310110@fit.edu.ph"
+        }
+    ],
+    "require": {}
+}
