@@ -77,4 +77,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  const successAlert = document.querySelector(".alert-success");
+  if (successAlert) {
+    setTimeout(function () {
+      successAlert.style.transition = "opacity 0.5s ease-out";
+      successAlert.style.opacity = "0";
+      setTimeout(function () {
+        successAlert.style.display = "none";
+      }, 500);
+    }, 1000);
+  }
 });
