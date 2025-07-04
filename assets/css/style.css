@@ -357,6 +357,11 @@ main {
   user-select: none;
 }
 
+/* Prevent scrolling when cart is open */
+body.cart-open {
+  overflow: hidden;
+}
+
 /* Responsive Navigation toggle styles */
 @media (max-width: 768px) {
   .nav {
