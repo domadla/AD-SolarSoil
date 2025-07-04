@@ -21,6 +21,11 @@ function addToCart(id, name, price, image) {
 
   updateCart();
   saveCart();
+
+  // Also update global cart display if function exists
+  if (typeof updateCartDisplay === "function") {
+    updateCartDisplay();
+  }
 }
 
 // Remove item from cart
@@ -32,6 +37,11 @@ function removeFromCart(id) {
     showNotification(`${itemName} removed from cart`);
     updateCart();
     saveCart();
+
+    // Also update global cart display if function exists
+    if (typeof updateCartDisplay === "function") {
+      updateCartDisplay();
+    }
   }
 }
 
@@ -45,6 +55,11 @@ function updateQuantity(id, quantity) {
       item.quantity = quantity;
       updateCart();
       saveCart();
+
+      // Also update global cart display if function exists
+      if (typeof updateCartDisplay === "function") {
+        updateCartDisplay();
+      }
     }
   }
 }
@@ -68,14 +83,14 @@ function updateCart() {
   const cartTotal = document.getElementById("cartTotal");
   const checkoutBtn = document.getElementById("checkoutBtn");
 
-  // Update cart count
+  // Update cart count (this works on all pages)
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   if (cartCount) {
     cartCount.textContent = totalItems;
     cartCount.style.display = totalItems > 0 ? "block" : "none";
   }
 
-  // Update cart items
+  // Update cart items (only on shop page where sidebar exists)
   if (cartItems) {
     if (cart.length === 0) {
       cartItems.innerHTML =
@@ -115,15 +130,20 @@ function updateCart() {
     }
   }
 
-  // Update total
+  // Update total (only on shop page where total display exists)
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   if (cartTotal) {
     cartTotal.textContent = total;
   }
 
-  // Update checkout button
+  // Update checkout button (only on shop page where button exists)
   if (checkoutBtn) {
     checkoutBtn.disabled = cart.length === 0;
+  }
+
+  // Also update cart count on other pages
+  if (typeof updateCartCountDisplay === "function") {
+    updateCartCountDisplay();
   }
 }
 
@@ -172,10 +192,21 @@ function checkout() {
 document.addEventListener("DOMContentLoaded", function () {
   updateCart();
 
-  // Close cart when clicking outside
+  // Close cart when clicking outside (but not on cart buttons)
   document.addEventListener("click", function (e) {
     const cartSidebar = document.getElementById("cartSidebar");
     const cartToggle = document.querySelector(".cart-toggle");
+
+    // Don't close if clicking on cart buttons or controls
+    if (
+      e.target.closest(".quantity-btn") ||
+      e.target.closest(".remove-item-btn") ||
+      e.target.closest(".cart-item-controls") ||
+      e.target.closest(".checkout-btn") ||
+      e.target.closest(".go-to-shop-btn")
+    ) {
+      return;
+    }
 
     if (
       cartSidebar &&
