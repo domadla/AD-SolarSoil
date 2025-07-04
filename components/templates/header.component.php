@@ -7,6 +7,145 @@
     <link rel="icon" type="image/x-icon" href="/assets/img/Logo.png">
     <title>SolarSoil - Interstellar Plant Store</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script>
+        function goToShop() {
+            window.location.href = '/pages/shop/index.php';
+        }
+
+        // Initialize cart count on all pages
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCartCountDisplay();
+        });
+
+        function updateCartCountDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                const cart = JSON.parse(localStorage.getItem('solarsoil_cart')) || [];
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = totalItems;
+                cartCount.style.display = totalItems > 0 ? 'block' : 'none';
+            }
+        }
+
+        // Basic cart functions for all pages
+        function toggleCart() {
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+
+            if (cartSidebar && cartOverlay) {
+                cartSidebar.classList.toggle('active');
+                cartOverlay.classList.toggle('active');
+                document.body.classList.toggle('cart-open');
+                updateCartDisplay();
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cart = JSON.parse(localStorage.getItem('solarsoil_cart')) || [];
+
+            // Update cart items
+            if (cartItems) {
+                if (cart.length === 0) {
+                    cartItems.innerHTML = '<p class="empty-cart-message">Your cart is empty</p>';
+                } else {
+                    cartItems.innerHTML = cart.map(item => `
+                        <div class="cart-item">
+                            <div class="cart-item-image">
+                                <img src="${item.image}" alt="${item.name}" onerror="this.style.display='none'">
+                            </div>
+                            <div class="cart-item-details">
+                                <h4 class="cart-item-name">${item.name}</h4>
+                                <p class="cart-item-price">${item.price} GC</p>
+                                <div class="cart-item-controls">
+                                    <button onclick="event.stopPropagation(); updateQuantity(${item.id}, ${item.quantity - 1}); return false;" class="quantity-btn">-</button>
+                                    <span class="quantity">${item.quantity}</span>
+                                    <button onclick="event.stopPropagation(); updateQuantity(${item.id}, ${item.quantity + 1}); return false;" class="quantity-btn">+</button>
+                                </div>
+                            </div>
+                            <button onclick="event.stopPropagation(); removeFromCart(${item.id}); return false;" class="remove-item-btn" aria-label="Remove ${item.name}">×</button>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Update total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            if (cartTotal) {
+                cartTotal.textContent = total;
+            }
+
+            // Update cart count badge
+            updateCartCountDisplay();
+        }
+
+        // Remove item from cart
+        function removeFromCart(id) {
+            let cart = JSON.parse(localStorage.getItem('solarsoil_cart')) || [];
+            const itemIndex = cart.findIndex(item => item.id === id);
+            if (itemIndex > -1) {
+                const itemName = cart[itemIndex].name;
+                cart.splice(itemIndex, 1);
+                localStorage.setItem('solarsoil_cart', JSON.stringify(cart));
+
+                // Update displays without closing sidebar
+                updateCartDisplay();
+                showNotification(`${itemName} removed from cart`);
+
+                // Prevent event bubbling that might close sidebar
+                event.stopPropagation();
+            }
+            return false; // Prevent default behavior
+        }
+
+        // Update item quantity
+        function updateQuantity(id, quantity) {
+            let cart = JSON.parse(localStorage.getItem('solarsoil_cart')) || [];
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                if (quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    item.quantity = quantity;
+                    localStorage.setItem('solarsoil_cart', JSON.stringify(cart));
+                    updateCartDisplay();
+                }
+
+                // Prevent event bubbling
+                if (typeof event !== 'undefined') {
+                    event.stopPropagation();
+                }
+            }
+            return false; // Prevent default behavior
+        }
+
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'cart-notification';
+            notification.textContent = message;
+
+            // Add to page
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
 </head>
 
 <body>
@@ -24,6 +163,10 @@
             </nav>
             <?php
             require_once UTILS_PATH . 'session.util.php';
+
+            // Check if we're on the shop page
+            $currentPage = $_SERVER['REQUEST_URI'];
+            $isShopPage = strpos($currentPage, '/shop') !== false;
 
             if (isUserLoggedIn()): ?>
                 <div class="header-actions">
@@ -59,7 +202,7 @@
         </div>
     </header>
 
-    <!-- Cart Sidebar -->
+    <!-- Cart Sidebar - Available on all pages -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h3>Shopping Cart</h3>
@@ -70,12 +213,20 @@
                 <p class="empty-cart-message">Your cart is empty</p>
             </div>
             <div class="cart-footer">
+                <?php if (!$isShopPage): ?>
+                    <button class="go-to-shop-btn" onclick="goToShop()"
+                        style="width: 100%; background: linear-gradient(135deg, var(--color-primary), #ffff4d); color: #000; border: none; padding: 1rem; border-radius: var(--border-radius); font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-bottom: 1rem;">
+                        Go to Shop
+                    </button>
+                <?php endif; ?>
                 <div class="cart-total">
                     <strong>Total: <span id="cartTotal">0</span> GC</strong>
                 </div>
-                <button class="checkout-btn" onclick="checkout()" disabled id="checkoutBtn">
-                    Proceed to Checkout
-                </button>
+                <?php if ($isShopPage): ?>
+                    <button class="checkout-btn" onclick="checkout()" disabled id="checkoutBtn">
+                        Proceed to Checkout
+                    </button>
+                <?php endif; ?>
             </div>
         </div>
     </div>
