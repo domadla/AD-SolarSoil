@@ -11,7 +11,12 @@ if (!function_exists('displayPlants')) {
             }
             echo "<h3 class='plant-name'>{$plant['name']}</h3>";
             echo "<p class='plant-description'>{$plant['desc']}</p>";
-            echo "<p class='plant-price'>Price: {$plant['price']} Galactic Credits</p>";
+            echo "<div class='plant-footer'>";
+            echo "<p class='plant-price'>{$plant['price']} GC</p>";
+            echo "<button class='add-to-cart-btn' onclick='addToCart({$plant['id']}, \"{$plant['name']}\", {$plant['price']}, \"{$plant['img']}\")' aria-label='Add {$plant['name']} to cart'>";
+            echo "<span class='cart-icon'>🛒</span> Add to Cart";
+            echo "</button>";
+            echo "</div>";
             echo "</article>";
         }
     }

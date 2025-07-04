@@ -1,6 +1,7 @@
 <?php
 $featuredPlants = [
     [
+        "id" => 1,
         "name" => "Nebula Bloom",
         "price" => 35,
         "desc" => "A radiant flower that glows with the colors of cosmic clouds.",
@@ -8,6 +9,7 @@ $featuredPlants = [
         "imgClass" => "nebula-bloom"
     ],
     [
+        "id" => 2,
         "name" => "Lunar Cactus",
         "price" => 28,
         "desc" => "Tough and resilient, it absorbs moonlight to bloom at night.",
@@ -15,6 +17,7 @@ $featuredPlants = [
         "imgClass" => "lunar-cactus"
     ],
     [
+        "id" => 3,
         "name" => "Meteor Fern",
         "price" => 42,
         "desc" => "Feathers shimmer like meteors streaking through space dust.",
@@ -22,6 +25,7 @@ $featuredPlants = [
         "imgClass" => "meteor-fern"
     ],
     [
+        "id" => 4,
         "name" => "Solar Vine",
         "price" => 30,
         "desc" => "Golden tendrils that sway toward sunlight, storing solar energy.",
@@ -29,6 +33,7 @@ $featuredPlants = [
         "imgClass" => "solar-vine"
     ],
     [
+        "id" => 5,
         "name" => "Galaxy Orchid",
         "price" => 55,
         "desc" => "Petals with shifting star-like specks, a true interstellar marvel.",
@@ -36,6 +41,7 @@ $featuredPlants = [
         "imgClass" => "galaxy-orchid"
     ],
     [
+        "id" => 6,
         "name" => "Comet Ivy",
         "price" => 26,
         "desc" => "Fast-growing vine that leaves glowing trails in the dark.",
@@ -43,14 +49,15 @@ $featuredPlants = [
         "imgClass" => "comet-ivy"
     ],
     [
+        "id" => 7,
         "name" => "Asteroid Moss",
         "price" => 18,
         "desc" => "Spongy moss that thrives in zero-gravity and rocky terrain.",
         'img' => '/pages/shop/assets/img/plants/AsteroidMoss.png',
         "imgClass" => "asteroid-moss"
-
     ],
     [
+        "id" => 8,
         "name" => "Venus Bell",
         "price" => 33,
         "desc" => "Bell-shaped bloom that hums gently when touched.",

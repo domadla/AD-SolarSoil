@@ -11,6 +11,7 @@ require_once COMPONENTS_PATH . 'templates/header.component.php';
 
 <head>
     <link rel="stylesheet" href="/pages/shop/assets/css/style.css">
+    <script src="/pages/shop/assets/js/cart.js"></script>
 </head>
 
 <section class="featured-plants container" aria-label="Featured Plants" id="products" tabindex="-1">
