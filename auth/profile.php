@@ -56,11 +56,6 @@ require_once COMPONENTS_PATH . 'templates/header.component.php';
         <h1 class="profile-title">User Profile</h1>
 
         <div class="profile-info">
-            <div class="profile-label">Full Name:</div>
-            <div class="profile-value"><?php echo htmlspecialchars(getUserFullName()); ?></div>
-        </div>
-
-        <div class="profile-info">
             <div class="profile-label">First Name:</div>
             <div class="profile-value"><?php echo htmlspecialchars(getUserFirstName()); ?></div>
         </div>
