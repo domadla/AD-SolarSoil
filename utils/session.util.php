@@ -57,15 +57,4 @@ function getUserEmail()
     startSessionSafely();
     return $_SESSION['user_email'] ?? null;
 }
-
-/**
- * Get logged in user's full name
- */
-function getUserFullName()
-{
-    startSessionSafely();
-    $firstName = $_SESSION['user_first_name'] ?? '';
-    $lastName = $_SESSION['user_last_name'] ?? '';
-    return trim($firstName . ' ' . $lastName);
-}
 ?>
