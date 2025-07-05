@@ -158,7 +158,7 @@
                 <ul class="nav-list">
                     <li><a href="/pages/home/index.php" class="nav-link">Home</a></li>
                     <li><a href="/pages/shop/index.php" class="nav-link">Shop</a></li>
-                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="/pages/about/index.php" class="nav-link">About</a></li>
                 </ul>
             </nav>
             <?php
