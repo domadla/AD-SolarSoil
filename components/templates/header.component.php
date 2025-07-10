@@ -40,6 +40,10 @@
                         <a class="nav-link" href="../Shop/index.php"><i class="fas fa-shopping-cart me-1"></i>Shop</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="../Cart/index.php"><i class="fas fa-shopping-cart me-1"></i>Cart <span
+                                class="badge bg-primary ms-1" id="cart-count">0</span></a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../../logout.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
                     </li>
                 </ul>
