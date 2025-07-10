@@ -47,7 +47,16 @@ function initFormValidation() {
     form.addEventListener("submit", function (e) {
       const formType = this.getAttribute("data-form");
 
-      // For demo forms (login/signup), allow normal submission to PHP
+      // Always validate signup forms for password matching
+      if (formType === "signup") {
+        const isValid = validateSignupForm(this);
+        if (!isValid) {
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // For demo forms (login/signup), allow normal submission to PHP if validation passes
       const demoInput = this.querySelector('input[name="demo"]');
       if (
         demoInput &&
@@ -66,6 +75,42 @@ function initFormValidation() {
       }
     });
   });
+
+  // Add real-time password matching validation
+  const confirmPasswordInputs = document.querySelectorAll('input[name="confirm_password"]');
+  confirmPasswordInputs.forEach(input => {
+    input.addEventListener('input', function() {
+      const form = this.closest('form');
+      const passwordInput = form.querySelector('input[name="password"]');
+      
+      // Clear previous error first
+      clearFieldError(this);
+      
+      if (passwordInput && this.value) {
+        if (this.value !== passwordInput.value) {
+          showFieldError(this, "Passwords do not match");
+        }
+      }
+    });
+  });
+
+  // Also add validation when password field changes
+  const passwordInputs = document.querySelectorAll('input[name="password"]');
+  passwordInputs.forEach(input => {
+    input.addEventListener('input', function() {
+      const form = this.closest('form');
+      const confirmPasswordInput = form.querySelector('input[name="confirm_password"]');
+      
+      if (confirmPasswordInput && confirmPasswordInput.value) {
+        // Clear previous error first
+        clearFieldError(confirmPasswordInput);
+        
+        if (this.value !== confirmPasswordInput.value) {
+          showFieldError(confirmPasswordInput, "Passwords do not match");
+        }
+      }
+    });
+  });
 }
 
 // Form Validation Logic
@@ -81,13 +126,6 @@ function validateForm(form, formType) {
 
     if (!value) {
       showFieldError(input, "This field is required");
-      isValid = false;
-      return;
-    }
-
-    // Email validation
-    if (input.type === "email" && !isValidEmail(value)) {
-      showFieldError(input, "Please enter a valid email address");
       isValid = false;
       return;
     }
@@ -115,13 +153,68 @@ function validateForm(form, formType) {
   return isValid;
 }
 
-// Helper Functions
-function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+// Specific validation for signup forms
+function validateSignupForm(form) {
+  let isValid = true;
+  
+  // Clear previous errors
+  clearErrorMessages(form);
+  
+  // Get form inputs
+  const password = form.querySelector('input[name="password"]');
+  const confirmPassword = form.querySelector('input[name="confirm_password"]');
+  const firstName = form.querySelector('input[name="first_name"]');
+  const lastName = form.querySelector('input[name="last_name"]');
+  const username = form.querySelector('input[name="username"]');
+  
+  // Check required fields
+  if (!firstName.value.trim()) {
+    showFieldError(firstName, "First name is required");
+    isValid = false;
+  }
+  
+  if (!lastName.value.trim()) {
+    showFieldError(lastName, "Last name is required");
+    isValid = false;
+  }
+  
+  if (!username.value.trim()) {
+    showFieldError(username, "Username is required");
+    isValid = false;
+  }
+  
+  if (!password.value) {
+    showFieldError(password, "Password is required");
+    isValid = false;
+  } else if (password.value.length < 6) {
+    showFieldError(password, "Password must be at least 6 characters long");
+    isValid = false;
+  }
+  
+  if (!confirmPassword.value) {
+    showFieldError(confirmPassword, "Please confirm your password");
+    isValid = false;
+  } else if (password.value !== confirmPassword.value) {
+    showFieldError(confirmPassword, "Passwords do not match");
+    isValid = false;
+  }
+  
+  return isValid;
 }
 
+function clearFieldError(input) {
+  input.classList.remove("is-invalid");
+  const errorElement = input.parentNode.querySelector(".field-error");
+  if (errorElement) {
+    errorElement.remove();
+  }
+}
+
+// Helper Functions
 function showFieldError(input, message) {
+  // Clear any existing error for this input first
+  clearFieldError(input);
+  
   const errorElement = document.createElement("div");
   errorElement.className = "text-danger mt-1 field-error";
   errorElement.textContent = message;
