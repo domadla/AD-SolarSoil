@@ -104,6 +104,16 @@ function initFormValidation() {
       const confirmPasswordInput = form.querySelector(
         'input[name="confirm_password"]'
       );
+      const passwordRequirement = form.querySelector(".password-requirement");
+
+      // Show password requirement text when user starts typing
+      if (passwordRequirement) {
+        if (this.value.length > 0 && this.value.length < 6) {
+          passwordRequirement.style.display = "block";
+        } else {
+          passwordRequirement.style.display = "none";
+        }
+      }
 
       if (confirmPasswordInput && confirmPasswordInput.value) {
         // Clear previous error first

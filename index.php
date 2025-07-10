@@ -120,7 +120,7 @@ $message_type = '';
                                         <i class="fas fa-lock me-2"></i>Password
                                     </label>
                                     <input type="password" class="form-control" id="login-password" name="password"
-                                        placeholder="Enter your password" required>
+                                        placeholder="Enter your password" required minlength="6">
                                 </div>
 
                                 <div class="d-grid gap-2">
@@ -170,8 +170,8 @@ $message_type = '';
                                         <i class="fas fa-lock me-2"></i>Password
                                     </label>
                                     <input type="password" class="form-control" id="signup-password" name="password"
-                                        placeholder="Create a password (min. 6 characters)" required>
-                                    <small class="form-text text-muted">
+                                        placeholder="Create a password (min. 6 characters)" required minlength="6">
+                                    <small class="form-text text-muted password-requirement" style="display: none;">
                                         Password must be at least 6 characters long
                                     </small>
                                 </div>
@@ -181,7 +181,8 @@ $message_type = '';
                                         <i class="fas fa-shield-alt me-2"></i>Confirm Password
                                     </label>
                                     <input type="password" class="form-control" id="signup-confirm-password"
-                                        name="confirm_password" placeholder="Confirm your password" required>
+                                        name="confirm_password" placeholder="Confirm your password" required
+                                        minlength="6">
                                 </div>
 
 
