@@ -53,10 +53,10 @@
                     </div>
 
                     <!-- Login Form -->
-                    <?php include 'forms/loginForm.php'; ?>
+                    <?php include 'loginForm.php'; ?>
 
                     <!-- Signup Form -->
-                    <?php include 'forms/signupForm.php'; ?>
+                    <?php include 'signupForm.php'; ?>
                 </div>
             </div>
         </div>
