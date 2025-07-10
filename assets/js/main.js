@@ -77,15 +77,17 @@ function initFormValidation() {
   });
 
   // Add real-time password matching validation
-  const confirmPasswordInputs = document.querySelectorAll('input[name="confirm_password"]');
-  confirmPasswordInputs.forEach(input => {
-    input.addEventListener('input', function() {
-      const form = this.closest('form');
+  const confirmPasswordInputs = document.querySelectorAll(
+    'input[name="confirm_password"]'
+  );
+  confirmPasswordInputs.forEach((input) => {
+    input.addEventListener("input", function () {
+      const form = this.closest("form");
       const passwordInput = form.querySelector('input[name="password"]');
-      
+
       // Clear previous error first
       clearFieldError(this);
-      
+
       if (passwordInput && this.value) {
         if (this.value !== passwordInput.value) {
           showFieldError(this, "Passwords do not match");
@@ -96,15 +98,17 @@ function initFormValidation() {
 
   // Also add validation when password field changes
   const passwordInputs = document.querySelectorAll('input[name="password"]');
-  passwordInputs.forEach(input => {
-    input.addEventListener('input', function() {
-      const form = this.closest('form');
-      const confirmPasswordInput = form.querySelector('input[name="confirm_password"]');
-      
+  passwordInputs.forEach((input) => {
+    input.addEventListener("input", function () {
+      const form = this.closest("form");
+      const confirmPasswordInput = form.querySelector(
+        'input[name="confirm_password"]'
+      );
+
       if (confirmPasswordInput && confirmPasswordInput.value) {
         // Clear previous error first
         clearFieldError(confirmPasswordInput);
-        
+
         if (this.value !== confirmPasswordInput.value) {
           showFieldError(confirmPasswordInput, "Passwords do not match");
         }
@@ -156,33 +160,33 @@ function validateForm(form, formType) {
 // Specific validation for signup forms
 function validateSignupForm(form) {
   let isValid = true;
-  
+
   // Clear previous errors
   clearErrorMessages(form);
-  
+
   // Get form inputs
   const password = form.querySelector('input[name="password"]');
   const confirmPassword = form.querySelector('input[name="confirm_password"]');
   const firstName = form.querySelector('input[name="first_name"]');
   const lastName = form.querySelector('input[name="last_name"]');
   const username = form.querySelector('input[name="username"]');
-  
+
   // Check required fields
   if (!firstName.value.trim()) {
     showFieldError(firstName, "First name is required");
     isValid = false;
   }
-  
+
   if (!lastName.value.trim()) {
     showFieldError(lastName, "Last name is required");
     isValid = false;
   }
-  
+
   if (!username.value.trim()) {
     showFieldError(username, "Username is required");
     isValid = false;
   }
-  
+
   if (!password.value) {
     showFieldError(password, "Password is required");
     isValid = false;
@@ -190,7 +194,7 @@ function validateSignupForm(form) {
     showFieldError(password, "Password must be at least 6 characters long");
     isValid = false;
   }
-  
+
   if (!confirmPassword.value) {
     showFieldError(confirmPassword, "Please confirm your password");
     isValid = false;
@@ -198,7 +202,7 @@ function validateSignupForm(form) {
     showFieldError(confirmPassword, "Passwords do not match");
     isValid = false;
   }
-  
+
   return isValid;
 }
 
@@ -214,7 +218,7 @@ function clearFieldError(input) {
 function showFieldError(input, message) {
   // Clear any existing error for this input first
   clearFieldError(input);
-  
+
   const errorElement = document.createElement("div");
   errorElement.className = "text-danger mt-1 field-error";
   errorElement.textContent = message;

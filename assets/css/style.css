@@ -313,7 +313,7 @@ body::before {
 .form-control.is-invalid:focus {
   border-color: #ff6b6b !important;
   box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25),
-              0 0 20px rgba(255, 107, 107, 0.3) !important;
+    0 0 20px rgba(255, 107, 107, 0.3) !important;
 }
 
 .form-check-input:checked {
