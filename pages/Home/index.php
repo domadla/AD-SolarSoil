@@ -1,7 +1,4 @@
 <?php
-// Include bootstrap for path definitions
-require_once '../../bootstrap.php';
-
 // Page variables
 $page_title = 'SolarSoil - User Dashboard';
 $page_description = 'Welcome to your personal interstellar agriculture command center.';
