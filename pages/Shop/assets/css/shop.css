@@ -1,0 +1,213 @@
+/* Shop Page Styles */
+.shop-container {
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.shop-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.shop-title {
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.shop-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Search and Filters */
+.search-box {
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  z-index: 2;
+}
+
+.search-box input {
+  padding-left: 45px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-box input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  color: #fff;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-controls select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.filter-controls select:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  color: #fff;
+}
+
+.filter-controls select option {
+  background: #333;
+  color: #fff;
+}
+
+/* Plant Cards - Simplified */
+.plant-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.plant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 123, 255, 0.5);
+}
+
+.plant-image {
+  height: auto;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.plant-image img {
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.plant-card:hover .plant-image img {
+  transform: scale(1.1);
+}
+
+.plant-info {
+  padding: 1.2rem;
+  color: #fff;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.plant-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.8rem;
+  color: #fff;
+}
+
+.plant-description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 1.2rem;
+  flex-grow: 1;
+}
+
+.plant-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.plant-price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.add-to-cart {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart:hover {
+  background: linear-gradient(135deg, #0056b3, #004085);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+/* Animation for filtering */
+.plant-item {
+  transition: all 0.3s ease;
+}
+
+.plant-item.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .shop-title {
+    font-size: 2rem;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .plant-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .plant-footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .add-to-cart {
+    width: 100%;
+  }
+}
