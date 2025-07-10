@@ -8,7 +8,7 @@ session_start();
 // Page variables
 $page_title = 'SolarSoil - User Dashboard';
 $page_description = 'Welcome to your personal interstellar agriculture command center.';
-$body_class = 'dashboard-page home-page';
+$body_class = 'home-page';
 
 // Include header component
 include TEMPLATES_PATH . '/header.component.php';
@@ -16,13 +16,6 @@ include TEMPLATES_PATH . '/header.component.php';
 
 <!-- Page-specific CSS -->
 <link rel="stylesheet" href="assets/css/home.css">
-
-<!-- Animated Star Field Background -->
-<div class="stars"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
-<div class="stars4"></div>
-<div class="stars5"></div>
 
 <!-- Main Dashboard Content -->
 <div class="dashboard-container">
@@ -198,9 +191,6 @@ include TEMPLATES_PATH . '/header.component.php';
         </div>
     </div>
 </div>
-
-<!-- Page-specific JavaScript -->
-<script src="assets/js/home.js"></script>
 
 <?php
 // Include footer component
