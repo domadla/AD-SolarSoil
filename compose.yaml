@@ -1,8 +1,10 @@
 services:
-  web-app-php:
+  ad-solarsoil:
+    volumes:
+      - ./.env:/var/www/html/.env
     build:
       context: .
-    container_name: web-app-php-service
+    container_name: ad-solarsoil-service
     ports:
       - "8000:8000"
     develop:
@@ -19,31 +21,31 @@ services:
 
   mongodb:
     image: mongo:latest
-    container_name: web-app-php-mongodb
+    container_name: ad-solarsoil-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: rootPassword
-      MONGO_INITDB_DATABASE: mydatabase
+      MONGO_INITDB_ROOT_USERNAME: solarsoil
+      MONGO_INITDB_ROOT_PASSWORD: solarsoil2025
+      MONGO_INITDB_DATABASE: solarsoildb
     ports:
       - "27111:27017"
     volumes:
-      - web-app-php-mongodb:/data/db/mongodb
+      - ad-solarsoil-mongodb:/data/db/mongodb
 
   postgresql:
     image: postgres:15
-    container_name: web-app-php-postgresql
+    container_name: ad-solarsoil-postgresql
     restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: solarsoil
+      POSTGRES_PASSWORD: solarsoil2025
+      POSTGRES_DB: solarsoildb
     ports:
       - "5112:5432"
     volumes:
-      - web-app-php-postgresql:/data/db/postgresql
+      - ad-solarsoil-postgresql:/data/db/postgresql
 
 volumes:
-  web-app-php-mongodb:
+  ad-solarsoil-mongodb:
     driver: local
-  web-app-php-postgresql:
+  ad-solarsoil-postgresql:
     driver: local
