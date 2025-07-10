@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/bootstrap.php';
+require 'bootstrap.php';
 
 if (php_sapi_name() === 'cli-server') {
     $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
