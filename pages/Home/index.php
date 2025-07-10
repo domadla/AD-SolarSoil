@@ -2,9 +2,6 @@
 // Include bootstrap for path definitions
 require_once '../../bootstrap.php';
 
-// Start session for user authentication
-session_start();
-
 // Page variables
 $page_title = 'SolarSoil - User Dashboard';
 $page_description = 'Welcome to your personal interstellar agriculture command center.';
@@ -13,9 +10,6 @@ $body_class = 'home-page';
 // Include header component
 include TEMPLATES_PATH . '/header.component.php';
 ?>
-
-<!-- Page-specific CSS -->
-<link rel="stylesheet" href="assets/css/home.css">
 
 <!-- Main Dashboard Content -->
 <div class="dashboard-container">
