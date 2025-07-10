@@ -297,6 +297,25 @@ body::before {
   color: white;
 }
 
+/* Form validation error styling */
+.is-invalid {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25) !important;
+}
+
+.field-error {
+  color: #ff6b6b !important;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  text-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+}
+
+.form-control.is-invalid:focus {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25),
+              0 0 20px rgba(255, 107, 107, 0.3) !important;
+}
+
 .form-check-input:checked {
   background-color: var(--primary-green);
   border-color: var(--primary-green);
