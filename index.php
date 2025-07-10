@@ -15,7 +15,7 @@ $message_type = '';
 
 // Capture the auth forms content
 ob_start();
-include 'components/authForms.php';
+include 'components/forms/authForms.php';
 $content = ob_get_clean();
 
 // Include the layout
