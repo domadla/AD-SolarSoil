@@ -1,0 +1,37 @@
+{
+    "name": "wishiwashi/ad-solar-soil",
+    "type": "project",
+    "authors": [
+        {
+            "name": "MarkGamboa",
+            "email": "202310110@fit.edu.ph",
+            "role": "Front-end Developer"
+        },
+        {
+            "name": "domadla",
+            "email": "domadlangbayan@gmail.com",
+            "role": "Quality Assurance"
+        },
+        {
+            "name": "carlmarinyo",
+            "email": "marinojerome2@gmail.com",
+            "role": "Database Admin"
+        },
+        {
+            "name": "PhonsekalLaure",
+            "email": "rosaritoronnsaimund@gmail.com",
+            "role": "Back-end Developer"
+        },
+        {
+            "name": "Marlo522",
+            "email": "202311932@fit.edu.ph",
+            "role": "Back-end Developer"
+        }
+    ],
+    "scripts": {
+        "start": "php -S localhost:8000 router.php"
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
