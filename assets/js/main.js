@@ -9,6 +9,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //animations
   initAnimations();
+
+  // Always update cart badge on every page load
+  if (
+    window.CartUtils &&
+    typeof window.CartUtils.updateCartBadge === "function"
+  ) {
+    window.CartUtils.updateCartBadge();
+  }
 });
 
 // Login <-> Signup
