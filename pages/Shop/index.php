@@ -26,10 +26,6 @@ ob_start();
                         <i class="fas fa-store me-3"></i>
                         Cosmic Plant Marketplace
                     </h1>
-                    <p class="shop-subtitle">
-                        Discover rare and exotic plants from across the galaxy. Each species has been carefully
-                        cultivated for interstellar environments.
-                    </p>
                 </div>
             </div>
         </div>
