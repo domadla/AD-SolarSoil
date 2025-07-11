@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             `;
       cartSubtotal.textContent = "0 GC";
-      cartTotal.textContent = "5 GC";
+      cartTotal.textContent = "0 GC";
       checkoutBtn.disabled = true;
       return;
     }
@@ -62,7 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const cartBefore = window.CartUtils.getCart();
         window.CartUtils.decrementQuantity(id);
         const cartAfter = window.CartUtils.getCart();
-        const itemStillExists = cartAfter.some(item => item.id === parseInt(id));
+        const itemStillExists = cartAfter.some(
+          (item) => item.id === parseInt(id)
+        );
         renderCart();
         if (!itemStillExists) {
           showCartNotification("Item removed from cart!", "danger");
@@ -70,10 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       renderCart();
     } else if (btn.classList.contains("cart-item-remove")) {
-      const itemName = btn.closest('.cart-item').querySelector('.cart-item-name').textContent;
+      const itemName = btn
+        .closest(".cart-item")
+        .querySelector(".cart-item-name").textContent;
       window.CartUtils.removeFromCart(id);
       renderCart();
-      showCartNotification(`${itemName} removed from cart!`, 'danger');
+      showCartNotification(`${itemName} removed from cart!`, "danger");
     }
   });
   // Event for direct quantity input
@@ -91,12 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
   window.CartUtils.updateCartBadge();
 
   // Notification for delete
-  function showCartNotification(message, type = 'success') {
+  function showCartNotification(message, type = "success") {
     // Remove any existing notification
-    const existingToast = document.querySelector('.toast-notification');
+    const existingToast = document.querySelector(".toast-notification");
     if (existingToast) existingToast.remove();
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
     toast.innerHTML = `
       <div class="toast-content">
         <i class="fas fa-trash-alt"></i>
