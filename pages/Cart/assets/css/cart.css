@@ -114,22 +114,37 @@ h5 {
 }
 
 .btn-success,
-.btn-primary.launch-order {
-  background: rgba(0, 255, 136, 0.15) !important;
+.btn-success.add-to-cart {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.25),
+    rgba(0, 255, 136, 0.18)
+  ) !important;
   color: #00ff88 !important;
-  border: 1px solid rgba(0, 255, 136, 0.25) !important;
+  border: 1.5px solid #00ff88 !important;
   border-radius: 10px !important;
   font-weight: 600;
   padding: 0.5rem 1.5rem !important;
   font-size: 1.1rem;
-  transition: background 0.2s, color 0.2s;
-  box-shadow: none;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  box-shadow: 0 2px 12px 0 rgba(0, 255, 136, 0.1);
   position: relative;
   overflow: hidden;
 }
 
+.btn-success.add-to-cart:hover,
+.btn-success:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.35),
+    rgba(0, 255, 136, 0.22)
+  ) !important;
+  color: #fff !important;
+  border: 1.5px solid #00ff88 !important;
+}
+
 .btn-success::after,
-.btn-primary.launch-order::after {
+.btn-success.add-to-cart::after {
   content: "";
   position: absolute;
   top: 0;
@@ -147,8 +162,8 @@ h5 {
   pointer-events: none;
 }
 
-.btn-success:hover::after,
-.btn-primary.launch-order:hover::after {
+.btn-success.add-to-cart:hover::after,
+.btn-success:hover::after {
   left: 120%;
   transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
