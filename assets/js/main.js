@@ -338,3 +338,102 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Only add toast animation style if not already present
+if (!document.getElementById("toast-animation-style")) {
+  const toastStyle = document.createElement("style");
+  toastStyle.id = "toast-animation-style";
+  toastStyle.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .toast-content i {
+        font-size: 1.2rem;
+    }
+  `;
+  document.head.appendChild(toastStyle);
+}
+
+// CartUtils - shared cart logic for all pages
+window.CartUtils = {
+  getCart: function () {
+    return JSON.parse(localStorage.getItem("solarsoil_cart")) || [];
+  },
+  setCart: function (cart) {
+    localStorage.setItem("solarsoil_cart", JSON.stringify(cart));
+  },
+  addToCart: function (plantData) {
+    let cart = this.getCart();
+    const existingItem = cart.find((item) => item.id === plantData.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push(plantData);
+    }
+    this.setCart(cart);
+    this.updateCartBadge();
+  },
+  removeFromCart: function (id) {
+    let cart = this.getCart();
+    cart = cart.filter((item) => item.id !== parseInt(id));
+    this.setCart(cart);
+    this.updateCartBadge();
+  },
+  incrementQuantity: function (id) {
+    let cart = this.getCart();
+    const item = cart.find((i) => i.id === parseInt(id));
+    if (item) item.quantity += 1;
+    this.setCart(cart);
+    this.updateCartBadge();
+  },
+  decrementQuantity: function (id) {
+    let cart = this.getCart();
+    const item = cart.find((i) => i.id === parseInt(id));
+    if (item) {
+      item.quantity -= 1;
+      if (item.quantity < 1) {
+        cart = cart.filter((i) => i.id !== parseInt(id));
+      }
+    }
+    this.setCart(cart);
+    this.updateCartBadge();
+  },
+  setQuantity: function (id, value) {
+    let cart = this.getCart();
+    const item = cart.find((i) => i.id === parseInt(id));
+    if (item) item.quantity = value;
+    this.setCart(cart);
+    this.updateCartBadge();
+  },
+  updateCartBadge: function () {
+    const cart = this.getCart();
+    const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+    const badge = document.getElementById("cart-badge");
+    if (badge) badge.textContent = cartCount;
+    // Also update old badge if present
+    const cartCountElement = document.getElementById("cart-count");
+    if (cartCountElement) cartCountElement.textContent = cartCount;
+  },
+};
