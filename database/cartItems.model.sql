@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS CartItems (
+CREATE TABLE IF NOT EXISTS cart_items (
     cart_item_id SERIAL PRIMARY KEY,
     cart_id INT NOT NULL,
     plant_id INT NOT NULL,
