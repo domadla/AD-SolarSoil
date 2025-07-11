@@ -4,8 +4,8 @@ $page_title = 'SolarSoil - User Dashboard';
 $page_description = 'Welcome to your personal interstellar agriculture command center.';
 $body_class = 'home-page';
 
-// Include header component
-include TEMPLATES_PATH . '/header.component.php';
+// Capture page content
+ob_start();
 ?>
 
 <!-- Main Dashboard Content -->
@@ -23,8 +23,7 @@ include TEMPLATES_PATH . '/header.component.php';
                             </h1>
                             <p class="welcome-subtitle">
                                 Your personal interstellar agriculture operations await. Monitor your crops across the
-                                galaxy,
-                                manage resources, and expand your cosmic farming empire.
+                                galaxy, manage resources, and expand your cosmic farming empire.
                             </p>
                         </div>
                         <div class="col-md-4 text-end">
@@ -48,131 +47,104 @@ include TEMPLATES_PATH . '/header.component.php';
                         <h3>Planetary Farms</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">12</div>
-                        <div class="metric-label">Active Worlds</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 75%;"></div>
+                        <div class="stat-number">12</div>
+                        <p>Active farming colonies across multiple star systems</p>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 85%"></div>
                         </div>
-                        <p class="card-description">
-                            Manage agricultural operations across multiple planets in the Andromeda sector.
-                        </p>
+                        <small class="text-muted">85% operational efficiency</small>
                     </div>
                 </div>
             </div>
 
-            <!-- Quantum Crops -->
+            <!-- Resource Management -->
             <div class="col-lg-4 col-md-6">
                 <div class="dashboard-card">
                     <div class="card-header">
-                        <i class="fas fa-seedling card-icon"></i>
-                        <h3>Quantum Crops</h3>
+                        <i class="fas fa-chart-line card-icon"></i>
+                        <h3>Resource Monitor</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">847K</div>
-                        <div class="metric-label">Plants Growing</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 92%;"></div>
+                        <div class="stat-number">2,847</div>
+                        <p>Galactic Credits earned this cycle</p>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" style="width: 65%"></div>
                         </div>
-                        <p class="card-description">
-                            Monitor bio-enhanced crops with quantum acceleration technology.
-                        </p>
+                        <small class="text-muted">+12% from last period</small>
                     </div>
                 </div>
             </div>
 
-            <!-- Energy Harvest -->
+            <!-- Fleet Status -->
             <div class="col-lg-4 col-md-6">
                 <div class="dashboard-card">
                     <div class="card-header">
-                        <i class="fas fa-solar-panel card-icon"></i>
-                        <h3>Solar Collection</h3>
+                        <i class="fas fa-rocket card-icon"></i>
+                        <h3>Transport Fleet</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">2.4M</div>
-                        <div class="metric-label">Energy Units</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 88%;"></div>
+                        <div class="stat-number">8</div>
+                        <p>Active cargo ships in transit</p>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: 40%"></div>
                         </div>
-                        <p class="card-description">
-                            Harvest energy from multiple star systems to power operations.
-                        </p>
+                        <small class="text-muted">3 scheduled arrivals today</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="row mb-5">
-            <div class="col-12">
-                <div class="actions-card">
-                    <h2 class="actions-title">
-                        <i class="fas fa-rocket me-2"></i>Quick Actions
-                    </h2>
-                    <div class="row g-3">
-                        <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
-                                <i class="fas fa-shopping-bag"></i>
-                                <span>Buy Plants</span>
-                            </button>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span>Show Carts</span>
-                            </button>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
-                                <i class="fas fa-receipt"></i>
-                                <span>View Orders</span>
-                            </button>
-                        </div>
-                        <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
-                                <i class="fas fa-cog"></i>
-                                <span>Settings</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
+        <!-- Recent Activity Feed -->
         <div class="row">
             <div class="col-12">
-                <div class="activity-card">
-                    <h2 class="activity-title">
-                        <i class="fas fa-history me-2"></i>Recent Cosmic Activity
-                    </h2>
-                    <div class="activity-list">
+                <div class="activity-feed">
+                    <div class="feed-header">
+                        <h3>
+                            <i class="fas fa-history me-3"></i>
+                            Recent System Activity
+                        </h3>
+                    </div>
+                    <div class="feed-content">
                         <div class="activity-item">
-                            <div class="activity-icon">
+                            <div class="activity-icon bg-success">
                                 <i class="fas fa-seedling"></i>
                             </div>
-                            <div class="activity-content">
-                                <h4>New Crop Strain Discovered</h4>
-                                <p>Quantum-enhanced tomatoes showing 340% growth rate on Kepler-442b</p>
+                            <div class="activity-details">
+                                <h4>Harvest Complete</h4>
+                                <p>Kepler-442b Farm: 500 units of Stellar Moss harvested</p>
                                 <span class="activity-time">2 hours ago</span>
                             </div>
                         </div>
+
                         <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-satellite"></i>
+                            <div class="activity-icon bg-info">
+                                <i class="fas fa-rocket"></i>
                             </div>
-                            <div class="activity-content">
-                                <h4>System Scan Complete</h4>
-                                <p>Proxima Centauri system shows optimal conditions for agriculture expansion</p>
+                            <div class="activity-details">
+                                <h4>Supply Drop Incoming</h4>
+                                <p>Transport ship arriving at Proxima Colony with nutrients</p>
+                                <span class="activity-time">4 hours ago</span>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>System Alert</h4>
+                                <p>Solar storm detected near Titan Base - shields activated</p>
                                 <span class="activity-time">6 hours ago</span>
                             </div>
                         </div>
+
                         <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-rocket"></i>
+                            <div class="activity-icon bg-primary">
+                                <i class="fas fa-chart-bar"></i>
                             </div>
-                            <div class="activity-content">
-                                <h4>Supply Ship Deployed</h4>
-                                <p>Resource transport successfully launched to Mars Colony Delta-7</p>
+                            <div class="activity-details">
+                                <h4>Performance Report</h4>
+                                <p>Weekly productivity increased by 15% across all colonies</p>
                                 <span class="activity-time">1 day ago</span>
                             </div>
                         </div>
@@ -184,6 +156,8 @@ include TEMPLATES_PATH . '/header.component.php';
 </div>
 
 <?php
-// Include footer component
-include TEMPLATES_PATH . '/footer.component.php';
+$content = ob_get_clean();
+
+// Include the single layout
+include '../../layouts/page-layout.php';
 ?>
