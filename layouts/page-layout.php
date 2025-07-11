@@ -57,17 +57,24 @@ if (file_exists($css_file)):
     </div>
 <?php endif; ?>
 
-<!-- Page-specific JavaScript (dynamically loaded based on body_class) -->
-<?php
-$js_file = "assets/js/" . str_replace('-page', '', $body_class) . ".js";
-if (file_exists($js_file)):
-    ?>
-    <script src="<?php echo $js_file; ?>"></script>
-<?php endif; ?>
-
 <!-- Cart Utils - Global JavaScript for cart functionality -->
-<script src="../../assets/js/cart-utils.js"></script>
-
+<script src="/assets/js/main.js"></script>
+<?php
+// Dynamically load JS for the current page
+if (isset($body_class)) {
+    $js_file = null;
+    if ($body_class === 'cart-page') {
+        $js_file = '/pages/Cart/assets/js/cart.js';
+    } elseif ($body_class === 'shop-page') {
+        $js_file = '/pages/Shop/assets/js/shop.js';
+    } elseif ($body_class === 'home-page') {
+        $js_file = '/pages/Home/assets/js/home.js';
+    }
+    if ($js_file) {
+        echo '<script src="' . $js_file . '"></script>';
+    }
+}
+?>
 <?php
 // Include footer component
 include TEMPLATES_PATH . '/footer.component.php';

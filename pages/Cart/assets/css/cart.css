@@ -1,0 +1,259 @@
+/* Cart Section Background - Subtle Glass Effect */
+.cart-container {
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.cart-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.cart-title {
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.empty-cart p.text-muted {
+  color: white !important;
+}
+
+.empty-cart i.text-muted {
+  color: #28a745 !important;
+}
+
+h5 {
+  color: white;
+}
+
+.cart-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cart-items,
+.cart-summary .card {
+  background: rgba(20, 24, 40, 0.75);
+  border: 1px solid rgba(0, 255, 136, 0.08);
+  border-radius: 15px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.2s;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 15px;
+  margin-right: 1.5rem;
+  background: #222;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.cart-item-details {
+  flex: 1;
+  color: #fff;
+}
+
+.cart-item-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.cart-item-price {
+  color: #28a745;
+  font-size: 1rem;
+}
+
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-btn {
+  background: rgba(0, 255, 136, 0.15) !important;
+  color: #00ff88 !important;
+  border: 1px solid rgba(0, 255, 136, 0.25) !important;
+  border-radius: 10px !important;
+  font-weight: 600;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: none;
+}
+
+.quantity-btn:hover {
+  background: rgba(0, 255, 136, 0.25) !important;
+  color: #fff !important;
+}
+
+.btn-success,
+.btn-success.add-to-cart {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.25),
+    rgba(0, 255, 136, 0.18)
+  ) !important;
+  color: #00ff88 !important;
+  border: 1.5px solid #00ff88 !important;
+  border-radius: 10px !important;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem !important;
+  font-size: 1.1rem;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  box-shadow: 0 2px 12px 0 rgba(0, 255, 136, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-success.add-to-cart:hover,
+.btn-success:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.35),
+    rgba(0, 255, 136, 0.22)
+  ) !important;
+  color: #fff !important;
+  border: 1.5px solid #00ff88 !important;
+}
+
+.btn-success::after,
+.btn-success.add-to-cart::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  transform: skewX(-25deg);
+  transition: none;
+  pointer-events: none;
+}
+
+.btn-success.add-to-cart:hover::after,
+.btn-success:hover::after {
+  left: 120%;
+  transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.empty-cart .btn {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.empty-cart .btn:hover {
+  background: rgba(0, 255, 136, 0.25);
+  color: #fff;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+  color: #fff;
+}
+
+.summary-row.total {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #00ff88;
+}
+
+.cart-item-remove {
+  background: rgba(0, 255, 136, 0.15) !important;
+  color: #00ff88 !important;
+  border: 1px solid rgba(0, 255, 136, 0.25) !important;
+  border-radius: 10px !important;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  font-size: 1.2rem;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: none;
+  padding: 0;
+}
+
+.cart-item-remove:hover {
+  background: rgba(0, 255, 136, 0.25) !important;
+  color: #fff !important;
+}
+
+.cart-item-remove i {
+  color: inherit !important;
+  font-size: 1.1rem;
+}
+
+.quantity-input {
+  width: 48px;
+  min-width: 0;
+  max-width: 60px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  margin: 0 0.5rem;
+  font-size: 1.1rem;
+  padding: 0.2rem 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .cart-title {
+    font-size: 2rem;
+  }
+  .cart-header {
+    margin-bottom: 2rem;
+  }
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+  .cart-item-image {
+    margin-right: 0;
+    margin-bottom: 0.7rem;
+  }
+  .cart-summary {
+    margin-top: 2rem;
+  }
+}
