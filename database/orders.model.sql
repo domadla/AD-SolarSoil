@@ -1,4 +1,4 @@
-CREATE TABLE Orders (
+CREATE TABLE IF NOT EXISTS Orders (
     id SERIAL PRIMARY KEY,
     user_id INT,
     cart_id INT,
