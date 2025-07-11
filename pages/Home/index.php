@@ -110,25 +110,25 @@ include TEMPLATES_PATH . '/header.component.php';
                     </h2>
                     <div class="row g-3">
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn" onclick="location.href='../Shop/index.php'">
+                            <button class="action-btn">
                                 <i class="fas fa-shopping-bag"></i>
                                 <span>Buy Plants</span>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn" onclick="location.href='../Cart/index.php'">
+                            <button class="action-btn">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span>Show Carts</span>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn" onclick="location.href='../Order/index.php'">
+                            <button class="action-btn">
                                 <i class="fas fa-receipt"></i>
                                 <span>View Orders</span>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn" onclick="location.href='../Profile/index.php'">
+                            <button class="action-btn">
                                 <i class="fas fa-cog"></i>
                                 <span>Settings</span>
                             </button>
