@@ -26,12 +26,19 @@ document.addEventListener("DOMContentLoaded", function () {
         id: parseInt(this.dataset.id),
         name: this.dataset.name,
         price: parseFloat(this.dataset.price),
-        image: this.dataset.image,
+        // Always store only the filename for the image
+        image: this.dataset.image.split("/").pop(),
         quantity: 1,
       };
-
-      addToCart(plantData);
+      window.CartUtils.addToCart(plantData);
+      // Remove any existing notification before showing a new one
+      const existingToast = document.querySelector(".toast-notification");
+      if (existingToast) existingToast.remove();
       showAddedToCartMessage(plantData.name);
+      // Remove redirect to cart page so user can add multiple plants
+      // setTimeout(function () {
+      //   window.location.href = "/pages/Cart/index.php";
+      // }, 1000); // Show notification for 1s before redirect
     });
   });
 
@@ -66,25 +73,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function addToCart(plantData) {
-    const existingItem = cart.find((item) => item.id === plantData.id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push(plantData);
-    }
-
-    localStorage.setItem("solarsoil_cart", JSON.stringify(cart));
-    updateCartCount();
-  }
-
   function updateCartCount() {
-    const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-    const cartCountElement = document.getElementById("cart-count");
-    if (cartCountElement) {
-      cartCountElement.textContent = cartCount;
-    }
+    window.CartUtils.updateCartBadge();
   }
 
   function showAddedToCartMessage(plantName) {
@@ -124,9 +114,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Add CSS animations for toast
-const style = document.createElement("style");
-style.textContent = `
+// Only add toast animation style if not already present
+if (!document.getElementById('toast-animation-style')) {
+  const toastStyle = document.createElement("style");
+  toastStyle.id = 'toast-animation-style';
+  toastStyle.textContent = `
     @keyframes slideInRight {
         from {
             transform: translateX(100%);
@@ -137,7 +129,6 @@ style.textContent = `
             opacity: 1;
         }
     }
-    
     @keyframes slideOutRight {
         from {
             transform: translateX(0);
@@ -148,18 +139,17 @@ style.textContent = `
             opacity: 0;
         }
     }
-    
     .toast-content {
         display: flex;
         align-items: center;
         gap: 10px;
     }
-    
     .toast-content i {
         font-size: 1.2rem;
     }
-`;
-document.head.appendChild(style);
+  `;
+  document.head.appendChild(toastStyle);
+}
 
 // Simple Shop Page JavaScript
 document.addEventListener("DOMContentLoaded", function () {
@@ -177,34 +167,24 @@ document.addEventListener("DOMContentLoaded", function () {
         id: parseInt(this.dataset.id),
         name: this.dataset.name,
         price: parseFloat(this.dataset.price),
-        image: this.dataset.image,
+        // Always store only the filename for the image
+        image: this.dataset.image.split("/").pop(),
         quantity: 1,
       };
-
-      addToCart(plantData);
+      window.CartUtils.addToCart(plantData);
+      // Remove any existing notification before showing a new one
+      const existingToast = document.querySelector(".toast-notification");
+      if (existingToast) existingToast.remove();
       showAddedToCartMessage(plantData.name);
+      // Remove redirect to cart page so user can add multiple plants
+      // setTimeout(function () {
+      //   window.location.href = "/pages/Cart/index.php";
+      // }, 1000); // Show notification for 1s before redirect
     });
   });
 
-  function addToCart(plantData) {
-    const existingItem = cart.find((item) => item.id === plantData.id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push(plantData);
-    }
-
-    localStorage.setItem("solarsoil_cart", JSON.stringify(cart));
-    updateCartCount();
-  }
-
   function updateCartCount() {
-    const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-    const cartCountElement = document.getElementById("cart-count");
-    if (cartCountElement) {
-      cartCountElement.textContent = cartCount;
-    }
+    window.CartUtils.updateCartBadge();
   }
 
   function showAddedToCartMessage(plantName) {
@@ -243,40 +223,3 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 3000);
   }
 });
-
-// Add CSS animations for toast
-const style = document.createElement("style");
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .toast-content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .toast-content i {
-        font-size: 1.2rem;
-    }
-`;
-document.head.appendChild(style);
