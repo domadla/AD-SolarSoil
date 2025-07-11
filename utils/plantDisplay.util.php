@@ -26,7 +26,7 @@ class PlantDisplayUtil
                     <p class="plant-description">' . htmlEscape($plant['desc']) . '</p>
                     <div class="plant-footer">
                         <span class="plant-price">' . number_format($plant['price'], 0) . ' GC</span>
-                        <button class="btn btn-primary add-to-cart" 
+                        <button class="btn btn-success add-to-cart" 
                                 data-id="' . htmlEscape($plant['id']) . '"
                                 data-name="' . htmlEscape($plant['name']) . '"
                                 data-price="' . htmlEscape($plant['price']) . '"
