@@ -115,9 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Only add toast animation style if not already present
-if (!document.getElementById('toast-animation-style')) {
+if (!document.getElementById("toast-animation-style")) {
   const toastStyle = document.createElement("style");
-  toastStyle.id = 'toast-animation-style';
+  toastStyle.id = "toast-animation-style";
   toastStyle.textContent = `
     @keyframes slideInRight {
         from {
