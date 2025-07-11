@@ -29,8 +29,11 @@ include TEMPLATES_PATH . '/header.component.php';
 ?>
 
 <!-- Page-specific CSS (dynamically loaded based on body_class) -->
-<?php if (file_exists("assets/css/" . str_replace('-page', '', $body_class) . ".css")): ?>
-    <link rel="stylesheet" href="assets/css/<?php echo str_replace('-page', '', $body_class); ?>.css">
+<?php
+$css_file = "assets/css/" . str_replace('-page', '', $body_class) . ".css";
+if (file_exists($css_file)):
+    ?>
+    <link rel="stylesheet" href="<?php echo $css_file; ?>">
 <?php endif; ?>
 
 <!-- Animated Star Field Background -->
@@ -55,8 +58,11 @@ include TEMPLATES_PATH . '/header.component.php';
 <?php endif; ?>
 
 <!-- Page-specific JavaScript (dynamically loaded based on body_class) -->
-<?php if (file_exists("assets/js/" . str_replace('-page', '', $body_class) . ".js")): ?>
-    <script src="assets/js/<?php echo str_replace('-page', '', $body_class); ?>.js"></script>
+<?php
+$js_file = "assets/js/" . str_replace('-page', '', $body_class) . ".js";
+if (file_exists($js_file)):
+    ?>
+    <script src="<?php echo $js_file; ?>"></script>
 <?php endif; ?>
 
 <!-- Cart Utils - Global JavaScript for cart functionality -->
