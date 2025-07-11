@@ -4,8 +4,8 @@ $page_title = 'SolarSoil - User Dashboard';
 $page_description = 'Welcome to your personal interstellar agriculture command center.';
 $body_class = 'home-page';
 
-// Include header component
-include TEMPLATES_PATH . '/header.component.php';
+// Capture page content
+ob_start();
 ?>
 
 <!-- Main Dashboard Content -->
@@ -110,13 +110,13 @@ include TEMPLATES_PATH . '/header.component.php';
                     </h2>
                     <div class="row g-3">
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
+                            <button class="action-btn" onclick="location.href='../Shop/index.php'">
                                 <i class="fas fa-shopping-bag"></i>
                                 <span>Buy Plants</span>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
+                            <button class="action-btn" onclick="location.href='../Cart/index.php'">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span>Show Carts</span>
                             </button>
@@ -184,6 +184,8 @@ include TEMPLATES_PATH . '/header.component.php';
 </div>
 
 <?php
-// Include footer component
-include TEMPLATES_PATH . '/footer.component.php';
+$content = ob_get_clean();
+
+// Include the single layout
+include '../../layouts/page-layout.php';
 ?>
