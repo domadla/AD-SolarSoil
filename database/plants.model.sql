@@ -1,4 +1,4 @@
-CREATE TABLE Plants (
+CREATE TABLE IF NOT EXISTS Plants (
     plant_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     stock INT DEFAULT 0,
