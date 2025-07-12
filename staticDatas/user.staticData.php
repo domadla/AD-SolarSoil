@@ -2,8 +2,7 @@
 return [
     [
         'username' => 'maxv',
-        'password' => 'redbull1',
-        'email' => 'max@example.com',
+        'password' => 'redbul',
         'firstname' => 'Max',
         'lastname' => 'Verstappen',
         'role' => 'admin',
@@ -13,8 +12,7 @@ return [
     ],
     [
         'username' => 'lewish',
-        'password' => 'mercedes7',
-        'email' => 'lewis@example.com',
+        'password' => 'mcedes',
         'firstname' => 'Lewis',
         'lastname' => 'Hamilton',
         'role' => 'user',
@@ -24,8 +22,7 @@ return [
     ],
     [
         'username' => 'carlm',
-        'password' => 'solar123',
-        'email' => 'carl@example.com',
+        'password' => 'slr123',
         'firstname' => 'Carl',
         'lastname' => 'Marino',
         'role' => 'user',
