@@ -1,9 +1,6 @@
 <?php
 require_once 'bootstrap.php';
 
-// Start session for user authentication
-session_start();
-
 // Page variables
 $page_title = 'SolarSoil - Interstellar Agriculture Hub';
 $page_description = 'Join SolarSoil - Sustainable Agriculture Solutions for the Cosmos. Login to your account or create a new one.';
