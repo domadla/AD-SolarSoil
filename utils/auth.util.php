@@ -76,8 +76,65 @@ class Auth
     }
 
     /**
+     * Register a new user
+     *
+     * @param PDO $pdo
+     * @param string $firstname
+     * @param string $lastname
+     * @param string $username
+     * @param string $password
+     * @return array ['success' => 'Message'] or ['error' => 'Message']
+     */
+    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $password): array
+    {
+        // 1) Check if username already exists
+        try {
+            $stmt = $pdo->prepare("SELECT user_id FROM USERS WHERE username = :username");
+            $stmt->execute([':username' => $username]);
+            if ($stmt->fetch()) {
+                error_log("[Auth::register] Attempt to register existing username: {$username}");
+                return ['error' => 'UsernameAlreadyTaken'];
+            }
+        } catch (\PDOException $e) {
+            error_log('[Auth::register] PDOException on check: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+
+        // 2) Hash the password - This is a critical security step.
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // 3) Insert the new user
+        try {
+            $stmt = $pdo->prepare(
+                "INSERT INTO USERS (firstname, lastname, username, password, role)
+                VALUES (:firstname, :lastname, :username, :password, :role)"
+            );
+            $stmt->execute([
+                ':firstname' => $firstname,
+                ':lastname' => $lastname,
+                ':username' => $username,
+                ':password' => $hashedPassword,
+                ':role' => 'user' // Default role
+            ]);
+
+            error_log("[Auth::register] New user created: {$username}");
+            return ['success' => 'SignupComplete'];
+        } catch (\PDOException $e) {
+            error_log('[Auth::register] PDOException on insert: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
+
+    /**
      * Returns the currently logged-in user, or null if not logged in
-     * 
+     *
+     */
+
+
+
+    /**
+     * Returns the currently logged-in user, or null if not logged in
+     *
      * @return array|null   User data if logged in, null otherwise
      */
     public static function user(): ?array
