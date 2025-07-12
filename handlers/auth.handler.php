@@ -8,7 +8,7 @@ require_once UTILS_PATH . '/envSetter.util.php';
 // Initialize session
 Auth::init();
 
-$host = 'host.docker.internal';
+$host = $pgConfig['host'];
 $port = $pgConfig['port'];
 $username = $pgConfig['user'];
 $password = $pgConfig['pass'];
