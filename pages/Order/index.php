@@ -142,14 +142,8 @@ ob_start();
                                 <div class="order-item">
                                     <?php
                                     $imagePath = $item['image'];
-                                    if (strpos($imagePath, 'assets/img/') === 0) {
-                                        $imagePath = '../../pages/Shop/' . $imagePath;
-                                    } elseif (strpos($imagePath, 'pages/Shop/assets/img/') === 0) {
-                                    } elseif (strpos($imagePath, 'Shop/assets/img/') === 0) {
-                                        $imagePath = '../../pages/' . $imagePath;
-                                    } elseif (strpos($imagePath, '../Shop/assets/img/') === 0) {
-                                        $imagePath = '../../pages/Shop/assets/img/' . substr($imagePath, strlen('../Shop/assets/img/'));
-                                    }
+                                    $basename = basename($imagePath);
+                                    $imagePath = '../../pages/Shop/assets/img/plants/' . $basename;
                                     ?>
                                     <img src="<?php echo htmlspecialchars($imagePath); ?>"
                                         alt="<?php echo htmlspecialchars($item['name']); ?>" class="item-image">
