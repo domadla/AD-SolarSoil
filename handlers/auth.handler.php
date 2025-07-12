@@ -41,27 +41,27 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $firstname = trim($_POST['first_name'] ?? '');
-//     $lastname = trim($_POST['last_name'] ?? '');
-//     $username = trim($_POST['username'] ?? '');
-//     $password = $_POST['password'] ?? ''; // Don't trim password
-//     $confirm_password = $_POST['confirm_password'] ?? '';
+elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $firstname = trim($_POST['first_name'] ?? '');
+    $lastname = trim($_POST['last_name'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? ''; // Don't trim password
+    $confirm_password = $_POST['confirm_password'] ?? '';
 
-//     // Basic server-side validation
-//     if (empty($firstname) || empty($lastname) || empty($username) || empty($password)) {
-//         header('Location: /index.php?error=AllFieldsRequired');
-//         exit;
-//     }
-//     if ($password !== $confirm_password) {
-//         header('Location: /index.php?error=PasswordsDoNotMatch');
-//         exit;
-//     }
+    // Basic server-side validation
+    if (empty($firstname) || empty($lastname) || empty($username) || empty($password)) {
+        header('Location: /index.php?error=AllFieldsRequired');
+        exit;
+    }
+    if ($password !== $confirm_password) {
+        header('Location: /index.php?error=PasswordsDoNotMatch');
+        exit;
+    }
 
-//     $result = Auth::register($pdo, $firstname, $lastname, $username, $password);
-//     header('Location: /index.php?' . http_build_query($result));
-//     exit;
-// }
+    $result = Auth::register($pdo, $firstname, $lastname, $username, $password);
+    header('Location: /index.php?' . http_build_query($result));
+    exit;
+}
 
 // --- LOGOUT ---
 elseif ($action === 'logout') {
