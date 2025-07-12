@@ -6,6 +6,6 @@ define('HANDLERS_PATH', BASE_PATH . '/handlers/');
 define('COMPONENTS_PATH', BASE_PATH . '/components/');
 define('TEMPLATES_PATH', BASE_PATH . '/components/templates');
 define('ASSETS_PATH', BASE_PATH . '/assets');
-
+define('DATABASE_PATH', BASE_PATH . '/database');
 
 chdir(BASE_PATH);
