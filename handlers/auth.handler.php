@@ -30,22 +30,44 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = Auth::user();
 
         if ($user["role"] == "admin") {
-            header('Location: /pages/users/index.php');
+            header('Location: /pages/users/index.php?success=login');
         } else {
-            header('Location: /pages/Home/index.php');
+            header('Location: /pages/Home/index.php?success=login');
         }
         exit;
     } else {
-        header('Location: /index.php?error=Invalid%Credentials');
+        header('Location: /index.php?error=InvalidCredentials');
         exit;
     }
 }
+
+// elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $firstname = trim($_POST['first_name'] ?? '');
+//     $lastname = trim($_POST['last_name'] ?? '');
+//     $username = trim($_POST['username'] ?? '');
+//     $password = $_POST['password'] ?? ''; // Don't trim password
+//     $confirm_password = $_POST['confirm_password'] ?? '';
+
+//     // Basic server-side validation
+//     if (empty($firstname) || empty($lastname) || empty($username) || empty($password)) {
+//         header('Location: /index.php?error=AllFieldsRequired');
+//         exit;
+//     }
+//     if ($password !== $confirm_password) {
+//         header('Location: /index.php?error=PasswordsDoNotMatch');
+//         exit;
+//     }
+
+//     $result = Auth::register($pdo, $firstname, $lastname, $username, $password);
+//     header('Location: /index.php?' . http_build_query($result));
+//     exit;
+// }
 
 // --- LOGOUT ---
 elseif ($action === 'logout') {
     Auth::init();
     Auth::logout();
-    header('Location: /index.php');
+    header('Location: /index.php?success=logout');
     exit;
 }
 
