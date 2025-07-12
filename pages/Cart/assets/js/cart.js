@@ -90,9 +90,33 @@ document.addEventListener("DOMContentLoaded", function () {
       renderCart();
     }
   });
+
   // Initial render
   renderCart();
   window.CartUtils.updateCartBadge();
+
+  // Checkout/Launch Order button logic
+  checkoutBtn.addEventListener("click", function () {
+    const cart = window.CartUtils.getCart();
+    if (!cart.length) return;
+    // Prepare a form to POST cart data to the order page
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "../Order/index.php";
+    form.style.display = "none";
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "cart_data";
+    input.value = JSON.stringify(cart);
+    form.appendChild(input);
+    const createOrder = document.createElement("input");
+    createOrder.type = "hidden";
+    createOrder.name = "create_order";
+    createOrder.value = "1";
+    form.appendChild(createOrder);
+    document.body.appendChild(form);
+    form.submit();
+  });
 
   // Notification for delete
   function showCartNotification(message, type = "success") {
