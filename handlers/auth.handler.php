@@ -30,9 +30,9 @@ if ($action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = Auth::user();
 
         if ($user["role"] == "admin") {
-            header('Location: /pages/users/index.php?success=login');
+            header('Location: /pages/users/index.php');
         } else {
-            header('Location: /pages/Home/index.php?success=login');
+            header('Location: /pages/Home/index.php');
         }
         exit;
     } else {
