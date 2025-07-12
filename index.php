@@ -31,6 +31,9 @@ if (Auth::check()) {
             case 'UsernameAlreadyTaken':
                 $message = 'That username is already taken. Please choose another.';
                 break;
+            case 'DatabaseError':
+                $message = 'An error occurred while processing your request. Please try again later.';
+                break;
             case 'AllFieldsRequired':
             case 'PasswordsDoNotMatch':
                 $message = 'Please correct the errors on the form and try again.';
@@ -45,7 +48,7 @@ if (Auth::check()) {
             case 'logout':
                 $message = 'You have been successfully logged out.';
                 break;
-            case 'signup':
+            case 'SignupComplete':
                 $message = 'Your account has been successfully created. You can now log in.';
                 break;
         }
