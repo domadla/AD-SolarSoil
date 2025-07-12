@@ -57,7 +57,7 @@ class Auth
 
         // 2) Verify password
         if ($password !== $user['password']) {
-            error_log("[Auth::login] Password mismatch for user_id={$user['id']}");
+            error_log("[Auth::login] Password mismatch for user_id={$user['user_id']}");
             return false;
         }
 
