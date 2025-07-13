@@ -1,8 +1,17 @@
 <?php
 // Include handlers and utilities
+require_once '../../bootstrap.php';
 require_once HANDLERS_PATH . '/plants.handler.php';
 require_once UTILS_PATH . '/plantDisplay.util.php';
+require_once UTILS_PATH . '/auth.util.php';
+require_once UTILS_PATH . '/cartItems.util.php';
+require_once UTILS_PATH . '/htmlEscape.util.php';
 
+session_start();
+if (!Auth::check()){
+    header('Location: ../../index.php?error=LoginRequired');
+    exit;
+}
 // Page variables
 $page_title = 'SolarSoil - Plant Shop';
 $page_description = 'Discover exotic plants from across the galaxy.';
