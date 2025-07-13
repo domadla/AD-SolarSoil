@@ -5,7 +5,26 @@
  */
 
 class PlantsHandler
-{
+{   
+    private static ?PDO $pdo = null;
+
+    /**
+     * Initialize database connection
+     * 
+     * @return PDO
+     */
+    private static function getConnection(): PDO
+    {
+        if (self::$pdo === null) {
+            global $pgConfig;
+            $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
+            self::$pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        }
+        return self::$pdo;
+    }
 
     /**
      * Get all available plants
@@ -13,72 +32,67 @@ class PlantsHandler
      */
     public static function getAllPlants()
     {
-        return [
-            [
-                "id" => 1,
-                "name" => "Nebula Bloom",
-                "price" => 35,
-                "desc" => "A radiant flower that glows with the colors of cosmic clouds.",
-                'img' => 'assets/img/plants/NebulaBloom.png',
-                "imgClass" => "nebula-bloom"
-            ],
-            [
-                "id" => 2,
-                "name" => "Lunar Cactus",
-                "price" => 28,
-                "desc" => "Tough and resilient, it absorbs moonlight to bloom at night.",
-                'img' => 'assets/img/plants/LunarCactus.png',
-                "imgClass" => "lunar-cactus"
-            ],
-            [
-                "id" => 3,
-                "name" => "Meteor Fern",
-                "price" => 42,
-                "desc" => "Feathers shimmer like meteors streaking through space dust.",
-                'img' => 'assets/img/plants/MeteorFern.png',
-                "imgClass" => "meteor-fern"
-            ],
-            [
-                "id" => 4,
-                "name" => "Solar Vine",
-                "price" => 30,
-                "desc" => "Golden tendrils that sway toward sunlight, storing solar energy.",
-                'img' => 'assets/img/plants/SolarVine.png',
-                "imgClass" => "solar-vine"
-            ],
-            [
-                "id" => 5,
-                "name" => "Galaxy Orchid",
-                "price" => 55,
-                "desc" => "Petals with shifting star-like specks, a true interstellar marvel.",
-                'img' => 'assets/img/plants/GalaxyOrchid.png',
-                "imgClass" => "galaxy-orchid"
-            ],
-            [
-                "id" => 6,
-                "name" => "Comet Ivy",
-                "price" => 26,
-                "desc" => "Fast-growing vine that leaves glowing trails in the dark.",
-                'img' => 'assets/img/plants/CometIvy.png',
-                "imgClass" => "comet-ivy"
-            ],
-            [
-                "id" => 7,
-                "name" => "Asteroid Moss",
-                "price" => 18,
-                "desc" => "Spongy moss that thrives in zero-gravity and rocky terrain.",
-                'img' => 'assets/img/plants/AsteroidMoss.png',
-                "imgClass" => "asteroid-moss"
-            ],
-            [
-                "id" => 8,
-                "name" => "Venus Bell",
-                "price" => 33,
-                "desc" => "Bell-shaped bloom that hums gently when touched.",
-                'img' => 'assets/img/plants/VenusBell.png',
-                "imgClass" => "venus-bell"
-            ]
-        ];
+        try {
+            $pdo = self::getConnection();
+            $stmt = $pdo->prepare("
+                SELECT 
+                    plant_id as id,
+                    name,
+                    price,
+                    image_url as img,
+                    COALESCE(stock_quantity, stock, 0) as stock_quantity
+                FROM plants 
+                WHERE isDeleted = FALSE 
+                ORDER BY plant_id
+            ");
+            $stmt->execute();
+            $plants = $stmt->fetchAll();
+
+            // If database is empty, return empty array (don't use fallback)
+            if (empty($plants)) {
+                error_log('[PlantsHandler::getAllPlants] No plants found in database');
+                return [];
+            }
+
+            // Transform data for frontend compatibility
+            $transformedPlants = [];
+            foreach ($plants as $plant) {
+                $transformedPlants[] = [
+                    'id' => $plant['id'],
+                    'name' => $plant['name'],
+                    'price' => (float)$plant['price'],
+                    'desc' => self::getPlantDescription($plant['name']),
+                    'img' => $plant['img'] ?: 'assets/img/plants/default.png',
+                    'imgClass' => self::generateImageClass($plant['name']),
+                    'stock' => $plant['stock_quantity']
+                ];
+            }
+
+            return $transformedPlants;
+        } catch (PDOException $e) {
+            error_log('[PlantsHandler::getAllPlants] Database connection error: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get plant description based on name
+     * @param string $name Plant name
+     * @return string Plant description
+     */
+    private static function getPlantDescription($name)
+    {
+        return 'An exotic cosmic plant with unique properties.';
+    }
+
+    /**
+     * Generate CSS class for plant image
+     * @param string $name Plant name
+     * @return string CSS class
+     */
+    private static function generateImageClass($name)
+    {
+        return strtolower(str_replace(' ', '-', $name));
     }
 
     /**
@@ -88,13 +102,40 @@ class PlantsHandler
      */
     public static function getPlantById($id)
     {
-        $plants = self::getAllPlants();
-        foreach ($plants as $plant) {
-            if ($plant['id'] == $id) {
-                return $plant;
+        try {
+            $pdo = self::getConnection();
+            $stmt = $pdo->prepare("
+                SELECT 
+                    plant_id as id,
+                    name,
+                    price,
+                    image_url as img,
+                    COALESCE(stock_quantity, stock, 0) as stock_quantity
+                FROM plants 
+                WHERE plant_id = :id AND isDeleted = FALSE
+            ");
+            $stmt->execute([':id' => $id]);
+            $plant = $stmt->fetch();
+
+            if (!$plant) {
+                return null;
             }
+
+            // Transform data for frontend compatibility
+            return [
+                'id' => $plant['id'],
+                'name' => $plant['name'],
+                'price' => (float)$plant['price'],
+                'desc' => self::getPlantDescription($plant['name']),
+                'img' => $plant['img'] ?: 'assets/img/plants/default.png',
+                'imgClass' => self::generateImageClass($plant['name']),
+                'stock' => $plant['stock_quantity']
+            ];
+
+        } catch (PDOException $e) {
+            error_log('[PlantsHandler::getPlantById] Database error: ' . $e->getMessage());
+            return null;
         }
-        return null;
     }
 }
 ?>
