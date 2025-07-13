@@ -82,10 +82,11 @@ class Auth
      * @param string $firstname
      * @param string $lastname
      * @param string $username
+     * @param string $address
      * @param string $password
      * @return array ['success' => 'Message'] or ['error' => 'Message']
      */
-    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $password): array
+    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $address, string $password): array
     {
         // 1) Check if username already exists
         try {
@@ -106,13 +107,14 @@ class Auth
         // 3) Insert the new user
         try {
             $stmt = $pdo->prepare(
-                "INSERT INTO USERS (firstname, lastname, username, password, role)
-                VALUES (:firstname, :lastname, :username, :password, :role)"
+                "INSERT INTO USERS (firstname, lastname, username, address, password, role)
+                VALUES (:firstname, :lastname, :username, :address, :password, :role)"
             );
             $stmt->execute([
                 ':firstname' => $firstname,
                 ':lastname' => $lastname,
                 ':username' => $username,
+                ':address' => $address,
                 ':password' => $hashedPassword,
                 ':role' => 'user' // Default role
             ]);
