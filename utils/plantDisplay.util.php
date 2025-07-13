@@ -51,6 +51,10 @@ class PlantDisplayUtil
                             <input type="hidden" name="id" value="' . htmlEscape($plant['id']) . '">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="btn btn-success add-to-cart ' . $buttonDisabled . '" 
+                                    data-id="' . htmlEscape($plant['id']) . '"
+                                    data-name="' . htmlEscape($plant['name']) . '"
+                                    data-price="' . htmlEscape($plant['price']) . '"
+                                    data-image="' . htmlEscape($plant['img']) . '"
                                     ' . ($buttonDisabled ? 'disabled' : '') . '>
                                 <i class="fas fa-cart-plus me-2"></i>
                                 ' . ($buttonDisabled ? 'Out of Stock' : 'Add') . '
