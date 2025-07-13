@@ -34,7 +34,9 @@ function showAddedToCartMessage(plantName) {
   setTimeout(() => {
     toast.style.animation = "slideOutRight 0.3s ease";
     setTimeout(() => {
-      document.body.removeChild(toast);
+      if (document.body.contains(toast)) {
+        document.body.removeChild(toast);
+      }
     }, 300);
   }, 3000);
 }
@@ -98,8 +100,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Add to cart functionality
   const addToCartButtons = document.querySelectorAll(".add-to-cart");
+  
   addToCartButtons.forEach((button) => {
-    button.addEventListener("click", function () {
+    button.addEventListener("click", function (e) {
+      e.preventDefault(); // Prevent form submission
+      
       const plantData = {
         id: parseInt(this.dataset.id),
         name: this.dataset.name,
@@ -109,11 +114,47 @@ document.addEventListener("DOMContentLoaded", function () {
         quantity: 1,
       };
 
+      // Add to localStorage first for immediate UI feedback
       if (window.CartUtils) {
         window.CartUtils.addToCart(plantData);
       }
 
-      showAddedToCartMessage(plantData.name);
+      console.log('Sending to backend:', plantData);
+
+      // Send to backend database via AJAX
+      fetch('?action=add_to_cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+          id: plantData.id,
+          quantity: plantData.quantity
+        })
+      })
+      .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+      })
+      .then(data => {
+        console.log('Backend response:', data);
+        if (data.success) {
+          showAddedToCartMessage(plantData.name);
+          // Update cart count
+          if (window.CartUtils && window.CartUtils.updateCartBadge) {
+            window.CartUtils.updateCartBadge();
+          }
+        } else {
+          console.error('Backend error:', data.message);
+          alert('Failed to add item to cart: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        // Still show the toast even if backend fails
+        showAddedToCartMessage(plantData.name);
+      });
     });
   });
 
