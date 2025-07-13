@@ -6,7 +6,6 @@ return [
         'price' => 199.99,
         'stock_quantity' => 50,
         'image_url' => '/images/snake_plant.jpg',
-        'isDeleted' => false,
     ],
     [
         'name' => 'Peace Lily',
@@ -14,7 +13,6 @@ return [
         'price' => 249.50,
         'stock_quantity' => 30,
         'image_url' => '/images/peace_lily.jpg',
-        'isDeleted' => false,
     ],
     [
         'name' => 'Aloe Vera',
@@ -22,6 +20,5 @@ return [
         'price' => 159.00,
         'stock_quantity' => 40,
         'image_url' => '/images/aloe_vera.jpg',
-        'isDeleted' => false,
     ]
 ];
