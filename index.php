@@ -1,11 +1,15 @@
 <?php
 require_once 'bootstrap.php';
 require_once UTILS_PATH . 'auth.util.php';
+require_once UTILS_PATH . 'carts.util.php';
 
 // Page variables
 $page_title = 'SolarSoil - Interstellar Agriculture Hub';
 $page_description = 'Join SolarSoil - Sustainable Agriculture Solutions for the Cosmos. Login to your account or create a new one.';
 $body_class = 'login-page';
+
+// Start session to track registration state
+session_start();
 
 // Error/success message handling
 $message = '';
@@ -16,6 +20,22 @@ if (Auth::check()) {
     $user = Auth::user();
     $message = "Welcome back, " . htmlspecialchars($user['username']) . "! You are already logged in.";
     $message_type = 'info';
+    
+    // Check if this is a fresh login after registration
+    if (isset($_SESSION['just_registered']) && $_SESSION['just_registered'] === true) {
+        unset($_SESSION['just_registered']); // Clear the flag
+        
+        // Create cart for the newly logged in user
+        $userId = (int)$user['id'];
+        try {
+            $cartId = Cart::getOrCreateCart($userId);
+            error_log("[Index] Cart ID {$cartId} created for newly registered user {$userId} on first login");
+            $message = "Welcome to SolarSoil, " . htmlspecialchars($user['username']) . "! Your cart is ready for cosmic shopping!";
+            $message_type = 'success';
+        } catch (Exception $e) {
+            error_log("[Index] Failed to create cart for newly registered user {$userId}: " . $e->getMessage());
+        }
+    }
 } else {
     // Handle messages from redirects (e.g., login failure, successful logout)
     if (isset($_GET['error'])) {
@@ -50,6 +70,8 @@ if (Auth::check()) {
                 break;
             case 'SignupComplete':
                 $message = 'Your account has been successfully created. You can now log in.';
+                // Set a session flag to track that user just registered
+                $_SESSION['just_registered'] = true;
                 break;
         }
     }
