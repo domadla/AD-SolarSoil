@@ -7,7 +7,6 @@ return [
         'lastname' => 'Verstappen',
         'role' => 'admin',
         'address' => '1 Red Bull Ring, Austria',
-        'isDeleted' => false,
         'created_at' => '2025-07-01 10:00:00',
     ],
     [
@@ -17,7 +16,6 @@ return [
         'lastname' => 'Hamilton',
         'role' => 'user',
         'address' => '44 Silverstone Rd, UK',
-        'isDeleted' => false,
         'created_at' => '2025-07-02 11:30:00',
     ],
     [
@@ -27,7 +25,6 @@ return [
         'lastname' => 'Marino',
         'role' => 'user',
         'address' => '12 Greenhouse Ln, USA',
-        'isDeleted' => false,
         'created_at' => '2025-07-03 09:15:00',
     ]
 ];
