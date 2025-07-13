@@ -32,6 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     $action = $_GET['action'];
     $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     
+    // Debug logging
+    error_log('[Shop] Action: ' . $action . ', isAjax: ' . ($isAjax ? 'true' : 'false'));
+    error_log('[Shop] Request method: ' . $_SERVER['REQUEST_METHOD']);
+    
     if ($isAjax) {
         header('Content-Type: application/json');
     }
@@ -46,8 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 if (!$input) {
                     $input = $_POST;
                 }
+                error_log('[Shop] AJAX input: ' . json_encode($input));
             } else {
                 $input = $_POST;
+                error_log('[Shop] Form input: ' . json_encode($input));
             }
             
             // Validate request - expect 'id' field
@@ -76,6 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
             
             // Add to cart
             $response = CartItemsHandler::addToCart($user['id'], $plantId, $quantity);
+            
+            // Debug logging
+            error_log('[Shop] Cart operation result: ' . json_encode($response));
             
             // Log the operation
             CartItemsUtil::logCartOperation('add_to_cart', $user['id'], [
@@ -157,6 +166,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
             } catch (Exception $e) {
                 error_log('[Shop::get_cart_count] Error: ' . $e->getMessage());
                 $response = ['success' => false, 'message' => 'Failed to get cart count'];
+            }
+            break;
+            
+        case 'get_cart_items':
+            // AJAX only - get all cart items for current user
+            if (!$isAjax) {
+                $response = ['success' => false, 'message' => 'This action requires AJAX'];
+                break;
+            }
+            
+            try {
+                require_once UTILS_PATH . '/envSetter.util.php';
+                global $pgConfig;
+                $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
+                $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                ]);
+                
+                $cartItems = CartItemsHandler::getUserCartItems($user['id']);
+                $response = ['success' => true, 'cart' => $cartItems];
+            } catch (Exception $e) {
+                error_log('[Shop::get_cart_items] Error: ' . $e->getMessage());
+                $response = ['success' => false, 'message' => 'Failed to get cart items'];
+            }
+            break;
+
+        case 'remove_from_cart':
+            // AJAX only - remove item from cart
+            if (!$isAjax) {
+                $response = ['success' => false, 'message' => 'This action requires AJAX'];
+                break;
+            }
+            
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input || !isset($input['id'])) {
+                $response = ['success' => false, 'message' => 'Plant ID required'];
+                break;
+            }
+            
+            $plantId = (int)$input['id'];
+            $response = CartItemsHandler::removeFromCart($user['id'], $plantId);
+            break;
+
+        case 'update_cart_quantity':
+            // AJAX only - update item quantity in cart
+            if (!$isAjax) {
+                $response = ['success' => false, 'message' => 'This action requires AJAX'];
+                break;
+            }
+            
+            $input = json_decode(file_get_contents('php://input'), true);
+            if (!$input || !isset($input['id']) || !isset($input['quantity'])) {
+                $response = ['success' => false, 'message' => 'Plant ID and quantity required'];
+                break;
+            }
+            
+            $plantId = (int)$input['id'];
+            $quantity = (int)$input['quantity'];
+            
+            if ($quantity <= 0) {
+                $response = CartItemsHandler::removeFromCart($user['id'], $plantId);
+            } else {
+                $response = CartItemsHandler::updateCartItemQuantity($user['id'], $plantId, $quantity);
             }
             break;
             
