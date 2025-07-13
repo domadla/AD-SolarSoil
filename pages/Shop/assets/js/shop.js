@@ -108,19 +108,19 @@ document.addEventListener("DOMContentLoaded", function () {
         image: this.dataset.image.split("/").pop(),
         quantity: 1,
       };
-      
+
       if (window.CartUtils) {
         window.CartUtils.addToCart(plantData);
       }
-      
+
       showAddedToCartMessage(plantData.name);
     });
   });
 
   function filterPlants() {
     const searchTerm = searchInput.value.toLowerCase();
-    const selectedPlanet = planetFilter ? planetFilter.value : '';
-    const selectedCare = careFilter ? careFilter.value : '';
+    const selectedPlanet = planetFilter ? planetFilter.value : "";
+    const selectedCare = careFilter ? careFilter.value : "";
     let visibleCount = 0;
 
     plantItems.forEach((item) => {
