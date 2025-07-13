@@ -31,13 +31,6 @@
                 required>
         </div>
 
-        <div class="form-group">
-            <label for="signup-address" class="form-label">
-                <i class="fas fa-map-marker-alt me-2"></i>Address
-            </label>
-            <input type="text" class="form-control" id="signup-address" name="address" placeholder="Enter your address"
-                required>
-        </div>
 
         <div class="form-group">
             <label for="signup-password" class="form-label">
