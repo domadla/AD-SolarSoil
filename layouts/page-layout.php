@@ -59,6 +59,9 @@ if (file_exists($css_file)):
 
 <!-- Cart Utils - Global JavaScript for cart functionality -->
 <script src="/assets/js/main.js"></script>
+<?php if ($body_class === 'profile-page'): ?>
+    <script src="/pages/Profile/assets/js/profile.js"></script>
+<?php endif; ?>
 <?php
 // Dynamically load JS for the current page
 if (isset($body_class)) {

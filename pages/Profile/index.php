@@ -121,8 +121,6 @@ ob_start();
     </div>
 </div>
 
-<!-- Page-specific JavaScript -->
-<script src="assets/js/profile.js"></script>
 
 <?php
 $content = ob_get_clean();
