@@ -65,10 +65,10 @@ function initFormValidation() {
       }
 
       // For demo forms (login/signup), allow normal submission to PHP if validation passes
-      const demoInput = this.querySelector('input[name="demo"]');
+      const actionInput = this.querySelector('input[name="action"]');
       if (
-        demoInput &&
-        (demoInput.value === "login" || demoInput.value === "signup")
+        actionInput &&
+        (actionInput.value === "login" || actionInput.value === "signup")
       ) {
         return; // Let the form submit normally to PHP
       }
