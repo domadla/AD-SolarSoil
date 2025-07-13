@@ -1,7 +1,7 @@
 <div id="signup-form" class="tab-content d-none">
     <h3 class="mb-4">Create Account</h3>
-    <form class="auth-form" data-form="signup" method="GET" action="index.php">
-        <input type="hidden" name="demo" value="signup">
+    <form class="auth-form" data-form="signup" method="POST" action="/handlers/auth.handler.php">
+        <input type="hidden" name="action" value="signup">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">

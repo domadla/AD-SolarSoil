@@ -1,7 +1,7 @@
 <div id="login-form" class="tab-content">
     <h3 class="mb-4">Welcome Back</h3>
-    <form class="auth-form" data-form="login" method="GET" action="index.php">
-        <input type="hidden" name="demo" value="login">
+    <form class="auth-form" data-form="login" method="POST" action="/handlers/auth.handler.php">
+        <input type="hidden" name="action" value="login">
         <div class="form-group">
             <label for="login-username" class="form-label">
                 <i class="fas fa-user me-2"></i>Username

@@ -46,6 +46,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="../Order/index.php"><i class="fas fa-receipt me-1"></i>Order</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../Profile/index.php"><i class="fas fa-user me-1"></i>Profile</a>
                     </li>
                     <li class="nav-item">
