@@ -7,5 +7,5 @@ define('COMPONENTS_PATH', BASE_PATH . '/components/');
 define('TEMPLATES_PATH', BASE_PATH . '/components/templates');
 define('ASSETS_PATH', BASE_PATH . '/assets');
 define('DATABASE_PATH', BASE_PATH . '/database');
-
+define('DUMMIES_PATH', BASE_PATH . '/staticDatas/');
 chdir(BASE_PATH);
