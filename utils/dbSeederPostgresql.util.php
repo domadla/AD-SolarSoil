@@ -46,8 +46,8 @@ $stmtUsers = $pdo->prepare("
 ");
 
 $stmtPlants = $pdo->prepare("
-    INSERT INTO plants (name, stock, price, stock_quantity, image_url)
-    VALUES (:name, :stock, :price, :quantity, :url)
+    INSERT INTO plants (name, stock, price, stock_quantity, image_url, description)
+    VALUES (:name, :stock, :price, :quantity, :url, :desc)
 ");
 
 $stmtCarts = $pdo->prepare("
@@ -90,15 +90,16 @@ try {
 
 echo "🔁 Seeding Plants\n";
 try {
-    foreach ($plants as $p) {
-        $stmtPlants->execute([
-            ':name' => $p['name'],
-            ':stock' => $p['stock'],
-            ':price' => $p['price'],
-            ':quantity' => $p['stock_quantity'],
-            ':url' => $p['image_url']
-        ]);
-    }
+foreach ($plants as $p) {
+    $stmtPlants->execute([
+        ':name' => $p['name'],
+        ':stock' => $p['stock'],
+        ':price' => $p['price'],
+        ':quantity' => $p['stock_quantity'],
+        ':url' => $p['image_url'],
+        ':desc' => $p['description']
+    ]);
+}
 } catch (PDOException $e) {
     echo "❌ Error seeding plants: " . $e->getMessage() . "\n";
     $allSeeded = false;
