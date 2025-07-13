@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once BASE_PATH . '/bootstrap.php';
 require_once UTILS_PATH . 'auth.util.php';
 require_once UTILS_PATH . 'carts.util.php';
 
