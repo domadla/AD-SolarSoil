@@ -36,6 +36,13 @@ if (Auth::check()) {
             error_log("[Index] Failed to create cart for newly registered user {$userId}: " . $e->getMessage());
         }
     }
+    if($user['role'] == 'admin') {
+        header('Location: /pages/Admin/index.php');
+        exit;
+    } else {
+        header('Location: /pages/Home/index.php');
+        exit;
+    }
 } else {
     // Handle messages from redirects (e.g., login failure, successful logout)
     if (isset($_GET['error'])) {
