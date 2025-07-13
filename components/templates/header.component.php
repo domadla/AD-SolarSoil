@@ -46,7 +46,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../Logout/index.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                        <a class="nav-link" href="../Order/index.php"><i class="fas fa-receipt me-1"></i>Order</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../Logout/index.php"><i
+                                class="fas fa-sign-out-alt me-1"></i>Logout</a>
                     </li>
                 </ul>
             </div>
