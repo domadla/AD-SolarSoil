@@ -13,7 +13,6 @@ $body_class = 'profile-page';
 
 // Get user data from handler
 $user_data = UserHandler::getCurrentUser();
-$user_stats = UserHandler::getUserStats();
 
 // Capture page content for layout
 ob_start();
@@ -34,8 +33,9 @@ ob_start();
                             <h2 class="profile-name">
                                 <?php echo htmlspecialchars($user_data['first_name'] . ' ' . $user_data['last_name']); ?>
                             </h2>
-                            <p class="profile-rank">
-                                <i class="fas fa-star me-2"></i><?php echo htmlspecialchars($user_data['usertype']); ?>
+                            <p class="profile-usertype">
+                                <i
+                                    class="fas fa-user-tag me-2"></i><?php echo htmlspecialchars($user_data['usertype']); ?>
                             </p>
                         </div>
                     </div>
@@ -78,26 +78,17 @@ ob_start();
                             <div class="col-md-6">
                                 <div class="profile-field">
                                     <label class="profile-label">
-                                        <i class="fas fa-envelope me-2"></i>Email
+                                        <i class="fas fa-map-marker-alt me-2"></i>Address
                                     </label>
                                     <div class="profile-value">
-                                        <?php echo htmlspecialchars($user_data['email']); ?>
+                                        <?php echo htmlspecialchars($user_data['address']); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="profile-field">
-                                    <label class="profile-label">
-                                        <i class="fas fa-globe me-2"></i>Home Planet
-                                    </label>
-                                    <div class="profile-value">
-                                        <?php echo htmlspecialchars($user_data['planet']); ?>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-md-6">
                                 <div class="profile-field">
                                     <label class="profile-label">
