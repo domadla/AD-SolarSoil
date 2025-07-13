@@ -2,7 +2,7 @@
 // Include handlers
 require_once HANDLERS_PATH . '/user.handler.php';
 
-// Start session for user authentication
+// Start session for user authentication    <!-- BUG: Cart Quantity not updating in Profile Page -->
 session_start();
 
 
