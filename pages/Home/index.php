@@ -9,6 +9,7 @@ $body_class = 'home-page';
 
 // Capture page content
 ob_start();
+Auth::init();
 if (!Auth::check()) {
     header('Location: /index.php?error=LoginRequired');
     exit;
