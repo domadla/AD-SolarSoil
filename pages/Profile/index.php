@@ -35,7 +35,7 @@ ob_start();
                                 <?php echo htmlspecialchars($user_data['first_name'] . ' ' . $user_data['last_name']); ?>
                             </h2>
                             <p class="profile-rank">
-                                <i class="fas fa-star me-2"></i><?php echo htmlspecialchars($user_data['rank']); ?>
+                                <i class="fas fa-star me-2"></i><?php echo htmlspecialchars($user_data['usertype']); ?>
                             </p>
                         </div>
                     </div>

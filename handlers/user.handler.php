@@ -18,7 +18,7 @@ class UserHandler
                 'email' => 'marloveluz@solarsoil.galaxy',
                 'join_date' => '2024-03-15',
                 'planet' => 'Earth',
-                'rank' => 'Cosmic Gardener',
+                'usertype' => 'User',
                 'avatar' => null
             ]
         ];
