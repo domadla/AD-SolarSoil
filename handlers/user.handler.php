@@ -15,9 +15,8 @@ class UserHandler
                 'first_name' => 'Marlo',
                 'last_name' => 'Veluz',
                 'username' => 'MarloVeluz',
-                'email' => 'marloveluz@solarsoil.galaxy',
-                'join_date' => '2024-03-15',
-                'planet' => 'Earth',
+                'address' => '123 Solar Street, Earth',
+                'join_date' => '2025-07-13',
                 'usertype' => 'User',
                 'avatar' => null
             ]
@@ -42,25 +41,4 @@ class UserHandler
      * @param int $user_id User ID
      * @return array User statistics
      */
-    public static function getUserStats($user_id = 1)
-    {
-        // Demo stats
-        $stats = [
-            1 => [
-                'plants_owned' => 47,
-                'orders_placed' => 12,
-                'total_spent' => 1247,
-                'favorite_plant_type' => 'Cosmic Orchids',
-                'days_active' => 125
-            ]
-        ];
-
-        return isset($stats[$user_id]) ? $stats[$user_id] : [
-            'plants_owned' => 0,
-            'orders_placed' => 0,
-            'total_spent' => 0,
-            'favorite_plant_type' => 'None',
-            'days_active' => 0
-        ];
-    }
 }
