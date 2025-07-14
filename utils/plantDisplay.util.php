@@ -22,14 +22,14 @@ class PlantDisplayUtil
         // Handle stock display
         if (isset($plant['stock'])) {
             if ($plant['stock'] <= 0) {
-                $stockStatus = '<span class="badge bg-danger">Out of Stock</span>';
+                $stockStatus = '<span class="badge bg-danger" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Out of Stock</span>';
                 $buttonDisabled = 'disabled';
                 $stockClass = 'out-of-stock';
             } elseif ($plant['stock'] <= 5) {
-                $stockStatus = '<span class="badge bg-warning">Low Stock (' . $plant['stock'] . ')</span>';
+                $stockStatus = '<span class="badge bg-warning" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Low Stock (' . $plant['stock'] . ')</span>';
                 $stockClass = 'low-stock';
             } else {
-                $stockStatus = '<span class="badge bg-success">In Stock (' . $plant['stock'] . ')</span>';
+                $stockStatus = '<span class="badge bg-success" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">In Stock (' . $plant['stock'] . ')</span>';
                 $stockClass = 'in-stock';
             }
         }
@@ -40,10 +40,10 @@ class PlantDisplayUtil
                 <div class="plant-image">
                     <img src="' . htmlEscape($plant['img']) . '" alt="' . htmlEscape($plant['name']) . '" 
                          onerror="this.src=\'assets/img/plants/default.png\'">
-                    ' . $stockStatus . '
                 </div>
-                <div class="plant-info">
-                    <h3 class="plant-name">' . htmlEscape($plant['name']) . '</h3>
+                <div class="plant-info" style="position: relative;">
+                    ' . $stockStatus . '
+                    <h3 class="plant-name" style="margin-top: 25px;">' . htmlEscape($plant['name']) . '</h3>
                     <p class="plant-description">' . htmlEscape($plant['desc']) . '</p>
                     <div class="plant-footer">
                         <span class="plant-price">' . number_format($plant['price'], 0) . ' GC</span>
