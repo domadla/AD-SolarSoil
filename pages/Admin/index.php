@@ -253,10 +253,10 @@ ob_start();
 $content = ob_get_clean();
 
 // Include the admin modal component
-include_once '../../components/admin/admin-modal.component.php';
+include_once COMPONENTS_PATH . 'admin/admin-modal.component.php';
 
 // Use the shared page layout
-include '../../layouts/page-layout.php';
+include LAYOUTS_PATH . 'page-layout.php';
 ?>
 
 <script>
