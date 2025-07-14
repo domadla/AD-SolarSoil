@@ -10,12 +10,19 @@ document.addEventListener("DOMContentLoaded", function () {
   //animations
   initAnimations();
 
-  // Always update cart badge on every page load
+  // Always update cart badge on every page load 
   if (
     window.CartUtils &&
     typeof window.CartUtils.updateCartBadge === "function"
   ) {
+    // Update from localStorage for immediate display
     window.CartUtils.updateCartBadge();
+    
+    // Only sync from database if we're on the shop page (which has the endpoints)
+    if (window.location.pathname.includes('/Shop/') && 
+        typeof window.CartUtils.syncCartFromDatabase === "function") {
+      window.CartUtils.syncCartFromDatabase();
+    }
   }
 });
 
@@ -392,6 +399,31 @@ window.CartUtils = {
   setCart: function (cart) {
     localStorage.setItem("solarsoil_cart", JSON.stringify(cart));
   },
+  
+  // Sync cart from database
+  syncCartFromDatabase: function() {
+    return fetch('?action=get_cart_items', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success && data.cart) {
+        this.setCart(data.cart);
+        this.updateCartBadge();
+        return data.cart;
+      }
+      return this.getCart();
+    })
+    .catch(error => {
+      console.error('Error syncing cart from database:', error);
+      return this.getCart();
+    });
+  },
+
   addToCart: function (plantData) {
     let cart = this.getCart();
     const existingItem = cart.find((item) => item.id === plantData.id);
@@ -403,19 +435,60 @@ window.CartUtils = {
     this.setCart(cart);
     this.updateCartBadge();
   },
+
   removeFromCart: function (id) {
+    // Remove from localStorage first
     let cart = this.getCart();
     cart = cart.filter((item) => item.id !== parseInt(id));
     this.setCart(cart);
     this.updateCartBadge();
+
+    // Sync to database only if on shop page
+    if (window.location.pathname.includes('/Shop/')) {
+      fetch('?action=remove_from_cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+          id: parseInt(id)
+        })
+      })
+      .catch(error => {
+        console.error('Error removing from database:', error);
+      });
+    }
   },
+
   incrementQuantity: function (id) {
     let cart = this.getCart();
     const item = cart.find((i) => i.id === parseInt(id));
-    if (item) item.quantity += 1;
-    this.setCart(cart);
-    this.updateCartBadge();
+    if (item) {
+      item.quantity += 1;
+      this.setCart(cart);
+      this.updateCartBadge();
+
+      // Sync to database only if on shop page
+      if (window.location.pathname.includes('/Shop/')) {
+        fetch('?action=update_cart_quantity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({
+            id: parseInt(id),
+            quantity: item.quantity
+          })
+        })
+        .catch(error => {
+          console.error('Error updating quantity in database:', error);
+        });
+      }
+    }
   },
+
   decrementQuantity: function (id) {
     let cart = this.getCart();
     const item = cart.find((i) => i.id === parseInt(id));
@@ -423,18 +496,64 @@ window.CartUtils = {
       item.quantity -= 1;
       if (item.quantity < 1) {
         cart = cart.filter((i) => i.id !== parseInt(id));
+        this.removeFromCart(id);
+      } else {
+        this.setCart(cart);
+        this.updateCartBadge();
+
+        // Sync to database only if on shop page
+        if (window.location.pathname.includes('/Shop/')) {
+          fetch('?action=update_cart_quantity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+              id: parseInt(id),
+              quantity: item.quantity
+            })
+          })
+          .catch(error => {
+            console.error('Error updating quantity in database:', error);
+          });
+        }
       }
     }
-    this.setCart(cart);
-    this.updateCartBadge();
   },
+
   setQuantity: function (id, value) {
     let cart = this.getCart();
     const item = cart.find((i) => i.id === parseInt(id));
-    if (item) item.quantity = value;
-    this.setCart(cart);
-    this.updateCartBadge();
+    if (item) {
+      if (value <= 0) {
+        this.removeFromCart(id);
+      } else {
+        item.quantity = parseInt(value);
+        this.setCart(cart);
+        this.updateCartBadge();
+
+        // Sync to database only if on shop page
+        if (window.location.pathname.includes('/Shop/')) {
+          fetch('?action=update_cart_quantity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+              id: parseInt(id),
+              quantity: parseInt(value)
+            })
+          })
+          .catch(error => {
+            console.error('Error updating quantity in database:', error);
+          });
+        }
+      }
+    }
   },
+
   updateCartBadge: function () {
     const cart = this.getCart();
     const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
