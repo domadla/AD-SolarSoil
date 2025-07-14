@@ -3,7 +3,6 @@
 if (!defined('TEMPLATES_PATH')) {
     require_once '../../bootstrap.php';
 }
-
 // Start session for user authentication if not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -28,13 +27,18 @@ if (isset($content_file) && file_exists($content_file)) {
 include TEMPLATES_PATH . '/header.component.php';
 ?>
 
+
 <!-- Page-specific CSS (dynamically loaded based on body_class) -->
 <?php
 $css_file = "assets/css/" . str_replace('-page', '', $body_class) . ".css";
-if (file_exists($css_file)):
-    ?>
-    <link rel="stylesheet" href="<?php echo $css_file; ?>">
-<?php endif; ?>
+if (file_exists($css_file)) {
+    echo '<link rel="stylesheet" href="' . $css_file . '">';
+}
+// Add admin-modal.css for admin-page
+if (isset($body_class) && $body_class === 'admin-page') {
+    echo '<link rel="stylesheet" href="assets/css/admin-modal.css">';
+}
+?>
 
 <!-- Animated Star Field Background -->
 <div class="stars"></div>
