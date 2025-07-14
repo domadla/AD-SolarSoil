@@ -6,7 +6,7 @@ require_once HANDLERS_PATH . '/cartItems.handler.php';
 
 /**
  * Order Handler - Manages order data and operations
- * In a real application, this would interact with a database
+ * Focuses on database operations for storing cart items with inCart = FALSE
  */
 class OrderHandler
 {
@@ -158,7 +158,7 @@ class OrderHandler
             
             $cartId = $cart['cart_id'];
             
-            // Create the order
+            // Create the order record
             $orderStmt = $pdo->prepare("
                 INSERT INTO orders (user_id, cart_id, created_at, completed)
                 VALUES (:user_id, :cart_id, CURRENT_TIMESTAMP, FALSE)
@@ -181,8 +181,8 @@ class OrderHandler
             $shipping = 5; // Fixed shipping cost
             $total = $subtotal + $shipping;
             
-            // Clear the user's cart after successful order creation
-            // Instead of deleting, mark cart items as ordered (inCart = FALSE)
+            // Mark cart items as ordered (inCart = FALSE)
+            // This stores the cart items with inCart = FALSE in the database
             $markOrderedStmt = $pdo->prepare("
                 UPDATE cart_items 
                 SET inCart = FALSE 
