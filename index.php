@@ -9,7 +9,7 @@ $page_description = 'Join SolarSoil - Sustainable Agriculture Solutions for the 
 $body_class = 'login-page';
 
 // Start session to track registration state
-session_start();
+Auth::init();
 
 // Error/success message handling
 $message = '';
@@ -36,7 +36,7 @@ if (Auth::check()) {
             error_log("[Index] Failed to create cart for newly registered user {$userId}: " . $e->getMessage());
         }
     }
-    if($user['role'] == 'admin') {
+    if($user['role'] === 'admin') {
         header('Location: /pages/Admin/index.php');
         exit;
     } else {
@@ -64,6 +64,9 @@ if (Auth::check()) {
             case 'AllFieldsRequired':
             case 'PasswordsDoNotMatch':
                 $message = 'Please correct the errors on the form and try again.';
+                break;
+            case 'PasswordComplexityFailed':
+                $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
                 break;
             default:
                 $message = 'An unexpected error occurred. Please try again.';
