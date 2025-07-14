@@ -8,7 +8,7 @@ require_once UTILS_PATH . '/auth.util.php';
 require_once UTILS_PATH . '/cartItems.util.php';
 require_once UTILS_PATH . '/htmlEscape.util.php';
 
-session_start();
+Auth::init();
 if (!Auth::check()){
     header('Location: ../../index.php?error=LoginRequired');
     exit;
