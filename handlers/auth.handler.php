@@ -58,6 +58,13 @@ elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /index.php?error=PasswordsDoNotMatch');
         exit;
     }
+    // Password complexity validation
+    // Requires: 1 uppercase, 1 lowercase, 1 number, 1 special char, min 8 chars
+    $passwordRegex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/';
+    if (!preg_match($passwordRegex, $password)) {
+        header('Location: /index.php?error=PasswordComplexityFailed');
+        exit;
+    }
 
     $result = Auth::register($pdo, $firstname, $lastname, $username, $address, $password);
     header('Location: /index.php?' . http_build_query($result));
