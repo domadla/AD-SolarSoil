@@ -32,6 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     
     $action = $_GET['action'];
     
+    // Add debug action for testing
+    if ($action === 'debug_test') {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Debug test successful',
+            'user_id' => $userId,
+            'session_data' => isset($_SESSION) ? 'Session active' : 'No session',
+            'handlers_path' => HANDLERS_PATH,
+            'cartitems_class' => class_exists('CartItemsHandler') ? 'Found' : 'Not found'
+        ]);
+        exit;
+    }
+    
     switch ($action) {
         case 'get_cart_items':
             try {
@@ -90,12 +103,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
             
         case 'create_order':
             try {
+                // Include required handlers
+                require_once HANDLERS_PATH . '/cartItems.handler.php';
                 require_once HANDLERS_PATH . '/order.handler.php';
                 
                 // Debug: Log the user ID
                 error_log("[Cart::create_order] Starting order creation for user_id: $userId");
                 
+                // Check if CartItemsHandler class exists
+                if (!class_exists('CartItemsHandler')) {
+                    error_log("[Cart::create_order] CartItemsHandler class not found");
+                    echo json_encode(['success' => false, 'message' => 'Cart handler not available']);
+                    exit;
+                }
+                
+                // Check if OrderHandler class exists
+                if (!class_exists('OrderHandler')) {
+                    error_log("[Cart::create_order] OrderHandler class not found");
+                    echo json_encode(['success' => false, 'message' => 'Order handler not available']);
+                    exit;
+                }
+                
                 // Get user's cart items
+                error_log("[Cart::create_order] Getting cart items for user $userId");
                 $cartItems = CartItemsHandler::getUserCartItems($userId);
                 error_log("[Cart::create_order] Found " . count($cartItems) . " cart items");
                 
@@ -112,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 
                 if ($result['success']) {
                     // Return success with redirect URL for frontend
-                    // Don't store order data in session - keep order page static
                     echo json_encode([
                         'success' => true,
                         'message' => 'Order created successfully',
@@ -123,8 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                     error_log("[Cart::create_order] Order creation failed: " . $result['message']);
                     echo json_encode($result);
                 }
+            } catch (PDOException $e) {
+                error_log("[Cart::create_order] Database Exception: " . $e->getMessage());
+                echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
             } catch (Exception $e) {
-                error_log("[Cart::create_order] Exception: " . $e->getMessage());
+                error_log("[Cart::create_order] General Exception: " . $e->getMessage());
                 echo json_encode(['success' => false, 'message' => 'Failed to create order: ' . $e->getMessage()]);
             }
             exit;
