@@ -77,5 +77,41 @@ class Admin{
         }
     }
 
+    public static function add_plant(PDO $pdo, string $name, float $price, int $stock_quantity, string $image_url, string $description){
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                plant_id
+            FROM PLANTS
+            WHERE name = :name");
+            $stmt->execute([':name' => $name]);
+            if ($stmt->fetch()) {
+                error_log("[Admin::add_plant] Plant already exists: {$name}");
+                return ['error' => 'PlantAlreadyExists'];
+            }
+        } catch (\PDOException $e) {
+            error_log('[Auth::register] PDOException on check: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+        try {
+            $stmt = $pdo->prepare(
+                "INSERT INTO PLANTS (name, price, stock_quantity, image_url, description)
+                VALUES (:name, :price, :stock_quantity, :image_url, :description)"
+            );
+            $stmt->execute([
+                ':name' => $name,
+                ':price' => $price,
+                ':stock_quantity' => $stock_quantity,
+                ':image_url' => $image_url,
+                ':description' => $description
+            ]);
+
+            error_log("[Auth::register] New Plant added: {$name}");
+            return ['success' => 'PlantAdded'];
+        } catch (\PDOException $e) {
+            error_log('[Admin::add_plant] PDOException on insert: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
 }
 ?>
