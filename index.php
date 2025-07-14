@@ -65,6 +65,9 @@ if (Auth::check()) {
             case 'PasswordsDoNotMatch':
                 $message = 'Please correct the errors on the form and try again.';
                 break;
+            case 'PasswordComplexityFailed':
+                $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
+                break;
             default:
                 $message = 'An unexpected error occurred. Please try again.';
         }
