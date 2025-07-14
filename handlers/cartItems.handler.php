@@ -110,8 +110,14 @@ class CartItemsHandler
                     return ['success' => false, 'message' => 'Failed to update stock - insufficient quantity available'];
                 }
                 
+                // Get updated stock quantity
+                $updatedStockStmt = $pdo->prepare("SELECT stock_quantity FROM plants WHERE plant_id = :plant_id");
+                $updatedStockStmt->execute([':plant_id' => $plantId]);
+                $updatedStock = $updatedStockStmt->fetch();
+                $newStockQuantity = $updatedStock ? $updatedStock['stock_quantity'] : 0;
+                
                 error_log("[CartItemsHandler::addToCart] Updated existing cart item and decreased stock for user_id={$userId}, plant_id={$plantId}, new_quantity={$newQuantity}, stock_decreased={$quantity}");
-                return ['success' => true, 'message' => 'Item quantity updated in cart', 'action' => 'updated'];
+                return ['success' => true, 'message' => 'Item quantity updated in cart', 'action' => 'updated', 'new_stock' => $newStockQuantity, 'plant_id' => $plantId];
             } else {
                 // Add new item to cart
                 $insertStmt = $pdo->prepare("
@@ -140,8 +146,14 @@ class CartItemsHandler
                     return ['success' => false, 'message' => 'Failed to update stock - insufficient quantity available'];
                 }
                 
+                // Get updated stock quantity
+                $updatedStockStmt = $pdo->prepare("SELECT stock_quantity FROM plants WHERE plant_id = :plant_id");
+                $updatedStockStmt->execute([':plant_id' => $plantId]);
+                $updatedStock = $updatedStockStmt->fetch();
+                $newStockQuantity = $updatedStock ? $updatedStock['stock_quantity'] : 0;
+                
                 error_log("[CartItemsHandler::addToCart] Added new cart item and decreased stock for user_id={$userId}, plant_id={$plantId}, quantity={$quantity}");
-                return ['success' => true, 'message' => 'Item added to cart', 'action' => 'added'];
+                return ['success' => true, 'message' => 'Item added to cart', 'action' => 'added', 'new_stock' => $newStockQuantity, 'plant_id' => $plantId];
             }
 
         } catch (PDOException $e) {

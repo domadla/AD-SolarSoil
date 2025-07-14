@@ -20,16 +20,16 @@ class PlantDisplayUtil
         $stockClass = '';
         
         // Handle stock display
-        if (isset($plant['stock'])) {
-            if ($plant['stock'] <= 0) {
-                $stockStatus = '<span class="badge bg-danger">Out of Stock</span>';
+        if (isset($plant['stock_quantity'])) {
+            if ($plant['stock_quantity'] <= 0) {
+                $stockStatus = '<span class="badge bg-danger" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Out of Stock</span>';
                 $buttonDisabled = 'disabled';
                 $stockClass = 'out-of-stock';
-            } elseif ($plant['stock'] <= 5) {
-                $stockStatus = '<span class="badge bg-warning">Low Stock (' . $plant['stock'] . ')</span>';
+            } elseif ($plant['stock_quantity'] <= 5) {
+                $stockStatus = '<span class="badge bg-warning" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Low Stock (' . $plant['stock_quantity'] . ')</span>';
                 $stockClass = 'low-stock';
             } else {
-                $stockStatus = '<span class="badge bg-success">In Stock (' . $plant['stock'] . ')</span>';
+                $stockStatus = '<span class="badge bg-success" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">In Stock (' . $plant['stock_quantity'] . ')</span>';
                 $stockClass = 'in-stock';
             }
         }
@@ -40,10 +40,10 @@ class PlantDisplayUtil
                 <div class="plant-image">
                     <img src="' . htmlEscape($plant['img']) . '" alt="' . htmlEscape($plant['name']) . '" 
                          onerror="this.src=\'assets/img/plants/default.png\'">
-                    ' . $stockStatus . '
                 </div>
-                <div class="plant-info">
-                    <h3 class="plant-name">' . htmlEscape($plant['name']) . '</h3>
+                <div class="plant-info" style="position: relative;">
+                    ' . $stockStatus . '
+                    <h3 class="plant-name" style="margin-top: 25px;">' . htmlEscape($plant['name']) . '</h3>
                     <p class="plant-description">' . htmlEscape($plant['desc']) . '</p>
                     <div class="plant-footer">
                         <span class="plant-price">' . number_format($plant['price'], 0) . ' GC</span>
@@ -51,6 +51,10 @@ class PlantDisplayUtil
                             <input type="hidden" name="id" value="' . htmlEscape($plant['id']) . '">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="btn btn-success add-to-cart ' . $buttonDisabled . '" 
+                                    data-id="' . htmlEscape($plant['id']) . '"
+                                    data-name="' . htmlEscape($plant['name']) . '"
+                                    data-price="' . htmlEscape($plant['price']) . '"
+                                    data-image="' . htmlEscape($plant['img']) . '"
                                     ' . ($buttonDisabled ? 'disabled' : '') . '>
                                 <i class="fas fa-cart-plus me-2"></i>
                                 ' . ($buttonDisabled ? 'Out of Stock' : 'Add') . '

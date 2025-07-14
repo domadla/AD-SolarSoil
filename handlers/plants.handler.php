@@ -40,7 +40,7 @@ class PlantsHandler
                     name,
                     price,
                     image_url as img,
-                    COALESCE(stock_quantity, stock, 0) as stock_quantity
+                    stock_quantity
                 FROM plants 
                 WHERE isDeleted = FALSE 
                 ORDER BY plant_id
@@ -64,7 +64,7 @@ class PlantsHandler
                     'desc' => self::getPlantDescription($plant['name']),
                     'img' => $plant['img'] ?: 'assets/img/plants/default.png',
                     'imgClass' => self::generateImageClass($plant['name']),
-                    'stock' => $plant['stock_quantity']
+                    'stock_quantity' => $plant['stock_quantity']
                 ];
             }
 
@@ -110,7 +110,7 @@ class PlantsHandler
                     name,
                     price,
                     image_url as img,
-                    COALESCE(stock_quantity, stock, 0) as stock_quantity
+                    stock_quantity
                 FROM plants 
                 WHERE plant_id = :id AND isDeleted = FALSE
             ");
@@ -129,7 +129,7 @@ class PlantsHandler
                 'desc' => self::getPlantDescription($plant['name']),
                 'img' => $plant['img'] ?: 'assets/img/plants/default.png',
                 'imgClass' => self::generateImageClass($plant['name']),
-                'stock' => $plant['stock_quantity']
+                'stock_quantity' => $plant['stock_quantity']
             ];
 
         } catch (PDOException $e) {
