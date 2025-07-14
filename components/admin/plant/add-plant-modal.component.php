@@ -1,7 +1,8 @@
 <?php
 // Add Plant Modal Content
 ?>
-<form id="addPlantForm">
+<form id="addPlantForm" method="POST" action="/handlers/admin.handler.php">
+    <input type="hidden" name="action" value="add_plant">
     <div class="mb-2">
         <label class="form-label">Name</label>
         <input type="text" class="form-control" name="name" required>
