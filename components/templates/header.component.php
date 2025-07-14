@@ -22,8 +22,6 @@
     <meta name="author" content="SolarSoil Team">
 </head>
 
-<!--BUG: "Order" tab missing in nav bar -->
-
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
