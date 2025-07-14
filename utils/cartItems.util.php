@@ -174,7 +174,7 @@ class CartItemsUtil
     {
         try {
             $stmt = $pdo->prepare("
-                SELECT SUM(ci.quantity) as count
+                SELECT COUNT(ci.cart_item_id) as count
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
                 JOIN plants p ON ci.plant_id = p.plant_id
