@@ -20,16 +20,16 @@ class PlantDisplayUtil
         $stockClass = '';
         
         // Handle stock display
-        if (isset($plant['stock'])) {
-            if ($plant['stock'] <= 0) {
+        if (isset($plant['stock_quantity'])) {
+            if ($plant['stock_quantity'] <= 0) {
                 $stockStatus = '<span class="badge bg-danger" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Out of Stock</span>';
                 $buttonDisabled = 'disabled';
                 $stockClass = 'out-of-stock';
-            } elseif ($plant['stock'] <= 5) {
-                $stockStatus = '<span class="badge bg-warning" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Low Stock (' . $plant['stock'] . ')</span>';
+            } elseif ($plant['stock_quantity'] <= 5) {
+                $stockStatus = '<span class="badge bg-warning" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">Low Stock (' . $plant['stock_quantity'] . ')</span>';
                 $stockClass = 'low-stock';
             } else {
-                $stockStatus = '<span class="badge bg-success" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">In Stock (' . $plant['stock'] . ')</span>';
+                $stockStatus = '<span class="badge bg-success" style="position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;">In Stock (' . $plant['stock_quantity'] . ')</span>';
                 $stockClass = 'in-stock';
             }
         }
