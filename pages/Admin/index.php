@@ -1,6 +1,15 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+require_once BASE_PATH . '/bootstrap.php';
+require_once UTILS_PATH . 'auth.util.php';
+
+Auth::init();
+if (!Auth::check()) {
+    header('Location: /index.php?error=LoginRequired');
+    exit;
+}
+if (Auth::user()['role'] != 'admin') {
+    header('Location: /index.php?error=AccessDenied');
+    exit;
 }
 
 $page_title = 'SolarSoil - Admin Control Center';
