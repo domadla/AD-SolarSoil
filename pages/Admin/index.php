@@ -1,13 +1,16 @@
 <?php
-// Set page variables
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 $page_title = 'SolarSoil - Admin Control Center';
 $page_description = 'Administrative dashboard for managing the interstellar agriculture platform.';
 $body_class = 'admin-page';
-
 // Capture page content
 ob_start();
+// ...existing code...
+// (Start HTML output here, do not close PHP tag)
 ?>
-
 <!-- Admin Dashboard Content -->
 <div class="admin-dashboard-container">
     <div class="container py-5">
@@ -240,6 +243,51 @@ ob_start();
 <?php
 $content = ob_get_clean();
 
+// Include the admin modal component
+include_once '../../components/admin/admin-modal.component.php';
+
 // Use the shared page layout
 include '../../layouts/page-layout.php';
 ?>
+
+<script>
+    // Helper to show the admin modal with custom content
+    function showAdminModal(title, body) {
+        document.getElementById('adminInfoModalLabel').textContent = title;
+        document.getElementById('adminInfoModalBody').innerHTML = body;
+        var modal = new bootstrap.Modal(document.getElementById('adminInfoModal'));
+        modal.show();
+    }
+
+
+    function manageUsers() {
+        fetch('../../components/admin/user/view-user-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('User List', html));
+    }
+    function addUser() {
+        fetch('../../components/admin/user/add-user-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('Add User', html));
+    }
+    function managePlants() {
+        fetch('../../components/admin/plant/view-plant-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('Plant Inventory', html));
+    }
+    function addPlant() {
+        fetch('../../components/admin/plant/add-plant-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('Add Plant', html));
+    }
+    function manageOrders() {
+        fetch('../../components/admin/order/view-order-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('Order List', html));
+    }
+    function processOrders() {
+        fetch('../../components/admin/order/process-order-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('Process Orders', html));
+    }
+</script>

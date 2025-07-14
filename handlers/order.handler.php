@@ -3,9 +3,64 @@
  * Order Handler - Manages order data and operations
  * In a real application, this would interact with a database
  */
-
 class OrderHandler
 {
+    /**
+     * Get all orders (demo data)
+     * @return array Array of all orders
+     */
+    public static function getAllOrders()
+    {
+        // Demo orders (in a real app, this would come from database)
+        $orders = [
+            [
+                'order_no' => 'SOL-1704567890',
+                'customer' => 'Ronn Rosario',
+                'item' => 'Galaxy Orchid',
+                'qty' => 2,
+                'date' => '2024-12-15 14:30:00',
+                'status' => 'delivered',
+                'total' => 156,
+                'items_count' => 3
+            ],
+            [
+                'order_no' => 'SOL-1704467890',
+                'customer' => 'Mario Veluz',
+                'item' => 'Meteor Fern',
+                'qty' => 1,
+                'date' => '2024-12-10 09:15:00',
+                'status' => 'in_transit',
+                'total' => 89,
+                'items_count' => 2
+            ],
+            [
+                'order_no' => 'SOL-1704367890',
+                'customer' => 'Carl Mario',
+                'item' => 'Solar Vine',
+                'qty' => 5,
+                'date' => '2024-12-05 16:45:00',
+                'status' => 'delivered',
+                'total' => 234,
+                'items_count' => 5
+            ]
+        ];
+
+        // Add current order from session if exists
+        if (isset($_SESSION['last_order'])) {
+            $last_order = $_SESSION['last_order'];
+            array_unshift($orders, [
+                'order_no' => $last_order['id'],
+                'customer' => isset($last_order['customer']) ? $last_order['customer'] : 'Demo User',
+                'item' => isset($last_order['items'][0]['name']) ? $last_order['items'][0]['name'] : 'Unknown',
+                'qty' => isset($last_order['items'][0]['quantity']) ? $last_order['items'][0]['quantity'] : 1,
+                'date' => $last_order['date'],
+                'status' => $last_order['status'],
+                'total' => $last_order['total'],
+                'items_count' => isset($last_order['items']) ? count($last_order['items']) : 1
+            ]);
+        }
+        return $orders;
+    }
 
     /**
      * Create a new order from cart data
@@ -46,68 +101,6 @@ class OrderHandler
         $_SESSION['last_order'] = $order;
 
         return $order;
-    }
-
-    /**
-     * Get order by ID
-     * @param string $order_id Order ID
-     * @return array|null Order data or null if not found
-     */
-    public static function getOrderById($order_id)
-    {
-        // In a real app, this would query database
-        // For demo, we'll return from session
-        if (isset($_SESSION['last_order']) && $_SESSION['last_order']['id'] === $order_id) {
-            return $_SESSION['last_order'];
-        }
-
-        return null;
-    }
-
-    /**
-     * Get orders for a user
-     * @param int $user_id User ID
-     * @return array Array of orders
-     */
-    public static function getUserOrders($user_id)
-    {
-        // Demo orders (in a real app, this would come from database)
-        $orders = [
-            [
-                'id' => 'SOL-1704567890',
-                'date' => '2024-12-15 14:30:00',
-                'status' => 'delivered',
-                'total' => 156,
-                'items_count' => 3
-            ],
-            [
-                'id' => 'SOL-1704467890',
-                'date' => '2024-12-10 09:15:00',
-                'status' => 'in_transit',
-                'total' => 89,
-                'items_count' => 2
-            ],
-            [
-                'id' => 'SOL-1704367890',
-                'date' => '2024-12-05 16:45:00',
-                'status' => 'delivered',
-                'total' => 234,
-                'items_count' => 5
-            ]
-        ];
-
-        // Add current order from session if exists
-        if (isset($_SESSION['last_order'])) {
-            array_unshift($orders, [
-                'id' => $_SESSION['last_order']['id'],
-                'date' => $_SESSION['last_order']['date'],
-                'status' => $_SESSION['last_order']['status'],
-                'total' => $_SESSION['last_order']['total'],
-                'items_count' => count($_SESSION['last_order']['items'])
-            ]);
-        }
-
-        return $orders;
     }
 
     /**

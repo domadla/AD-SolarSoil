@@ -1,4 +1,50 @@
 <?php
+
+if (!class_exists('UserHandlerDemo')) {
+    class UserHandlerDemo
+    {
+        public static function getAllUsers()
+        {
+            return [
+                [
+                    'id' => 1,
+                    'first_name' => 'Marlo',
+                    'last_name' => 'Veluz',
+                    'username' => 'marlo.veluz',
+                    'role' => 'Admin',
+                ],
+                [
+                    'id' => 2,
+                    'first_name' => 'Ronn',
+                    'last_name' => 'Rosarito',
+                    'username' => 'ronn.rosarito',
+                    'role' => 'Admin',
+                ],
+                [
+                    'id' => 3,
+                    'first_name' => 'Dominic',
+                    'last_name' => 'Madlangbayan',
+                    'username' => 'dom.madla',
+                    'role' => 'Admin',
+                ],
+                [
+                    'id' => 4,
+                    'first_name' => 'Carl',
+                    'last_name' => 'Marino',
+                    'username' => 'carl.marino',
+                    'role' => 'Admin',
+                ],
+                [
+                    'id' => 5,
+                    'first_name' => 'Mark',
+                    'last_name' => 'Gamboa',
+                    'username' => 'mark.gamboa',
+                    'role' => 'Admin',
+                ],
+            ];
+        }
+    }
+}
 class UserHandler
 {
     /**
@@ -32,7 +78,7 @@ class UserHandler
     public static function getCurrentUser()
     {
         // In a real app, this would get user ID from session
-        // For demo purposes, we'll always return user ID 1
+// For demo purposes, we'll always return user ID 1
         return self::getUserById(1);
     }
 
@@ -42,3 +88,5 @@ class UserHandler
      * @return array User statistics
      */
 }
+
+?>
