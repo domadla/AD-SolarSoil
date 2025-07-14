@@ -40,12 +40,12 @@ class Admin{
             ");
             $stmt->execute();
             $plants = $stmt->fetchAll();
-            if(empty($users)){
+            if(empty($plants)){
                 error_log("[Admin::display_plants] No plants found in database");
             }
             return $plants;
         }catch(PDOException $e){
-            error_log("[Admin::display_users] Database connection error: " . $e->getMessage());
+            error_log("[Admin::display_plants] Database connection error: " . $e->getMessage());
             return [];
         }
     }
