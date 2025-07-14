@@ -35,7 +35,7 @@
                 <ul class="navbar-nav ms-auto">
                     <?php if (isset($body_class) && $body_class === 'admin-page'): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="../../logout.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                            <a class="nav-link" href="../Logout/index.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
@@ -57,7 +57,7 @@
                             <a class="nav-link" href="../Profile/index.php"><i class="fas fa-user me-1"></i>Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../../logout.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                            <a class="nav-link" href="../Logout/index.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
                         </li>
                     <?php endif; ?>
                 </ul>
