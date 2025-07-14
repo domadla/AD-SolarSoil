@@ -46,8 +46,8 @@ $stmtUsers = $pdo->prepare("
 ");
 
 $stmtPlants = $pdo->prepare("
-    INSERT INTO plants (name, stock, price, image_url, description)
-    VALUES (:name, :stock, :price, :url, :desc)
+    INSERT INTO plants (name, price, stock_quantity, image_url, description)
+    VALUES (:name, :price,:quantity, :url, :desc)
 ");
 
 $stmtCarts = $pdo->prepare("
@@ -93,8 +93,8 @@ try {
 foreach ($plants as $p) {
     $stmtPlants->execute([
         ':name' => $p['name'],
-        ':stock' => $p['stock'],
         ':price' => $p['price'],
+        ':quantity' => $p['stock_quantity'],
         ':url' => $p['image_url'],
         ':desc' => $p['description']
     ]);
