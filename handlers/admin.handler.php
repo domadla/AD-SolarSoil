@@ -36,7 +36,7 @@ if ($action === 'add_plant' && $_SERVER['REQUEST_METHOD'] === 'POST'){
         exit;
     }
     $result = Admin::add_plant($pdo, $nameInput, $priceInput, $stock_quantityInput, $image_urlInput, $descriptionInput);
-    header("Location: {$redirect}?" . http_build_query($result));
+    header("Location: /pages/Admin/index.php?" . http_build_query($result));
     exit;
 }
 ?>
