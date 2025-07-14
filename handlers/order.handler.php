@@ -182,11 +182,14 @@ class OrderHandler
             $total = $subtotal + $shipping;
             
             // Clear the user's cart after successful order creation
-            $clearCartStmt = $pdo->prepare("
-                DELETE FROM cart_items 
-                WHERE cart_id = :cart_id
+            // Instead of deleting, mark cart items as ordered (inCart = FALSE)
+            $markOrderedStmt = $pdo->prepare("
+                UPDATE cart_items 
+                SET inCart = FALSE 
+                WHERE cart_id = :cart_id AND inCart = TRUE
             ");
-            $clearCartStmt->execute([':cart_id' => $cartId]);
+            $markOrderedStmt->execute([':cart_id' => $cartId]);
+            $markedItemsCount = $markOrderedStmt->rowCount();
             
             // Commit transaction
             $pdo->commit();
@@ -198,7 +201,8 @@ class OrderHandler
                 'subtotal' => $subtotal,
                 'shipping' => $shipping,
                 'total' => $total,
-                'items_count' => count($cartItems)
+                'items_count' => count($cartItems),
+                'items_marked_ordered' => $markedItemsCount
             ];
             
         } catch (PDOException $e) {
