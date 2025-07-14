@@ -47,10 +47,16 @@
                             <a class="nav-link" href="../Shop/index.php"><i class="fas fa-store me-1"></i>Shop</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="../Order/index.php"><i class="fas fa-box me-1"></i>Order</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="../Cart/index.php">
                                 <i class="fas fa-shopping-cart me-1"></i>Cart
                                 <span id="cart-badge" class="badge bg-success ms-1">0</span>
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../Profile/index.php"><i class="fas fa-user me-1"></i>Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="../../logout.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
