@@ -50,6 +50,32 @@ class Admin{
         }
     }
 
+    public static function display_orders(PDO $pdo){
+        try{
+            $stmt = $pdo->prepare("
+                SELECT
+                    o.id,
+                    u.firstname,
+                    u.lastname,
+                    p.name,
+                    ct.quantity,
+                    o.completed
+                FROM orders o
+                JOIN users u ON o.user_id = u.user_id
+                JOIN cart_items ct ON o.cart_id = ct.cart_id
+                JOIN plants p ON ct.plant_id = p.plant_id;
+            ");
+            $stmt->execute();
+            $orders = $stmt->fetchAll();
+            if(empty($orders)){
+                error_log("[Admin::display_orders] No orders found in database");
+            }
+            return $orders;
+        }catch(PDOException $e){
+            error_log("[Admin::display_orders] Database connection error: " . $e->getMessage());
+            return [];
+        }
+    }
 
 }
 ?>
