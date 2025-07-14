@@ -1,0 +1,62 @@
+/* Admin Modal Form Styles */
+#adminInfoModal .modal-content {
+  background: #181c2a;
+  color: #f8f9fa;
+  border-radius: 1rem;
+  box-shadow: 0 0 24px 0 #000a2a;
+}
+#adminInfoModal .modal-header,
+#adminInfoModal .modal-footer {
+  border: none;
+  background: #181c2a;
+}
+#adminInfoModal .modal-title {
+  color: #ffe066;
+  font-weight: bold;
+}
+#adminInfoModal .form-label {
+  color: #ffe066;
+  font-weight: 500;
+}
+#adminInfoModal input,
+#adminInfoModal textarea,
+#adminInfoModal select {
+  background: #23263a;
+  color: #f8f9fa;
+  border: 1px solid #343a40;
+  border-radius: 0.5rem;
+}
+#adminInfoModal input:focus,
+#adminInfoModal textarea:focus,
+#adminInfoModal select:focus {
+  border-color: #ffe066;
+  box-shadow: 0 0 0 0.2rem rgba(255, 224, 102, 0.15);
+}
+#adminInfoModal button[type="submit"] {
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 #000a2a33;
+}
+#adminInfoModal .table {
+  background: #23263a;
+  color: #f8f9fa;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+#adminInfoModal .table th {
+  background: #23263a;
+  color: #ffe066;
+  font-weight: 600;
+  border-bottom: 2px solid #ffe066;
+}
+#adminInfoModal .table td {
+  background: #23263a;
+  color: #f8f9fa;
+  border-bottom: 1px solid #343a40;
+}
+#adminInfoModal .badge {
+  font-size: 0.95em;
+  padding: 0.4em 0.7em;
+  border-radius: 0.5em;
+}
