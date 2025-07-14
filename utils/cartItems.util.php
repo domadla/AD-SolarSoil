@@ -88,7 +88,7 @@ class CartItemsUtil
                 SELECT ci.quantity
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.inCart = TRUE
             ");
             $stmt->execute([
                 ':user_id' => $userId,
@@ -151,6 +151,7 @@ class CartItemsUtil
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
+                AND ci.inCart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $result = $stmt->fetch();
@@ -180,6 +181,7 @@ class CartItemsUtil
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
+                AND ci.inCart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $result = $stmt->fetch();
@@ -273,6 +275,44 @@ class CartItemsUtil
         ];
         
         error_log('[CartItemsUtil] ' . json_encode($logData));
+    }
+
+    /**
+     * Get ordered items (items with inCart = FALSE) for a user
+     * 
+     * @param PDO $pdo Database connection
+     * @param int $userId User ID
+     * @return array Ordered items with plant details
+     */
+    public static function getOrderedItems(PDO $pdo, int $userId): array
+    {
+        try {
+            $stmt = $pdo->prepare("
+                SELECT 
+                    ci.cart_item_id,
+                    ci.quantity,
+                    p.plant_id,
+                    p.name,
+                    p.price,
+                    p.image_url,
+                    p.description,
+                    ci.created_at
+                FROM cart_items ci
+                JOIN carts c ON ci.cart_id = c.cart_id
+                JOIN plants p ON ci.plant_id = p.plant_id
+                WHERE c.user_id = :user_id 
+                AND p.isDeleted = FALSE
+                AND ci.inCart = FALSE
+                ORDER BY ci.created_at DESC
+            ");
+            $stmt->execute([':user_id' => $userId]);
+            
+            return $stmt->fetchAll();
+            
+        } catch (PDOException $e) {
+            error_log('[CartItemsUtil::getOrderedItems] Database error: ' . $e->getMessage());
+            return [];
+        }
     }
 
 }
