@@ -141,12 +141,12 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log("Backend response:", data);
           if (data.success) {
             showAddedToCartMessage(plantData.name);
-            
+
             // Update stock display if new stock data is provided
             if (data.new_stock !== undefined && data.plant_id) {
               updateStockDisplay(data.plant_id, data.new_stock);
             }
-            
+
             // Update cart count
             if (window.CartUtils && window.CartUtils.updateCartBadge) {
               window.CartUtils.updateCartBadge();
@@ -206,47 +206,63 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function to update stock display after adding to cart
   function updateStockDisplay(plantId, newStock) {
     // Find the plant card with the specific ID
-    const plantCard = document.querySelector(`[data-id="${plantId}"]`).closest('.plant-item');
+    const plantCard = document
+      .querySelector(`[data-id="${plantId}"]`)
+      .closest(".plant-item");
     if (!plantCard) return;
 
     // Find the stock badge within this plant card
-    const stockBadge = plantCard.querySelector('.badge');
+    const stockBadge = plantCard.querySelector(".badge");
     if (!stockBadge) return;
 
     // Update badge content and style based on new stock level
     if (newStock <= 0) {
-      stockBadge.className = 'badge bg-danger';
-      stockBadge.style.cssText = 'position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;';
-      stockBadge.textContent = 'Out of Stock';
-      
+      stockBadge.className = "badge bg-danger";
+      stockBadge.style.cssText =
+        "position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;";
+      stockBadge.textContent = "Out of Stock";
+
       // Disable the add button
-      const addButton = plantCard.querySelector('.add-to-cart');
+      const addButton = plantCard.querySelector(".add-to-cart");
       if (addButton) {
         addButton.disabled = true;
-        addButton.classList.add('disabled');
-        addButton.innerHTML = '<i class="fas fa-cart-plus me-2"></i>Out of Stock';
+        addButton.classList.add("disabled");
+        addButton.innerHTML =
+          '<i class="fas fa-cart-plus me-2"></i>Out of Stock';
       }
-      
+
       // Update plant item class
-      plantCard.className = plantCard.className.replace(/\b(in-stock|low-stock|out-of-stock)\b/g, '') + ' out-of-stock';
-      
+      plantCard.className =
+        plantCard.className.replace(
+          /\b(in-stock|low-stock|out-of-stock)\b/g,
+          ""
+        ) + " out-of-stock";
     } else if (newStock <= 5) {
-      stockBadge.className = 'badge bg-warning';
-      stockBadge.style.cssText = 'position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;';
+      stockBadge.className = "badge bg-warning";
+      stockBadge.style.cssText =
+        "position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;";
       stockBadge.textContent = `Low Stock (${newStock})`;
-      
+
       // Update plant item class
-      plantCard.className = plantCard.className.replace(/\b(in-stock|low-stock|out-of-stock)\b/g, '') + ' low-stock';
-      
+      plantCard.className =
+        plantCard.className.replace(
+          /\b(in-stock|low-stock|out-of-stock)\b/g,
+          ""
+        ) + " low-stock";
     } else {
-      stockBadge.className = 'badge bg-success';
-      stockBadge.style.cssText = 'position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;';
+      stockBadge.className = "badge bg-success";
+      stockBadge.style.cssText =
+        "position: absolute; top: 10px; left: 10px; font-size: 0.7rem; padding: 0.2rem 0.4rem; min-width: 60px; text-align: center;";
       stockBadge.textContent = `In Stock (${newStock})`;
-      
+
       // Update plant item class
-      plantCard.className = plantCard.className.replace(/\b(in-stock|low-stock|out-of-stock)\b/g, '') + ' in-stock';
+      plantCard.className =
+        plantCard.className.replace(
+          /\b(in-stock|low-stock|out-of-stock)\b/g,
+          ""
+        ) + " in-stock";
     }
-    
+
     console.log(`Stock updated for plant ${plantId}: ${newStock} remaining`);
   }
 });
