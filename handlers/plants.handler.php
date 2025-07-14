@@ -20,7 +20,8 @@ class PlantsHandler
                 "price" => 35,
                 "desc" => "A radiant flower that glows with the colors of cosmic clouds.",
                 'img' => 'assets/img/plants/NebulaBloom.png',
-                "imgClass" => "nebula-bloom"
+                "imgClass" => "nebula-bloom",
+                "stock" => 12
             ],
             [
                 "id" => 2,
@@ -28,7 +29,8 @@ class PlantsHandler
                 "price" => 28,
                 "desc" => "Tough and resilient, it absorbs moonlight to bloom at night.",
                 'img' => 'assets/img/plants/LunarCactus.png',
-                "imgClass" => "lunar-cactus"
+                "imgClass" => "lunar-cactus",
+                "stock" => 8
             ],
             [
                 "id" => 3,
@@ -36,7 +38,8 @@ class PlantsHandler
                 "price" => 42,
                 "desc" => "Feathers shimmer like meteors streaking through space dust.",
                 'img' => 'assets/img/plants/MeteorFern.png',
-                "imgClass" => "meteor-fern"
+                "imgClass" => "meteor-fern",
+                "stock" => 15
             ],
             [
                 "id" => 4,
@@ -44,7 +47,8 @@ class PlantsHandler
                 "price" => 30,
                 "desc" => "Golden tendrils that sway toward sunlight, storing solar energy.",
                 'img' => 'assets/img/plants/SolarVine.png',
-                "imgClass" => "solar-vine"
+                "imgClass" => "solar-vine",
+                "stock" => 20
             ],
             [
                 "id" => 5,
@@ -52,7 +56,8 @@ class PlantsHandler
                 "price" => 55,
                 "desc" => "Petals with shifting star-like specks, a true interstellar marvel.",
                 'img' => 'assets/img/plants/GalaxyOrchid.png',
-                "imgClass" => "galaxy-orchid"
+                "imgClass" => "galaxy-orchid",
+                "stock" => 5
             ],
             [
                 "id" => 6,
@@ -60,7 +65,8 @@ class PlantsHandler
                 "price" => 26,
                 "desc" => "Fast-growing vine that leaves glowing trails in the dark.",
                 'img' => 'assets/img/plants/CometIvy.png',
-                "imgClass" => "comet-ivy"
+                "imgClass" => "comet-ivy",
+                "stock" => 18
             ],
             [
                 "id" => 7,
@@ -68,7 +74,8 @@ class PlantsHandler
                 "price" => 18,
                 "desc" => "Spongy moss that thrives in zero-gravity and rocky terrain.",
                 'img' => 'assets/img/plants/AsteroidMoss.png',
-                "imgClass" => "asteroid-moss"
+                "imgClass" => "asteroid-moss",
+                "stock" => 10
             ],
             [
                 "id" => 8,
@@ -76,7 +83,8 @@ class PlantsHandler
                 "price" => 33,
                 "desc" => "Bell-shaped bloom that hums gently when touched.",
                 'img' => 'assets/img/plants/VenusBell.png',
-                "imgClass" => "venus-bell"
+                "imgClass" => "venus-bell",
+                "stock" => 7
             ]
         ];
     }
