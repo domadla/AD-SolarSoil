@@ -214,7 +214,7 @@ class CartHandler
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]);
 
-            $stmt = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = :cart_id");
+            $stmt = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = :cart_id AND inCart = TRUE");
             $stmt->execute([':cart_id' => $cartId]);
 
             self::sendJsonResponse(true, 'Cart cleared successfully');
@@ -222,6 +222,44 @@ class CartHandler
         } catch (Exception $e) {
             error_log('[CartHandler::clearCart] Error: ' . $e->getMessage());
             self::sendJsonResponse(false, 'Failed to clear cart', null, 500);
+        }
+    }
+
+    /**
+     * Mark cart items as ordered
+     */
+    public static function orderCartItems(): void
+    {
+        try {
+            $userId = self::authenticateUser();
+            $cartId = Cart::getCartId($userId);
+
+            if (!$cartId) {
+                self::sendJsonResponse(false, 'Cart not found', null, 404);
+            }
+
+            global $pgConfig;
+            $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
+            $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]);
+
+            // Mark cart items as ordered (set inCart = FALSE)
+            $stmt = $pdo->prepare("
+                UPDATE cart_items 
+                SET inCart = FALSE 
+                WHERE cart_id = :cart_id AND inCart = TRUE
+            ");
+            $stmt->execute([':cart_id' => $cartId]);
+            $updatedCount = $stmt->rowCount();
+
+            self::sendJsonResponse(true, 'Cart items marked as ordered successfully', [
+                'items_ordered' => $updatedCount
+            ]);
+
+        } catch (Exception $e) {
+            error_log('[CartHandler::orderCartItems] Error: ' . $e->getMessage());
+            self::sendJsonResponse(false, 'Failed to order cart items', null, 500);
         }
     }
 
@@ -249,6 +287,7 @@ class CartHandler
             JOIN plants p ON ci.plant_id = p.plant_id
             WHERE ci.cart_id = :cart_id 
             AND p.isDeleted = FALSE
+            AND ci.inCart = TRUE
             ORDER BY ci.cart_item_id
         ");
         $stmt->execute([':cart_id' => $cartId]);
@@ -273,7 +312,7 @@ class CartHandler
                 p.stock_quantity,
                 COALESCE(SUM(ci.quantity), 0) as reserved_quantity
             FROM plants p
-            LEFT JOIN cart_items ci ON p.plant_id = ci.plant_id
+            LEFT JOIN cart_items ci ON p.plant_id = ci.plant_id AND ci.inCart = TRUE
             WHERE p.plant_id = :plant_id 
             AND p.isDeleted = FALSE
             GROUP BY p.plant_id, p.stock_quantity
@@ -300,7 +339,7 @@ class CartHandler
         $stmt = $pdo->prepare("
             SELECT quantity 
             FROM cart_items 
-            WHERE cart_id = :cart_id AND plant_id = :plant_id
+            WHERE cart_id = :cart_id AND plant_id = :plant_id AND inCart = TRUE
         ");
         $stmt->execute([':cart_id' => $cartId, ':plant_id' => $plantId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -319,7 +358,7 @@ class CartHandler
         $stmt = $pdo->prepare("
             UPDATE cart_items 
             SET quantity = :quantity 
-            WHERE cart_id = :cart_id AND plant_id = :plant_id
+            WHERE cart_id = :cart_id AND plant_id = :plant_id AND inCart = TRUE
         ");
         $stmt->execute([
             ':quantity' => $quantity,
@@ -337,8 +376,8 @@ class CartHandler
         ]);
 
         $stmt = $pdo->prepare("
-            INSERT INTO cart_items (cart_id, plant_id, quantity)
-            VALUES (:cart_id, :plant_id, :quantity)
+            INSERT INTO cart_items (cart_id, plant_id, quantity, inCart)
+            VALUES (:cart_id, :plant_id, :quantity, TRUE)
         ");
         $stmt->execute([
             ':cart_id' => $cartId,
@@ -357,7 +396,7 @@ class CartHandler
 
         $stmt = $pdo->prepare("
             DELETE FROM cart_items 
-            WHERE cart_id = :cart_id AND plant_id = :plant_id
+            WHERE cart_id = :cart_id AND plant_id = :plant_id AND inCart = TRUE
         ");
         $stmt->execute([':cart_id' => $cartId, ':plant_id' => $plantId]);
     }
@@ -379,7 +418,7 @@ class CartHandler
                 p.stock_quantity,
                 COALESCE(SUM(ci.quantity), 0) as reserved_quantity
             FROM plants p
-            LEFT JOIN cart_items ci ON p.plant_id = ci.plant_id AND ci.cart_id != :exclude_cart_id
+            LEFT JOIN cart_items ci ON p.plant_id = ci.plant_id AND ci.cart_id != :exclude_cart_id AND ci.inCart = TRUE
             WHERE p.plant_id = :plant_id 
             AND p.isDeleted = FALSE
             GROUP BY p.plant_id, p.stock_quantity
@@ -416,6 +455,8 @@ try {
         case 'POST':
             if ($action === 'add') {
                 CartHandler::addToCart();
+            } elseif ($action === 'order') {
+                CartHandler::orderCartItems();
             } else {
                 CartHandler::sendJsonResponse(false, 'Invalid action', null, 400);
             }
