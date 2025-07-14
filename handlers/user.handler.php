@@ -8,7 +8,17 @@ class UserHandler
      */
     public static function getUserById($user_id = 1)
     {
-        // Demo user data
+        // Demo user data (always include all expected keys)
+        $default = [
+            'id' => null,
+            'first_name' => '',
+            'last_name' => '',
+            'username' => '',
+            'address' => '',
+            'join_date' => '',
+            'usertype' => '',
+            'avatar' => null
+        ];
         $users = [
             1 => [
                 'id' => 1,
@@ -21,8 +31,9 @@ class UserHandler
                 'avatar' => null
             ]
         ];
-
-        return isset($users[$user_id]) ? $users[$user_id] : null;
+        $user = isset($users[$user_id]) ? $users[$user_id] : $default;
+        // Ensure all keys exist
+        return array_merge($default, $user);
     }
 
     /**
