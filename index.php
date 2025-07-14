@@ -9,7 +9,7 @@ $page_description = 'Join SolarSoil - Sustainable Agriculture Solutions for the 
 $body_class = 'login-page';
 
 // Start session to track registration state
-session_start();
+Auth::init();
 
 // Error/success message handling
 $message = '';
@@ -36,7 +36,7 @@ if (Auth::check()) {
             error_log("[Index] Failed to create cart for newly registered user {$userId}: " . $e->getMessage());
         }
     }
-    if($user['role'] == 'admin') {
+    if($user['role'] === 'admin') {
         header('Location: /pages/Admin/index.php');
         exit;
     } else {
