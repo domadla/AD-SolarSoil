@@ -158,5 +158,21 @@ class Admin{
             return 0;
         }
     }
+
+    public static function update_orders(PDO $pdo, int $id, bool $completed){
+        try {
+            $stmt = $pdo->prepare("
+            UPDATE ORDERS
+            SET completed = :completed
+            WHERE id = :id
+            ");
+            $stmt->execute([
+                ':id' => $id,
+                ':completed' => $completed
+            ]);
+        } catch (\PDOException $e) {
+            error_log('[Admin::update_orders] PDOException on update: ' . $e->getMessage());
+        }
+    }
 }
 ?>
