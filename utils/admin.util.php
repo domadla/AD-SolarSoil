@@ -90,7 +90,7 @@ class Admin{
                 return ['error' => 'PlantAlreadyExists'];
             }
         } catch (\PDOException $e) {
-            error_log('[Auth::register] PDOException on check: ' . $e->getMessage());
+            error_log('[Admin::add_plant] PDOException on check: ' . $e->getMessage());
             return ['error' => 'DatabaseError'];
         }
         try {
@@ -106,12 +106,30 @@ class Admin{
                 ':description' => $description
             ]);
 
-            error_log("[Auth::register] New Plant added: {$name}");
+            error_log("[Admin::add_plant] New Plant added: {$name}");
             return ['success' => 'PlantAdded'];
         } catch (\PDOException $e) {
             error_log('[Admin::add_plant] PDOException on insert: ' . $e->getMessage());
             return ['error' => 'DatabaseError'];
         }
     }
+
+    public static function count_users(PDO $pdo): int{
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                COUNT(user_id)
+            FROM USERS
+            WHERE isDeleted = FALSE AND role = 'user'
+            ");
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            error_log('[Admin::count_users] PDOException on count: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+
 }
 ?>
