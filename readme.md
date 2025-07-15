@@ -77,10 +77,6 @@ SolarSoil is an advanced e-commerce platform designed for collectors, gardeners,
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 
-#### Deployment
-
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-
 ## Rules, Practices and Principles
 
 <!-- Do not Change this -->
