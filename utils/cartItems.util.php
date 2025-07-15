@@ -88,7 +88,7 @@ class CartItemsUtil
                 SELECT ci.quantity
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.incart = TRUE
             ");
             $stmt->execute([
                 ':user_id' => $userId,
@@ -151,6 +151,7 @@ class CartItemsUtil
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
+                AND ci.incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $result = $stmt->fetch();
@@ -174,12 +175,13 @@ class CartItemsUtil
     {
         try {
             $stmt = $pdo->prepare("
-                SELECT SUM(ci.quantity) as count
+                SELECT COUNT(ci.cart_item_id) as count
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
+                AND ci.incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $result = $stmt->fetch();
@@ -273,6 +275,107 @@ class CartItemsUtil
         ];
         
         error_log('[CartItemsUtil] ' . json_encode($logData));
+    }
+
+    /**
+     * Get ordered items (items with incart = FALSE) for a user
+     * 
+     * @param PDO $pdo Database connection
+     * @param int $userId User ID
+     * @return array Ordered items with plant details
+     */
+    public static function getOrderedItems(PDO $pdo, int $userId): array
+    {
+        try {
+            $stmt = $pdo->prepare("
+                SELECT 
+                    ci.cart_item_id,
+                    ci.quantity,
+                    ci.order_id,
+                    p.plant_id,
+                    p.name,
+                    p.price,
+                    p.image_url,
+                    p.description,
+                    ci.created_at
+                FROM cart_items ci
+                JOIN carts c ON ci.cart_id = c.cart_id
+                JOIN plants p ON ci.plant_id = p.plant_id
+                WHERE c.user_id = :user_id 
+                AND p.isDeleted = FALSE
+                AND ci.incart = FALSE
+                ORDER BY ci.created_at DESC
+            ");
+            $stmt->execute([':user_id' => $userId]);
+            
+            return $stmt->fetchAll();
+            
+        } catch (PDOException $e) {
+            error_log('[CartItemsUtil::getOrderedItems] Database error: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get orders with their associated cart items for a user
+     * 
+     * @param PDO $pdo Database connection
+     * @param int $userId User ID
+     * @return array Orders with cart items
+     */
+    public static function getUserOrdersWithItems(PDO $pdo, int $userId): array
+    {
+        try {
+            $stmt = $pdo->prepare("
+                SELECT 
+                    o.id as order_id,
+                    o.created_at as order_date,
+                    o.completed,
+                    ci.cart_item_id,
+                    ci.quantity,
+                    p.plant_id,
+                    p.name,
+                    p.price,
+                    p.image_url
+                FROM orders o
+                JOIN cart_items ci ON o.id = ci.order_id
+                JOIN plants p ON ci.plant_id = p.plant_id
+                WHERE o.user_id = :user_id 
+                AND p.isDeleted = FALSE
+                ORDER BY o.created_at DESC, ci.cart_item_id
+            ");
+            $stmt->execute([':user_id' => $userId]);
+            
+            $results = $stmt->fetchAll();
+            
+            // Group items by order
+            $orders = [];
+            foreach ($results as $row) {
+                $orderId = $row['order_id'];
+                if (!isset($orders[$orderId])) {
+                    $orders[$orderId] = [
+                        'order_id' => $orderId,
+                        'order_date' => $row['order_date'],
+                        'completed' => $row['completed'],
+                        'items' => []
+                    ];
+                }
+                $orders[$orderId]['items'][] = [
+                    'cart_item_id' => $row['cart_item_id'],
+                    'plant_id' => $row['plant_id'],
+                    'name' => $row['name'],
+                    'price' => $row['price'],
+                    'quantity' => $row['quantity'],
+                    'image_url' => $row['image_url']
+                ];
+            }
+            
+            return array_values($orders);
+            
+        } catch (PDOException $e) {
+            error_log('[CartItemsUtil::getUserOrdersWithItems] Database error: ' . $e->getMessage());
+            return [];
+        }
     }
 
 }
