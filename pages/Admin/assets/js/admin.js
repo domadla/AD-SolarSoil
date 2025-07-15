@@ -15,6 +15,24 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.style = "";
     });
   }
+
+  // Progress bar logic
+  function setProgressBar(countId, progressId) {
+    var countElem = document.getElementById(countId);
+    var progressElem = document.getElementById(progressId);
+    if (countElem && progressElem) {
+      var count = parseInt(countElem.getAttribute("data-count"), 10);
+      var goal = parseInt(countElem.getAttribute("data-goal"), 10);
+      var percent = 0;
+      if (goal > 0) {
+        percent = Math.min(100, (count / goal) * 100);
+      }
+      progressElem.style.width = percent + "%";
+    }
+  }
+  setProgressBar("user-count", "user-progress");
+  setProgressBar("plant-count", "plant-progress");
+  setProgressBar("order-count", "order-progress");
 });
 
 function manageUsers() {
