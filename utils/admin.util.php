@@ -145,6 +145,18 @@ class Admin{
         }
     }
 
-
+    public static function count_orders(PDO $pdo): int{
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                COUNT(id)
+            FROM ORDERS");
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            error_log('[Admin::count_orders] PDOException on count: ' . $e->getMessage());
+            return 0;
+        }
+    }
 }
 ?>
