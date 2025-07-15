@@ -39,4 +39,17 @@ if ($action === 'add_plant' && $_SERVER['REQUEST_METHOD'] === 'POST'){
     header("Location: /pages/Admin/index.php?" . http_build_query($result));
     exit;
 }
+
+if ($action === 'update_orders' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $orderIds = $_POST['order_id'] ?? [];
+    $statuses = $_POST['status'] ?? [];
+
+    foreach ($orderIds as $index => $id) {
+        $completed = ($statuses[$index] === 'Completed');
+        Admin::update_orders($pdo, (int)$id, $completed);
+    }
+    header("Location: {$redirect}?success=OrdersUpdated");
+    exit;
+}
+
 ?>
