@@ -37,6 +37,7 @@ class Admin{
                     price
                 FROM plants
                 WHERE isDeleted = FALSE
+                ORDER BY plant_id
             ");
             $stmt->execute();
             $plants = $stmt->fetchAll();
@@ -57,13 +58,14 @@ class Admin{
                     o.id,
                     u.firstname,
                     u.lastname,
-                    p.name,
-                    ct.quantity,
-                    o.completed
+                    o.completed,
+                    STRING_AGG(p.name || ' (Qty: ' || ct.quantity || ')', '; ') AS items
                 FROM orders o
                 JOIN users u ON o.user_id = u.user_id
-                JOIN cart_items ct ON o.cart_id = ct.cart_id
-                JOIN plants p ON ct.plant_id = p.plant_id;
+                LEFT JOIN cart_items ct ON o.id = ct.order_id
+                LEFT JOIN plants p ON ct.plant_id = p.plant_id
+                GROUP BY o.id, u.firstname, u.lastname, o.completed
+                ORDER BY o.id
             ");
             $stmt->execute();
             $orders = $stmt->fetchAll();
