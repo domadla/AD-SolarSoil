@@ -1,18 +1,28 @@
 <?php
 // Include handlers
-require_once HANDLERS_PATH . '/user.handler.php';
+require_once '../../bootstrap.php';
+require_once HANDLERS_PATH . '/profile.handler.php';
+require_once UTILS_PATH . '/auth.util.php';
 
-// Start session for user authentication
-session_start();
-
+Auth::init();
+if (!Auth::check()){
+    header('Location: ../../index.php?error=LoginRequired');
+    exit;
+}
 
 // Set page variables
 $page_title = 'SolarSoil - User Profile';
 $page_description = 'Manage your SolarSoil account and profile settings.';
 $body_class = 'profile-page';
 
-// Get user data from handler
-$user_data = UserHandler::getCurrentUser();
+// Get user data from profile handler
+$user_data = ProfileHandler::getCurrentUser();
+
+// If user data is not found, redirect to login
+if (!$user_data) {
+    header('Location: ../../index.php?error=UserDataNotFound');
+    exit;
+}
 
 // Capture page content for layout
 ob_start();
@@ -81,7 +91,7 @@ ob_start();
                                         <i class="fas fa-map-marker-alt me-2"></i>Address
                                     </label>
                                     <div class="profile-value">
-                                        <?php echo htmlspecialchars($user_data['address']); ?>
+                                        <?php echo htmlspecialchars($user_data['address'] ?? 'Not provided'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -95,7 +105,13 @@ ob_start();
                                         <i class="fas fa-calendar me-2"></i>Member Since
                                     </label>
                                     <div class="profile-value">
-                                        <?php echo date('F j, Y', strtotime($user_data['join_date'])); ?>
+                                        <?php 
+                                        if (!empty($user_data['join_date'])) {
+                                            echo date('F j, Y', strtotime($user_data['join_date'])); 
+                                        } else {
+                                            echo 'Unknown';
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
