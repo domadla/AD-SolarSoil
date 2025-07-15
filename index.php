@@ -20,11 +20,11 @@ if (Auth::check()) {
     $user = Auth::user();
     $message = "Welcome back, " . htmlspecialchars($user['username']) . "! You are already logged in.";
     $message_type = 'info';
-    
+
     // Check if this is a fresh login after registration
     if (isset($_SESSION['just_registered']) && $_SESSION['just_registered'] === true) {
         unset($_SESSION['just_registered']); // Clear the flag
-        
+
         // Create cart for the newly logged in user
         $userId = (int)$user['id'];
         try {
@@ -36,7 +36,7 @@ if (Auth::check()) {
             error_log("[Index] Failed to create cart for newly registered user {$userId}: " . $e->getMessage());
         }
     }
-    if($user['role'] === 'admin') {
+    if ($user['role'] === 'admin') {
         header('Location: /pages/Admin/index.php');
         exit;
     } else {
@@ -87,7 +87,7 @@ if (Auth::check()) {
     }
 }
 
-
+//<!-- BUG: Password should also check for 1 Uppercase, 1 Lowercase, and 1 Number  -->
 // Capture the auth forms content
 ob_start();
 include 'components/forms/authForms.php';
@@ -95,4 +95,3 @@ $content = ob_get_clean();
 
 // Include the layout
 include 'layouts/login-layout.php';
-?>
