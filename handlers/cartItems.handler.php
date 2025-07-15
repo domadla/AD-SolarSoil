@@ -1,19 +1,19 @@
 <?php
 /**
- * Cart Items Handler - Updated for inCart column functionality
+ * Cart Items Handler - Updated for incart column functionality
  * 
  * IMPORTANT CHANGES:
- * - Added inCart column support to cart_items table
- * - Cart items are no longer deleted when ordered, instead inCart is set to FALSE
- * - Only items with inCart = TRUE are shown in cart
- * - Items with inCart = FALSE represent order history
+ * - Added incart column support to cart_items table
+ * - Cart items are no longer deleted when ordered, instead incart is set to FALSE
+ * - Only items with incart = TRUE are shown in cart
+ * - Items with incart = FALSE represent order history
  * 
  * New Methods:
- * - markCartItemsAsOrdered(): Sets inCart = FALSE instead of deleting items
+ * - markCartItemsAsOrdered(): Sets incart = FALSE instead of deleting items
  * 
  * Usage:
  * - To place an order: Call markCartItemsAsOrdered() or use order.handler.php
- * - To view cart: Existing methods now filter by inCart = TRUE
+ * - To view cart: Existing methods now filter by incart = TRUE
  * - To view order history: Use getOrderedItems() from cartItems.util.php
  */
 
@@ -86,7 +86,7 @@ class CartItemsHandler
             $stmt = $pdo->prepare("
                 SELECT cart_item_id, quantity 
                 FROM cart_items 
-                WHERE cart_id = :cart_id AND plant_id = :plant_id AND inCart = TRUE
+                WHERE cart_id = :cart_id AND plant_id = :plant_id AND incart = TRUE
             ");
             $stmt->execute([
                 ':cart_id' => $cartId,
@@ -134,7 +134,7 @@ class CartItemsHandler
             } else {
                 // Add new item to cart
                 $insertStmt = $pdo->prepare("
-                    INSERT INTO cart_items (cart_id, plant_id, quantity, inCart) 
+                    INSERT INTO cart_items (cart_id, plant_id, quantity, incart) 
                     VALUES (:cart_id, :plant_id, :quantity, TRUE)
                 ");
                 $insertStmt->execute([
@@ -203,7 +203,7 @@ class CartItemsHandler
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
-                AND ci.inCart = TRUE
+                AND ci.incart = TRUE
                 ORDER BY ci.cart_item_id DESC
             ");
             $stmt->execute([':user_id' => $userId]);
@@ -233,7 +233,7 @@ class CartItemsHandler
                 SELECT ci.quantity 
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.inCart = TRUE
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.incart = TRUE
             ");
             $selectStmt->execute([
                 ':user_id' => $userId,
@@ -251,7 +251,7 @@ class CartItemsHandler
             $stmt = $pdo->prepare("
                 DELETE FROM cart_items 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND plant_id = :plant_id AND inCart = TRUE
+                AND plant_id = :plant_id AND incart = TRUE
             ");
             $stmt->execute([
                 ':user_id' => $userId,
@@ -304,7 +304,7 @@ class CartItemsHandler
                 SELECT ci.quantity 
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.inCart = TRUE
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.incart = TRUE
             ");
             $selectStmt->execute([
                 ':user_id' => $userId,
@@ -339,7 +339,7 @@ class CartItemsHandler
                 UPDATE cart_items 
                 SET quantity = :quantity 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND plant_id = :plant_id AND inCart = TRUE
+                AND plant_id = :plant_id AND incart = TRUE
             ");
             $stmt->execute([
                 ':quantity' => $quantity,
@@ -392,7 +392,7 @@ class CartItemsHandler
                 JOIN carts c ON ci.cart_id = c.cart_id
                 WHERE plants.plant_id = ci.plant_id 
                 AND c.user_id = :user_id
-                AND ci.inCart = TRUE
+                AND ci.incart = TRUE
             ");
             $restoreStockStmt->execute([':user_id' => $userId]);
             $stockRestoredCount = $restoreStockStmt->rowCount();
@@ -401,7 +401,7 @@ class CartItemsHandler
             $stmt = $pdo->prepare("
                 DELETE FROM cart_items 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND inCart = TRUE
+                AND incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             
@@ -415,7 +415,7 @@ class CartItemsHandler
     }
 
     /**
-     * Mark cart items as ordered (set inCart to FALSE) instead of deleting them
+     * Mark cart items as ordered (set incart to FALSE) instead of deleting them
      * 
      * @param int $userId User ID
      * @return array Response with success/error status
@@ -425,12 +425,12 @@ class CartItemsHandler
         try {
             $pdo = self::getConnection();
             
-            // Update all cart items to set inCart = FALSE
+            // Update all cart items to set incart = FALSE
             $stmt = $pdo->prepare("
                 UPDATE cart_items 
-                SET inCart = FALSE 
+                SET incart = FALSE 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND inCart = TRUE
+                AND incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $updatedCount = $stmt->rowCount();
