@@ -17,7 +17,7 @@ $user_data = UserHandler::getCurrentUser();
 // Capture page content for layout
 ob_start();
 ?>
-
+<!-- TODO: Add checker for confirming new password -->
 <!-- Profile Content -->
 <div class="profile-container">
     <div class="container py-5">
