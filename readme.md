@@ -20,7 +20,6 @@
 <br />
 <br />
 
-<!-- TODO: If you want to add more layers for your readme -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
@@ -53,13 +52,15 @@ SolarSoil is an advanced e-commerce platform designed for collectors, gardeners,
 ### Key Components
 
 - User and Admin Authentication
-- CRUD Operations for Plant Stocks
+- CRUD Operations for Inventory Plant Stocks
 - CRUD Operations for Carts and Ordering
 - CRUD Operations for Users Mangement
 
-### Technology
+- User Login, Sign Up, and Editing of own user details
+- User Shopping and Ordering
+- Admin Dashboard for managing Users, Stock, and Orders
 
-<!-- TODO: List of Technology Used -->
+### Technology
 
 #### Language
 
