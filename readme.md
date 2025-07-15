@@ -52,11 +52,10 @@ SolarSoil is an advanced e-commerce platform designed for collectors, gardeners,
 
 ### Key Components
 
-<!-- TODO: List of Key Components -->
-<!-- The following are just sample -->
-
-- Authentication & Authorization
-- CRUD Operations for Invetory System
+- User and Admin Authentication
+- CRUD Operations for Plant Stocks
+- CRUD Operations for Carts and Ordering
+- CRUD Operations for Users Mangement
 
 ### Technology
 
