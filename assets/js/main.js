@@ -10,19 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
   //animations
   initAnimations();
 
-  // Always update cart badge on every page load 
+  // Always update cart badge on every page load
   if (
     window.CartUtils &&
-    typeof window.CartUtils.updateCartBadge === "function"
+    typeof window.CartUtils.syncCartBadgeFromDatabase === "function"
   ) {
-    // Update from localStorage for immediate display
-    window.CartUtils.updateCartBadge();
-    
-    // Only sync from database if we're on the shop page (which has the endpoints)
-    if (window.location.pathname.includes('/Shop/') && 
-        typeof window.CartUtils.syncCartFromDatabase === "function") {
-      window.CartUtils.syncCartFromDatabase();
-    }
+    // Use database sync for all pages that support it
+    window.CartUtils.syncCartBadgeFromDatabase();
   }
 });
 
@@ -399,29 +393,78 @@ window.CartUtils = {
   setCart: function (cart) {
     localStorage.setItem("solarsoil_cart", JSON.stringify(cart));
   },
-  
-  // Sync cart from database
-  syncCartFromDatabase: function() {
-    return fetch('?action=get_cart_items', {
-      method: 'POST',
+
+  // Sync cart badge from database for accurate count
+  syncCartBadgeFromDatabase: function () {
+    // Determine the correct endpoint based on current location
+    let endpoint;
+    if (window.location.pathname.includes("/Cart/")) {
+      endpoint = "?action=get_cart_items";
+    } else if (window.location.pathname.includes("/Shop/")) {
+      endpoint = "?action=get_cart_count";
+    } else {
+      // For Home and Profile pages, navigate to Shop page endpoint
+      // Get the base path and construct Shop URL
+      const pathParts = window.location.pathname.split("/");
+      const basePath = pathParts.slice(0, pathParts.length - 2).join("/");
+      endpoint = basePath + "/Shop/index.php?action=get_cart_count";
+    }
+
+    fetch(endpoint, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success && data.cart) {
-        this.setCart(data.cart);
-        this.updateCartBadge();
-        return data.cart;
-      }
-      return this.getCart();
-    })
-    .catch(error => {
-      console.error('Error syncing cart from database:', error);
-      return this.getCart();
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          let cartCount = 0;
+
+          if (data.items) {
+            // Cart page response format - count number of distinct items
+            cartCount = data.items.length;
+          } else if (data.count !== undefined) {
+            // Shop page response format - use the count directly
+            cartCount = parseInt(data.count);
+          }
+
+          const badge = document.getElementById("cart-badge");
+          if (badge) badge.textContent = cartCount;
+          // Also update old badge if present
+          const cartCountElement = document.getElementById("cart-count");
+          if (cartCountElement) cartCountElement.textContent = cartCount;
+
+          // Clear localStorage cart to prevent conflicts with database
+          this.clearLocalStorageCart();
+        } else {
+          console.log("Database cart sync failed:", data.message);
+          // Set badge to 0 if database sync fails
+          const badge = document.getElementById("cart-badge");
+          if (badge) badge.textContent = "0";
+          const cartCountElement = document.getElementById("cart-count");
+          if (cartCountElement) cartCountElement.textContent = "0";
+        }
+      })
+      .catch((error) => {
+        console.log("Database cart sync not available:", error.message);
+        // Set badge to 0 if sync not available
+        const badge = document.getElementById("cart-badge");
+        if (badge) badge.textContent = "0";
+        const cartCountElement = document.getElementById("cart-count");
+        if (cartCountElement) cartCountElement.textContent = "0";
+      });
+  },
+
+  // Alias for syncCartBadgeFromDatabase to match the initialization code
+  syncCartFromDatabase: function () {
+    return this.syncCartBadgeFromDatabase();
   },
 
   addToCart: function (plantData) {
@@ -444,19 +487,18 @@ window.CartUtils = {
     this.updateCartBadge();
 
     // Sync to database only if on shop page
-    if (window.location.pathname.includes('/Shop/')) {
-      fetch('?action=remove_from_cart', {
-        method: 'POST',
+    if (window.location.pathname.includes("/Shop/")) {
+      fetch("?action=remove_from_cart", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify({
-          id: parseInt(id)
-        })
-      })
-      .catch(error => {
-        console.error('Error removing from database:', error);
+          id: parseInt(id),
+        }),
+      }).catch((error) => {
+        console.error("Error removing from database:", error);
       });
     }
   },
@@ -470,20 +512,19 @@ window.CartUtils = {
       this.updateCartBadge();
 
       // Sync to database only if on shop page
-      if (window.location.pathname.includes('/Shop/')) {
-        fetch('?action=update_cart_quantity', {
-          method: 'POST',
+      if (window.location.pathname.includes("/Shop/")) {
+        fetch("?action=update_cart_quantity", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
           },
           body: JSON.stringify({
             id: parseInt(id),
-            quantity: item.quantity
-          })
-        })
-        .catch(error => {
-          console.error('Error updating quantity in database:', error);
+            quantity: item.quantity,
+          }),
+        }).catch((error) => {
+          console.error("Error updating quantity in database:", error);
         });
       }
     }
@@ -502,20 +543,19 @@ window.CartUtils = {
         this.updateCartBadge();
 
         // Sync to database only if on shop page
-        if (window.location.pathname.includes('/Shop/')) {
-          fetch('?action=update_cart_quantity', {
-            method: 'POST',
+        if (window.location.pathname.includes("/Shop/")) {
+          fetch("?action=update_cart_quantity", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest'
+              "Content-Type": "application/json",
+              "X-Requested-With": "XMLHttpRequest",
             },
             body: JSON.stringify({
               id: parseInt(id),
-              quantity: item.quantity
-            })
-          })
-          .catch(error => {
-            console.error('Error updating quantity in database:', error);
+              quantity: item.quantity,
+            }),
+          }).catch((error) => {
+            console.error("Error updating quantity in database:", error);
           });
         }
       }
@@ -534,20 +574,19 @@ window.CartUtils = {
         this.updateCartBadge();
 
         // Sync to database only if on shop page
-        if (window.location.pathname.includes('/Shop/')) {
-          fetch('?action=update_cart_quantity', {
-            method: 'POST',
+        if (window.location.pathname.includes("/Shop/")) {
+          fetch("?action=update_cart_quantity", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest'
+              "Content-Type": "application/json",
+              "X-Requested-With": "XMLHttpRequest",
             },
             body: JSON.stringify({
               id: parseInt(id),
-              quantity: parseInt(value)
-            })
-          })
-          .catch(error => {
-            console.error('Error updating quantity in database:', error);
+              quantity: parseInt(value),
+            }),
+          }).catch((error) => {
+            console.error("Error updating quantity in database:", error);
           });
         }
       }
@@ -556,11 +595,17 @@ window.CartUtils = {
 
   updateCartBadge: function () {
     const cart = this.getCart();
-    const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+    const cartCount = cart.length; // Count distinct items, not total quantity
     const badge = document.getElementById("cart-badge");
     if (badge) badge.textContent = cartCount;
     // Also update old badge if present
     const cartCountElement = document.getElementById("cart-count");
     if (cartCountElement) cartCountElement.textContent = cartCount;
+  },
+
+  clearLocalStorageCart: function () {
+    // Clear localStorage cart data to prevent conflicts with database
+    localStorage.removeItem("solarsoil_cart");
+    console.log("Cleared localStorage cart data to sync with database");
   },
 };

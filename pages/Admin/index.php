@@ -207,7 +207,6 @@ ob_start();
                         <h3>User Management</h3>
                     </div>
                     <div class="card-body">
-                        <p>Manage user accounts, permissions, and access levels across the platform.</p>
                         <div class="action-buttons">
                             <button class="btn btn-primary btn-sm me-2" onclick="manageUsers()">
                                 <i class="fas fa-users"></i> View Users
@@ -228,13 +227,15 @@ ob_start();
                         <h3>Plant Inventory</h3>
                     </div>
                     <div class="card-body">
-                        <p>Control plant species, inventory levels, and pricing across all galactic markets.</p>
                         <div class="action-buttons">
                             <button class="btn btn-success btn-sm me-2" onclick="managePlants()">
                                 <i class="fas fa-seedling"></i> View Plants
                             </button>
                             <button class="btn btn-outline-success btn-sm" onclick="addPlant()">
                                 <i class="fas fa-plus"></i> Add Plant
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="editPlant()">
+                                <i class="fas fa-edit"></i> Edit Plant
                             </button>
                         </div>
                     </div>
@@ -249,7 +250,6 @@ ob_start();
                         <h3>Order Management</h3>
                     </div>
                     <div class="card-body">
-                        <p>Monitor, process, and manage all customer orders and transactions.</p>
                         <div class="action-buttons">
                             <button class="btn btn-warning btn-sm me-2" onclick="manageOrders()">
                                 <i class="fas fa-list"></i> View Orders
@@ -357,6 +357,11 @@ include LAYOUTS_PATH . 'page-layout.php';
         fetch('../../components/admin/plant/add-plant-modal.component.php')
             .then(response => response.text())
             .then(html => showAdminModal('Add Plant', html));
+    }
+    function editPlant() {
+        fetch('../../components/admin/plant/edit-plant-modal.component.php')
+            .then(response => response.text())
+            .then(html => showAdminModal('Edit Plant', html));
     }
     function manageOrders() {
         fetch('../../components/admin/order/view-order-modal.component.php')
