@@ -88,7 +88,7 @@ class CartItemsUtil
                 SELECT ci.quantity
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.inCart = TRUE
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.incart = TRUE
             ");
             $stmt->execute([
                 ':user_id' => $userId,
@@ -151,7 +151,7 @@ class CartItemsUtil
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
-                AND ci.inCart = TRUE
+                AND ci.incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $result = $stmt->fetch();
@@ -181,7 +181,7 @@ class CartItemsUtil
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
-                AND ci.inCart = TRUE
+                AND ci.incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             $result = $stmt->fetch();
@@ -278,7 +278,7 @@ class CartItemsUtil
     }
 
     /**
-     * Get ordered items (items with inCart = FALSE) for a user
+     * Get ordered items (items with incart = FALSE) for a user
      * 
      * @param PDO $pdo Database connection
      * @param int $userId User ID
@@ -302,7 +302,7 @@ class CartItemsUtil
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
-                AND ci.inCart = FALSE
+                AND ci.incart = FALSE
                 ORDER BY ci.created_at DESC
             ");
             $stmt->execute([':user_id' => $userId]);
