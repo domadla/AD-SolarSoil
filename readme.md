@@ -140,11 +140,6 @@ AD-ProjectName
 
 ## Resources
 
-<!-- TODO: Add References -->
-
-| Title        | Purpose                                                                       | Link          |
-| ------------ | ----------------------------------------------------------------------------- | ------------- |
-| Sample Title | Sample purpose would be here like this and this is the example of what it is. | trykolang.com |
-| Sample Title | Sample purpose would be here like this and this is the example of what it is. | trykolang.com |
-| Sample Title | Sample purpose would be here like this and this is the example of what it is. | trykolang.com |
-| Sample Title | Sample purpose would be here like this and this is the example of what it is. | trykolang.com |
+| Title        | Purpose                             | Link                                      |
+| ------------ | ----------------------------------- | ----------------------------------------- |
+| Plant Images | Displayed images of plants in Shop. | https://www.canva.com/ai-image-generator/ |
