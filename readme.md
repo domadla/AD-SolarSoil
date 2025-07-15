@@ -7,12 +7,10 @@
   <a href="https://github.com/domadla/">
     <img src="./assets/img/logo.png" alt="SolarSoil" width="130" height="100">
   </a>
-<!-- TODO: Change Title to the name of the title of your Project -->
-  <h3 align="center">Title</h3>
+  <h3 align="center">SolarSoil</h3>
 </div>
-<!-- TODO: Make a short description -->
 <div align="center">
-  Short Description. (Optional)
+  Discover rare and exotic flora from across the galaxy at Intergalactic Botanica. From glowing Martian moss to Venusian vines, our collection of space-grown plants brings otherworldly beauty to your home or habitat. Grown in zero-G, delivered at light speed.
 </div>
 
 <br />
