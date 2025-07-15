@@ -63,6 +63,12 @@ if (isset($_GET['success'])) {
         case 'PlantUpdatedSuccessfully':
             $message = 'Plant has been successfully updated.';
             break;
+        case 'UserDeleted':
+            $message = 'User has been successfully deleted.';
+            break;
+        case 'PlantDeleted':
+            $message = 'Plant has been successfully deleted.';
+            break;
     }
 }
 $host = $pgConfig['host'];
