@@ -39,6 +39,12 @@ if (isset($_GET['error'])) {
         case 'PasswordsDoNotMatch':
             $message = 'Please correct the errors on the form and try again.';
             break;
+        case 'NoFieldsToUpdate':
+            $message = 'No fields to update.';
+            break;
+        default:
+            $message = 'An unexpected error occurred. Please try again.';
+            break;
     }
 }
 if (isset($_GET['success'])) {
@@ -53,6 +59,9 @@ if (isset($_GET['success'])) {
             break;
         case 'PlantAdded':
             $message = 'Plant has been successfully added.';
+            break;
+        case 'PlantUpdatedSuccessfully':
+            $message = 'Plant has been successfully updated.';
             break;
     }
 }
