@@ -30,9 +30,10 @@ foreach ($users as $user) {
         '<td>' . htmlspecialchars($user['lastname']) . '</td>' .
         '<td>' . htmlspecialchars($user['username']) . '</td>' .
         '<td>' . htmlspecialchars(ucfirst($user['role'])) . '</td>' .
+        '<td><button class="btn btn-sm btn-danger" onclick="deleteUser(\'' . htmlspecialchars($user['id']) . '\')">Delete</button></td>' .
         '</tr>';
 }
 $userTable = '<table class="table table-striped table-bordered">'
-    . '<thead><tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Username</th><th>Role</th></tr></thead>'
+    . '<thead><tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Username</th><th>Role</th><th>Delete</th></tr></thead>'
     . '<tbody>' . $userRows . '</tbody></table>';
 echo $userTable;
