@@ -48,7 +48,7 @@ class Auth
             error_log("[Auth::login] No user found for username='{$username}'");
             return false;
         } else {
-            if ($user['isDeleted'] === true) {
+            if ($user['isdeleted'] === true) {
                 error_log("[Auth::login] User is deleted: {$username}");
                 return false;
             } else {
