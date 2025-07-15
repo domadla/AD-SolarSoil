@@ -181,12 +181,12 @@ class OrderHandler
             $shipping = 5; // Fixed shipping cost
             $total = $subtotal + $shipping;
             
-            // Mark cart items as ordered (inCart = FALSE)
-            // This stores the cart items with inCart = FALSE in the database
+            // Mark cart items as ordered (incart = FALSE)
+            // This stores the cart items with incart = FALSE in the database
             $markOrderedStmt = $pdo->prepare("
                 UPDATE cart_items 
-                SET inCart = FALSE 
-                WHERE cart_id = :cart_id AND inCart = TRUE
+                SET incart = FALSE 
+                WHERE cart_id = :cart_id AND incart = TRUE
             ");
             $markOrderedStmt->execute([':cart_id' => $cartId]);
             $markedItemsCount = $markOrderedStmt->rowCount();
