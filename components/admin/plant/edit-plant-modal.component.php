@@ -15,6 +15,10 @@
         <input type="number" step="0.01" class="form-control" name="price">
     </div>
     <div class="mb-2">
+        <label class="form-label">Price</label>
+        <input type="number" step="0.01" class="form-control" name="price">
+    </div>
+    <div class="mb-2">
         <label class="form-label">Stock Quantity</label>
         <input type="number" class="form-control" name="stock_quantity" min="0">
     </div>

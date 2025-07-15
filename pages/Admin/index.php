@@ -157,7 +157,7 @@ ob_start();
                                 <i class="fas fa-plus"></i> Add Plant
                             </button>
                             <button class="btn btn-outline-success btn-sm" onclick="editPlant()">
-                                <i class="fas fa-plus"></i> Edit Plant
+                                <i class="fas fa-edit"></i> Edit Plant
                             </button>
                         </div>
                     </div>
@@ -281,7 +281,7 @@ include '../../layouts/page-layout.php';
             .then(html => showAdminModal('Add Plant', html));
     }
     function editPlant() {
-        fetch('../../components/admin/plant/add-plant-modal.component.php')
+        fetch('../../components/admin/plant/edit-plant-modal.component.php')
             .then(response => response.text())
             .then(html => showAdminModal('Edit Plant', html));
     }
