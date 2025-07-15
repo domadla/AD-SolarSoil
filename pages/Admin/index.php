@@ -100,14 +100,14 @@ ob_start();
                 </div>
             </div>
         </div>
-<!-- Alert Container -->
-                    <div id="alert-container">
-                        <?php if (isset($message) && $message): ?>
-                            <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
-                                <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars($message); ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+        <!-- Alert Container -->
+        <div id="alert-container">
+            <?php if (isset($message) && $message): ?>
+                <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
+                    <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
+        </div>
         <!-- Admin Stats Cards -->
         <div class="row g-4 mb-5">
             <!-- Total Users -->
@@ -325,49 +325,4 @@ include_once COMPONENTS_PATH . 'admin/admin-modal.component.php';
 include LAYOUTS_PATH . 'page-layout.php';
 ?>
 
-<script>
-    // Helper to show the admin modal with custom content
-    function showAdminModal(title, body) {
-        document.getElementById('adminInfoModalLabel').textContent = title;
-        document.getElementById('adminInfoModalBody').innerHTML = body;
-        var modal = new bootstrap.Modal(document.getElementById('adminInfoModal'));
-        modal.show();
-    }
-
-
-    function manageUsers() {
-        fetch('../../components/admin/user/view-user-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('User List', html));
-    }
-    function addUser() {
-        fetch('../../components/admin/user/add-user-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Add User', html));
-    }
-    function managePlants() {
-        fetch('../../components/admin/plant/view-plant-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Plant Inventory', html));
-    }
-    function addPlant() {
-        fetch('../../components/admin/plant/add-plant-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Add Plant', html));
-    }
-    function editPlant(id) {
-        fetch('../../components/admin/plant/edit-plant-modal.component.php?id=' + id)
-            .then(response => response.text())
-            .then(html => showAdminModal('Edit Plant', html));
-    }
-    function manageOrders() {
-        fetch('../../components/admin/order/view-order-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Order List', html));
-    }
-    function processOrders() {
-        fetch('../../components/admin/order/process-order-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Process Orders', html));
-    }
-</script>
+<script src="assets/js/admin.js"></script>
