@@ -1,7 +1,72 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+require_once BASE_PATH . '/bootstrap.php';
+require_once UTILS_PATH . 'auth.util.php';
+require_once UTILS_PATH . 'admin.util.php';
+require_once UTILS_PATH . 'envSetter.util.php';
+
+Auth::init();
+
+$message = '';
+$message_type = '';
+
+if (!Auth::check()) {
+    header('Location: /index.php?error=LoginRequired');
+    exit;
 }
+if (Auth::user()['role'] != 'admin') {
+    header('Location: /index.php?error=AccessDenied');
+    exit;
+}
+if (isset($_GET['error'])) {
+    $message_type = 'danger';
+    $error_code = $_GET['error'];
+    switch ($error_code) {
+        case 'InvalidCredentials':
+            $message = 'Invalid username or password. Please try again.';
+            break;
+        case 'UsernameAlreadyTaken':
+            $message = 'That username is already taken. Please choose another.';
+            break;
+        case 'DatabaseError':
+            $message = 'An error occurred while processing your request. Please try again later.';
+            break;
+        case 'PlantAlreadyExists':
+            $message = 'Plant already exists. Please choose another name.';
+        case 'PasswordComplexityFailed':
+            $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
+            break;
+        case 'AllFieldsRequired':
+        case 'PasswordsDoNotMatch':
+            $message = 'Please correct the errors on the form and try again.';
+            break;
+    }
+}
+if (isset($_GET['success'])) {
+    $message_type = 'success';
+    $success_code = $_GET['success'];
+    switch ($success_code) {
+        case 'SignupComplete':
+            $message = 'Account has been successfully created.';
+            break;
+        case 'OrdersUpdated':
+            $message = 'Orders have been successfully updated.';
+            break;
+        case 'PlantAdded':
+            $message = 'Plant has been successfully added.';
+            break;
+    }
+}
+$host = $pgConfig['host'];
+$port = $pgConfig['port'];
+$username = $pgConfig['user'];
+$password = $pgConfig['pass'];
+$dbname = $pgConfig['db'];
+
+// Connect to Postgres
+$dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
+$pdo = new PDO($dsn, $username, $password, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+]);
 
 $page_title = 'SolarSoil - Admin Control Center';
 $page_description = 'Administrative dashboard for managing the interstellar agriculture platform.';
@@ -35,7 +100,14 @@ ob_start();
                 </div>
             </div>
         </div>
-
+<!-- Alert Container -->
+                    <div id="alert-container">
+                        <?php if (isset($message) && $message): ?>
+                            <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
+                                <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars($message); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
         <!-- Admin Stats Cards -->
         <div class="row g-4 mb-5">
             <!-- Total Users -->
@@ -46,7 +118,9 @@ ob_start();
                         <h3>Total Users</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">2,847</div>
+                        <div class="metric-value"><?php
+                        echo htmlspecialchars(Admin::count_users($pdo));
+                        ?></div>
                         <div class="metric-label">Active Farmers</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 85%;"></div>
@@ -66,7 +140,9 @@ ob_start();
                         <h3>Plant Inventory</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">156</div>
+                        <div class="metric-value"><?php
+                        echo htmlspecialchars(Admin::count_plants($pdo));
+                        ?></div>
                         <div class="metric-label">Plant Species</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 92%;"></div>
@@ -86,7 +162,9 @@ ob_start();
                         <h3>Orders</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">4,231</div>
+                        <div class="metric-value"><?php
+                        echo htmlspecialchars(Admin::count_orders($pdo));
+                        ?></div>
                         <div class="metric-label">Total Orders</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 78%;"></div>
@@ -106,7 +184,7 @@ ob_start();
                         <h3>System Health</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">98.7%</div>
+                        <div class="metric-value">99.7%</div>
                         <div class="metric-label">Uptime</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 98.7%;"></div>
@@ -244,10 +322,10 @@ ob_start();
 $content = ob_get_clean();
 
 // Include the admin modal component
-include_once '../../components/admin/admin-modal.component.php';
+include_once COMPONENTS_PATH . 'admin/admin-modal.component.php';
 
 // Use the shared page layout
-include '../../layouts/page-layout.php';
+include LAYOUTS_PATH . 'page-layout.php';
 ?>
 
 <script>

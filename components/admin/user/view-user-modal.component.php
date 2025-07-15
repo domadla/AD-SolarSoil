@@ -1,16 +1,35 @@
 <?php
 // View User Modal Content
-$requirePath = __DIR__ . '/../../../handlers/user.handler.php';
-require_once $requirePath;
-$users = UserHandlerDemo::getAllUsers();
+require_once BASE_PATH . '/bootstrap.php';
+require_once VENDOR_PATH . 'autoload.php';
+require_once UTILS_PATH . 'admin.util.php';
+require_once UTILS_PATH . 'auth.util.php';
+require_once UTILS_PATH . 'envSetter.util.php';
+
+Auth::init();
+
+$host = $pgConfig['host'];
+$port = $pgConfig['port'];
+$username = $pgConfig['user'];
+$password = $pgConfig['pass'];
+$dbname = $pgConfig['db'];
+
+// Connect to Postgres
+$dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
+$pdo = new PDO($dsn, $username, $password, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+]);
+
+
+$users = Admin::display_users($pdo);
 $userRows = '';
 foreach ($users as $user) {
     $userRows .= '<tr>' .
         '<td>' . htmlspecialchars($user['id']) . '</td>' .
-        '<td>' . htmlspecialchars($user['first_name']) . '</td>' .
-        '<td>' . htmlspecialchars($user['last_name']) . '</td>' .
+        '<td>' . htmlspecialchars($user['firstname']) . '</td>' .
+        '<td>' . htmlspecialchars($user['lastname']) . '</td>' .
         '<td>' . htmlspecialchars($user['username']) . '</td>' .
-        '<td>' . htmlspecialchars($user['role']) . '</td>' .
+        '<td>' . htmlspecialchars(ucfirst($user['role'])) . '</td>' .
         '</tr>';
 }
 $userTable = '<table class="table table-striped table-bordered">'

@@ -1,0 +1,178 @@
+<?php
+declare(strict_types=1);
+
+include_once UTILS_PATH . "/envSetter.util.php";
+class Admin{
+    public static function display_users(PDO $pdo){
+        try{
+            $stmt = $pdo->prepare("
+                SELECT
+                    user_id as id,
+                    firstname,
+                    lastname,
+                    username,
+                    role
+                FROM USERS
+                WHERE isDeleted = FALSE
+            ");
+            $stmt->execute();
+            $users = $stmt->fetchAll();
+            if(empty($users)){
+                error_log("[Admin::display_users] No users found in database");
+            }
+            return $users;
+        }catch(PDOException $e){
+            error_log("[Admin::display_users] Database connection error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function display_plants(PDO $pdo){
+        try{
+            $stmt = $pdo->prepare("
+                SELECT
+                    plant_id as id,
+                    name,
+                    stock_quantity,
+                    price
+                FROM plants
+                WHERE isDeleted = FALSE
+            ");
+            $stmt->execute();
+            $plants = $stmt->fetchAll();
+            if(empty($plants)){
+                error_log("[Admin::display_plants] No plants found in database");
+            }
+            return $plants;
+        }catch(PDOException $e){
+            error_log("[Admin::display_plants] Database connection error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function display_orders(PDO $pdo){
+        try{
+            $stmt = $pdo->prepare("
+                SELECT
+                    o.id,
+                    u.firstname,
+                    u.lastname,
+                    p.name,
+                    ct.quantity,
+                    o.completed
+                FROM orders o
+                JOIN users u ON o.user_id = u.user_id
+                JOIN cart_items ct ON o.cart_id = ct.cart_id
+                JOIN plants p ON ct.plant_id = p.plant_id;
+            ");
+            $stmt->execute();
+            $orders = $stmt->fetchAll();
+            if(empty($orders)){
+                error_log("[Admin::display_orders] No orders found in database");
+            }
+            return $orders;
+        }catch(PDOException $e){
+            error_log("[Admin::display_orders] Database connection error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function add_plant(PDO $pdo, string $name, float $price, int $stock_quantity, string $image_url, string $description){
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                plant_id
+            FROM PLANTS
+            WHERE name = :name");
+            $stmt->execute([':name' => $name]);
+            if ($stmt->fetch()) {
+                error_log("[Admin::add_plant] Plant already exists: {$name}");
+                return ['error' => 'PlantAlreadyExists'];
+            }
+        } catch (\PDOException $e) {
+            error_log('[Admin::add_plant] PDOException on check: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+        try {
+            $stmt = $pdo->prepare(
+                "INSERT INTO PLANTS (name, price, stock_quantity, image_url, description)
+                VALUES (:name, :price, :stock_quantity, :image_url, :description)"
+            );
+            $stmt->execute([
+                ':name' => $name,
+                ':price' => $price,
+                ':stock_quantity' => $stock_quantity,
+                ':image_url' => $image_url,
+                ':description' => $description
+            ]);
+
+            error_log("[Admin::add_plant] New Plant added: {$name}");
+            return ['success' => 'PlantAdded'];
+        } catch (\PDOException $e) {
+            error_log('[Admin::add_plant] PDOException on insert: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
+
+    public static function count_users(PDO $pdo): int{
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                COUNT(user_id)
+            FROM USERS
+            WHERE isDeleted = FALSE AND role = 'user'
+            ");
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            error_log('[Admin::count_users] PDOException on count: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public static function count_plants(PDO $pdo): int{
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                COUNT(plant_id)
+            FROM PLANTS
+            WHERE isDeleted = FALSE");
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            error_log('[Admin::count_plants] PDOException on count: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public static function count_orders(PDO $pdo): int{
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                COUNT(id)
+            FROM ORDERS");
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            error_log('[Admin::count_orders] PDOException on count: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public static function update_orders(PDO $pdo, int $id, bool $completed){
+        try {
+            $stmt = $pdo->prepare("
+            UPDATE ORDERS
+            SET completed = :completed
+            WHERE id = :id
+            ");
+            $stmt->execute([
+                ':id' => $id,
+                ':completed' => $completed
+            ]);
+        } catch (\PDOException $e) {
+            error_log('[Admin::update_orders] PDOException on update: ' . $e->getMessage());
+        }
+    }
+}
+?>

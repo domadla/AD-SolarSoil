@@ -86,7 +86,7 @@ class Auth
      * @param string $password
      * @return array ['success' => 'Message'] or ['error' => 'Message']
      */
-    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $address, string $password): array
+    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $address, string $password, string $role): array
     {
         // 1) Check if username already exists
         try {
@@ -116,7 +116,7 @@ class Auth
                 ':username' => $username,
                 ':address' => $address,
                 ':password' => $hashedPassword,
-                ':role' => 'user' // Default role
+                ':role' => $role // Default role
             ]);
 
             error_log("[Auth::register] New user created: {$username}");
