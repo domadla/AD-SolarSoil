@@ -52,4 +52,30 @@ if ($action === 'update_orders' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+if ($action === 'edit_plant' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = (int)($_POST['id'] ?? 0);
+    if (!$id) {
+        header("Location: {$redirect}?error=InvalidID");
+        exit;
+    }
+    $dataToUpdate = [];
+    $possibleFields = ['name', 'description', 'price', 'stock_quantity', 'image_url'];
+
+    foreach ($possibleFields as $field) {
+        if (isset($_POST[$field]) && trim($_POST[$field]) !== '') {
+            if ($field === 'price') {
+                $dataToUpdate[$field] = (float) trim($_POST[$field]);
+            } elseif ($field === 'stock_quantity') {
+                $dataToUpdate[$field] = (int) trim($_POST[$field]);
+            } else {
+                $dataToUpdate[$field] = trim($_POST[$field]);
+            }
+        }
+    }
+
+    $result = Admin::edit_plant($pdo, $id, $dataToUpdate);
+    header("Location: /pages/Admin/index.php?" . http_build_query($result));
+    exit;
+}
+
 ?>
