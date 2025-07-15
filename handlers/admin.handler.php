@@ -78,4 +78,14 @@ if ($action === 'edit_plant' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+if ($action === 'delete_user' && $_SERVER['REQUEST'] === 'POST') {
+    $id = (int)($_POST['id'] ?? 0);
+
+    $result = Admin::delete_user($pdo, $id);
+    header('Location: /pages/Admin/index.php?' . http_build_query($result));
+    exit;
+}
+
+
+
 ?>
