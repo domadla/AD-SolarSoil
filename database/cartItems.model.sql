@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS cart_items (
     order_id INT NULL,
     FOREIGN KEY (cart_id) REFERENCES Carts(cart_id),
     FOREIGN KEY (plant_id) REFERENCES Plants(plant_id),
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+    FOREIGN KEY (order_id) REFERENCES Orders(id)
 );
