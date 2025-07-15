@@ -174,5 +174,47 @@ class Admin{
             error_log('[Admin::update_orders] PDOException on update: ' . $e->getMessage());
         }
     }
+
+    public static function edit_plant(PDO $pdo, int $id, array $data) {
+        try {
+            // Build the SQL update statement dynamically
+            $updates = [];
+            $params = [':id' => $id];
+
+            if (isset($data['name'])) {
+                $updates[] = 'name = :name';
+                $params[':name'] = $data['name'];
+            }
+            if (isset($data['description'])) {
+                $updates[] = 'description = :description';
+                $params[':description'] = $data['description'];
+            }
+            if (isset($data['price'])) {
+                $updates[] = 'price = :price';
+                $params[':price'] = $data['price'];
+            }
+            if (isset($data['stock_quantity'])) {
+                $updates[] = 'stock_quantity = :stock_quantity';
+                $params[':stock_quantity'] = $data['stock_quantity'];
+            }
+            if (isset($data['image_url'])) {
+                $updates[] = 'image_url = :image_url';
+                $params[':image_url'] = $data['image_url'];
+            }
+
+            if (empty($updates)) {
+                return ['error' => 'No fields to update'];
+            }
+
+            $sql = "UPDATE plants SET " . implode(', ', $updates) . " WHERE plant_id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+
+            return ['success' => 'Plant updated successfully'];
+        } catch (\PDOException $e) {
+            error_log('[Admin::edit_plant] PDOException on update: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
 }
 ?>
