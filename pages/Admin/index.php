@@ -68,13 +68,21 @@ $pdo = new PDO($dsn, $username, $password, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
 
+
+//Progress bar 
+$user_count = Admin::count_users($pdo);
+$user_goal = 100;
+$plant_count = Admin::count_plants($pdo);
+$plant_goal = 100;
+$order_count = Admin::count_orders($pdo);
+$order_goal = 100;
+
 $page_title = 'SolarSoil - Admin Control Center';
 $page_description = 'Administrative dashboard for managing the interstellar agriculture platform.';
 $body_class = 'admin-page';
 // Capture page content
 ob_start();
-// ...existing code...
-// (Start HTML output here, do not close PHP tag)
+
 ?>
 <!-- Admin Dashboard Content -->
 <div class="admin-dashboard-container">
@@ -118,12 +126,12 @@ ob_start();
                         <h3>Total Users</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value"><?php
-                        echo htmlspecialchars(Admin::count_users($pdo));
-                        ?></div>
+                        <div class="metric-value" id="user-count"
+                            data-count="<?php echo htmlspecialchars($user_count); ?>"
+                            data-goal="<?php echo $user_goal; ?>"><?php echo htmlspecialchars($user_count); ?></div>
                         <div class="metric-label">Active Farmers</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 85%;"></div>
+                            <div class="progress-fill" id="user-progress"></div>
                         </div>
                         <p class="card-description">
                             Cosmic agriculture pioneers across the galaxy.
@@ -140,12 +148,15 @@ ob_start();
                         <h3>Plant Inventory</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value"><?php
-                        echo htmlspecialchars(Admin::count_plants($pdo));
-                        ?></div>
+                        <?php
+
+                        ?>
+                        <div class="metric-value" id="plant-count"
+                            data-count="<?php echo htmlspecialchars($plant_count); ?>"
+                            data-goal="<?php echo $plant_goal; ?>"><?php echo htmlspecialchars($plant_count); ?></div>
                         <div class="metric-label">Plant Species</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 92%;"></div>
+                            <div class="progress-fill" id="plant-progress"></div>
                         </div>
                         <p class="card-description">
                             Quantum-enhanced crops and bio-fusion varieties.
@@ -162,12 +173,12 @@ ob_start();
                         <h3>Orders</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value"><?php
-                        echo htmlspecialchars(Admin::count_orders($pdo));
-                        ?></div>
+                        <div class="metric-value" id="order-count"
+                            data-count="<?php echo htmlspecialchars($order_count); ?>"
+                            data-goal="<?php echo $order_goal; ?>"><?php echo htmlspecialchars($order_count); ?></div>
                         <div class="metric-label">Total Orders</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 78%;"></div>
+                            <div class="progress-fill" id="order-progress"></div>
                         </div>
                         <p class="card-description">
                             Galactic commerce transactions processed.
