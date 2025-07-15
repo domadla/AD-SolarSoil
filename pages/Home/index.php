@@ -1,4 +1,7 @@
 <?php
+require_once BASE_PATH . '/bootstrap.php';
+require_once UTILS_PATH . 'auth.util.php';
+
 // Page variables
 $page_title = 'SolarSoil - User Dashboard';
 $page_description = 'Welcome to your personal interstellar agriculture command center.';
@@ -6,6 +9,11 @@ $body_class = 'home-page';
 
 // Capture page content
 ob_start();
+Auth::init();
+if (!Auth::check()) {
+    header('Location: /index.php?error=LoginRequired');
+    exit;
+}
 ?>
 
 <!-- Main Dashboard Content -->
