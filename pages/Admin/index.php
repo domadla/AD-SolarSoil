@@ -32,6 +32,12 @@ if (isset($_GET['error'])) {
             break;
         case 'PlantAlreadyExists':
             $message = 'Plant already exists. Please choose another name.';
+        case 'PasswordComplexityFailed':
+            $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
+            break;
+        case 'AllFieldsRequired':
+        case 'PasswordsDoNotMatch':
+            $message = 'Please correct the errors on the form and try again.';
             break;
     }
 }
@@ -94,7 +100,14 @@ ob_start();
                 </div>
             </div>
         </div>
-
+<!-- Alert Container -->
+                    <div id="alert-container">
+                        <?php if (isset($message) && $message): ?>
+                            <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
+                                <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars($message); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
         <!-- Admin Stats Cards -->
         <div class="row g-4 mb-5">
             <!-- Total Users -->
