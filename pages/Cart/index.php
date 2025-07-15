@@ -4,13 +4,15 @@ $page_title = 'SolarSoil - Shopping Cart';
 $page_description = 'Review your selected cosmic plants and complete your galactic garden.';
 $body_class = 'cart-page';
 
+
+//<!-- BUG: FIX display notification after launching order -->
 // Include necessary utilities for authentication
 require_once '../../bootstrap.php';
 require_once UTILS_PATH . '/auth.util.php';
 
 // Initialize session
 Auth::init();
-if (!Auth::check()){
+if (!Auth::check()) {
     header('Location: ../../index.php?error=LoginRequired');
     exit;
 }
@@ -27,11 +29,11 @@ $userId = $user['id'];
 // Handle AJAX requests for cart operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     require_once HANDLERS_PATH . '/cartItems.handler.php';
-    
+
     header('Content-Type: application/json');
-    
+
     $action = $_GET['action'];
-    
+
     // Add debug action for testing
     if ($action === 'debug_test') {
         echo json_encode([
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
         ]);
         exit;
     }
-    
+
     switch ($action) {
         case 'get_cart_items':
             try {
@@ -61,17 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 ]);
             }
             exit;
-            
+
         case 'update_quantity':
             $input = json_decode(file_get_contents('php://input'), true);
             $plantId = (int)($input['plant_id'] ?? 0);
             $quantity = (int)($input['quantity'] ?? 0);
-            
+
             if (!$plantId || $quantity < 0) {
                 echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
                 exit;
             }
-            
+
             try {
                 if ($quantity === 0) {
                     $result = CartItemsHandler::removeFromCart($userId, $plantId);
@@ -83,16 +85,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 echo json_encode(['success' => false, 'message' => 'Failed to update cart: ' . $e->getMessage()]);
             }
             exit;
-            
+
         case 'remove_item':
             $input = json_decode(file_get_contents('php://input'), true);
             $plantId = (int)($input['plant_id'] ?? 0);
-            
+
             if (!$plantId) {
                 echo json_encode(['success' => false, 'message' => 'Invalid plant ID']);
                 exit;
             }
-            
+
             try {
                 $result = CartItemsHandler::removeFromCart($userId, $plantId);
                 echo json_encode($result);
@@ -100,46 +102,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 echo json_encode(['success' => false, 'message' => 'Failed to remove item: ' . $e->getMessage()]);
             }
             exit;
-            
+
         case 'create_order':
             try {
                 // Include required handlers
                 require_once HANDLERS_PATH . '/cartItems.handler.php';
                 require_once HANDLERS_PATH . '/order.handler.php';
-                
+
                 // Debug: Log the user ID
                 error_log("[Cart::create_order] Starting order creation for user_id: $userId");
-                
+
                 // Check if CartItemsHandler class exists
                 if (!class_exists('CartItemsHandler')) {
                     error_log("[Cart::create_order] CartItemsHandler class not found");
                     echo json_encode(['success' => false, 'message' => 'Cart handler not available']);
                     exit;
                 }
-                
+
                 // Check if OrderHandler class exists
                 if (!class_exists('OrderHandler')) {
                     error_log("[Cart::create_order] OrderHandler class not found");
                     echo json_encode(['success' => false, 'message' => 'Order handler not available']);
                     exit;
                 }
-                
+
                 // Get user's cart items
                 error_log("[Cart::create_order] Getting cart items for user $userId");
                 $cartItems = CartItemsHandler::getUserCartItems($userId);
                 error_log("[Cart::create_order] Found " . count($cartItems) . " cart items");
-                
+
                 if (empty($cartItems)) {
                     error_log("[Cart::create_order] Cart is empty, returning error");
                     echo json_encode(['success' => false, 'message' => 'Cart is empty']);
                     exit;
                 }
-                
+
                 // Create the order
                 error_log("[Cart::create_order] Creating order from cart");
                 $result = OrderHandler::createOrderFromCart($userId);
                 error_log("[Cart::create_order] Order creation result: " . json_encode($result));
-                
+
                 if ($result['success']) {
                     // Return success with redirect URL for frontend
                     echo json_encode([
@@ -160,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 echo json_encode(['success' => false, 'message' => 'Failed to create order: ' . $e->getMessage()]);
             }
             exit;
-            
+
         default:
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
             exit;
