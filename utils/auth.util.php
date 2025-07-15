@@ -48,11 +48,16 @@ class Auth
             error_log("[Auth::login] No user found for username='{$username}'");
             return false;
         } else {
-            error_log('[Auth::login] Retrieved user: ' . var_export([
-                'id' => $user['user_id'],
-                'username' => $user['username'],
-                'role' => $user['role'],
-            ], true));
+            if ($user['isdeleted'] === true) {
+                error_log("[Auth::login] User is deleted: {$username}");
+                return false;
+            } else {
+                error_log('[Auth::login] Retrieved user: ' . var_export([
+                    'id' => $user['user_id'],
+                    'username' => $user['username'],
+                    'role' => $user['role'],
+                ], true));
+            }
         }
 
         // 2) Verify password
