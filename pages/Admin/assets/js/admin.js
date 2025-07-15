@@ -44,6 +44,10 @@ function addUser() {
   fetch("../../components/admin/user/add-user-modal.component.php")
     .then((response) => response.text())
     .then((html) => showAdminModal("Add User", html));
+}function deleteUser(id) {
+  fetch("../../components/admin/user/delete-user-modal.component.php?id=" + id)
+    .then((response) => response.text())
+    .then((html) => showAdminModal("Delete User", html));
 }
 function managePlants() {
   fetch("../../components/admin/plant/view-plant-modal.component.php")
