@@ -30,7 +30,7 @@ foreach ($plants as $plant) {
         '<td>' . (isset($plant['stock_quantity']) ? htmlspecialchars($plant['stock_quantity']) : '-') . '</td>' .
         '<td>' . (isset($plant['price']) ? htmlspecialchars($plant['price']) : '-') . '</td>' .
         '<td><button class="btn btn-sm btn-secondary" onclick="editPlant(' . htmlspecialchars($plant['id']) . ')">Edit</button>
-        <button class="btn btn-sm btn-danger"  onclick="deletePlant(' . htmlspecialchars($plant['id']) . ')">Delete</button></td>' .
+        <button class="btn btn-sm btn-danger" onclick="deletePlant(' . htmlspecialchars($plant['id']) . ')">Delete</button></td>' .
         '</tr>';
 }
 $plantTable = '<table class="table table-striped table-bordered">'
