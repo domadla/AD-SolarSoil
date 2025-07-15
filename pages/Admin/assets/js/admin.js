@@ -64,6 +64,11 @@ function editPlant(id) {
     .then((response) => response.text())
     .then((html) => showAdminModal("Edit Plant", html));
 }
+function deletePlant(id) {
+  fetch("../../components/admin/plant/delete-plant-modal.component.php?id=" + id)
+    .then((response) => response.text())
+    .then((html) => showAdminModal("Delete Plant", html));
+}
 function manageOrders() {
   fetch("../../components/admin/order/view-order-modal.component.php")
     .then((response) => response.text())

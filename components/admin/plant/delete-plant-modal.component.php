@@ -1,9 +1,5 @@
-<!-- Delete User Modal -->
-<?
-$id = $_GET['id'];
-?>
 <div class="text-center py-4">
-    <p class="fs-5">Are you sure you want to delete this account?</p>
+    <p class="fs-5">Are you sure you want to delete this plant?</p>
     <div class="d-flex justify-content-center gap-3 mt-4">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-danger">Delete</button>
