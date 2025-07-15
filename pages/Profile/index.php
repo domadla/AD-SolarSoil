@@ -111,8 +111,9 @@ ob_start();
                                 data-bs-target="#changePasswordModal">
                                 <i class="fas fa-key me-2"></i>Change Password
                             </button>
-                            <button class="btn btn-outline-danger">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                                data-bs-target="#deleteAccountModal">
+                                <i class="fas fa-user-times me-2"></i>Delete Account
                             </button>
                         </div>
                     </div>
@@ -122,10 +123,10 @@ ob_start();
     </div>
 </div>
 
-
 <?php
 $content = ob_get_clean();
-// Include the edit profile and change password modal components
+
+include_once '../../components/profile/delete-account-modal.component.php';
 include_once '../../components/profile/profile-edit-modal.component.php';
 include_once '../../components/profile/change-password-modal.component.php';
 // Use the shared page layout
