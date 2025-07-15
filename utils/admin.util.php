@@ -64,6 +64,7 @@ class Admin{
                 JOIN users u ON o.user_id = u.user_id
                 LEFT JOIN cart_items ct ON o.id = ct.order_id
                 LEFT JOIN plants p ON ct.plant_id = p.plant_id
+                WHERE u.isDeleted = FALSE AND p.isDeleted = FALSE
                 GROUP BY o.id, u.firstname, u.lastname, o.completed
                 ORDER BY o.id
             ");
