@@ -87,7 +87,6 @@ if (Auth::check()) {
     }
 }
 
-//<!-- BUG: Password should also check for 1 Uppercase, 1 Lowercase, and 1 Number  -->
 // Capture the auth forms content
 ob_start();
 include 'components/forms/authForms.php';
