@@ -124,6 +124,6 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
-// Use the shared page layout
+
 include '../../layouts/page-layout.php';
 ?>
