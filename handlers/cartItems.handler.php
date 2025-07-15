@@ -418,24 +418,35 @@ class CartItemsHandler
      * Mark cart items as ordered (set incart to FALSE) instead of deleting them
      * 
      * @param int $userId User ID
+     * @param int|null $orderId Optional order ID to assign to cart items
      * @return array Response with success/error status
      */
-    public static function markCartItemsAsOrdered(int $userId): array
+    public static function markCartItemsAsOrdered(int $userId, ?int $orderId = null): array
     {
         try {
             $pdo = self::getConnection();
             
-            // Update all cart items to set incart = FALSE
-            $stmt = $pdo->prepare("
-                UPDATE cart_items 
-                SET incart = FALSE 
-                WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND incart = TRUE
-            ");
-            $stmt->execute([':user_id' => $userId]);
+            // Update all cart items to set incart = FALSE and optionally assign order_id
+            if ($orderId !== null) {
+                $stmt = $pdo->prepare("
+                    UPDATE cart_items 
+                    SET incart = FALSE, order_id = :order_id 
+                    WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
+                    AND incart = TRUE
+                ");
+                $stmt->execute([':user_id' => $userId, ':order_id' => $orderId]);
+            } else {
+                $stmt = $pdo->prepare("
+                    UPDATE cart_items 
+                    SET incart = FALSE 
+                    WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
+                    AND incart = TRUE
+                ");
+                $stmt->execute([':user_id' => $userId]);
+            }
             $updatedCount = $stmt->rowCount();
             
-            error_log("[CartItemsHandler::markCartItemsAsOrdered] Marked {$updatedCount} cart items as ordered for user_id={$userId}");
+            error_log("[CartItemsHandler::markCartItemsAsOrdered] Marked {$updatedCount} cart items as ordered for user_id={$userId}" . ($orderId ? " with order_id={$orderId}" : ""));
             return ['success' => true, 'message' => 'Cart items marked as ordered', 'items_updated' => $updatedCount];
             
         } catch (PDOException $e) {
