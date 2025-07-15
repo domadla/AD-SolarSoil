@@ -403,8 +403,11 @@ window.CartUtils = {
     } else if (window.location.pathname.includes("/Shop/")) {
       endpoint = "?action=get_cart_count";
     } else {
-      // For other pages, try the cart count endpoint as fallback
-      endpoint = "?action=get_cart_count";
+      // For Home and Profile pages, navigate to Shop page endpoint
+      // Get the base path and construct Shop URL
+      const pathParts = window.location.pathname.split("/");
+      const basePath = pathParts.slice(0, pathParts.length - 2).join("/");
+      endpoint = basePath + "/Shop/index.php?action=get_cart_count";
     }
 
     fetch(endpoint, {
