@@ -5,7 +5,6 @@ $page_description = 'Review your selected cosmic plants and complete your galact
 $body_class = 'cart-page';
 
 
-//<!-- BUG: FIX display notification after launching order -->
 // Include necessary utilities for authentication
 require_once '../../bootstrap.php';
 require_once UTILS_PATH . '/auth.util.php';
