@@ -177,7 +177,6 @@ class Admin{
 
     public static function edit_plant(PDO $pdo, int $id, array $data) {
         try {
-            // Build the SQL update statement dynamically
             $updates = [];
             $params = [':id' => $id];
 
@@ -203,14 +202,14 @@ class Admin{
             }
 
             if (empty($updates)) {
-                return ['error' => 'No fields to update'];
+                return ['error' => 'NoFieldsToUpdate'];
             }
 
             $sql = "UPDATE plants SET " . implode(', ', $updates) . " WHERE plant_id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 
-            return ['success' => 'Plant updated successfully'];
+            return ['success' => 'PlantUpdatedSuccessfully'];
         } catch (\PDOException $e) {
             error_log('[Admin::edit_plant] PDOException on update: ' . $e->getMessage());
             return ['error' => 'DatabaseError'];
