@@ -5,6 +5,10 @@ require_once UTILS_PATH . 'admin.util.php';
 require_once UTILS_PATH . 'envSetter.util.php';
 
 Auth::init();
+
+$message = '';
+$message_type = '';
+
 if (!Auth::check()) {
     header('Location: /index.php?error=LoginRequired');
     exit;
@@ -13,7 +17,39 @@ if (Auth::user()['role'] != 'admin') {
     header('Location: /index.php?error=AccessDenied');
     exit;
 }
-
+if (isset($_GET['error'])) {
+    $message_type = 'danger';
+    $error_code = $_GET['error'];
+    switch ($error_code) {
+        case 'InvalidCredentials':
+            $message = 'Invalid username or password. Please try again.';
+            break;
+        case 'UsernameAlreadyTaken':
+            $message = 'That username is already taken. Please choose another.';
+            break;
+        case 'DatabaseError':
+            $message = 'An error occurred while processing your request. Please try again later.';
+            break;
+        case 'PlantAlreadyExists':
+            $message = 'Plant already exists. Please choose another name.';
+            break;
+    }
+}
+if (isset($_GET['success'])) {
+    $message_type = 'success';
+    $success_code = $_GET['success'];
+    switch ($success_code) {
+        case 'SignupComplete':
+            $message = 'Account has been successfully created.';
+            break;
+        case 'OrdersUpdated':
+            $message = 'Orders have been successfully updated.';
+            break;
+        case 'PlantAdded':
+            $message = 'Plant has been successfully added.';
+            break;
+    }
+}
 $host = $pgConfig['host'];
 $port = $pgConfig['port'];
 $username = $pgConfig['user'];
@@ -135,7 +171,7 @@ ob_start();
                         <h3>System Health</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">98.7%</div>
+                        <div class="metric-value">99.7%</div>
                         <div class="metric-label">Uptime</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 98.7%;"></div>
