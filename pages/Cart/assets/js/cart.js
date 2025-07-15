@@ -23,8 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     `;
 
-    console.log("Loading cart from database...");
-
     fetch("?action=get_cart_items", {
       method: "POST",
       headers: {
@@ -33,11 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     })
       .then((response) => {
-        console.log("Cart response status:", response.status);
         return response.json();
       })
       .then((data) => {
-        console.log("Cart data received:", data);
         if (data.success) {
           // Transform data to match expected format
           cartData = {
@@ -59,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
             cartData.total = 5; // Just shipping cost
           }
 
-          console.log("Processed cart data:", cartData);
           renderCart();
           updateCartBadge(); // Update the global cart badge
         } else {
@@ -260,55 +255,90 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   }
 
-  // Load cart data from database on page load
+  // Check for error parameters in URL on page load
+  function checkUrlErrorParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get("error");
+
+    if (error) {
+      let errorMessage = "";
+      switch (error) {
+        case "NoOrderFound":
+          errorMessage =
+            "No recent order found. Please create a new order from your cart.";
+          break;
+        case "OrderCreationFailed":
+          errorMessage = "Failed to create order. Please try again.";
+          break;
+        default:
+          errorMessage = "An error occurred. Please try again.";
+      }
+
+      showOrderErrorMessage(errorMessage);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }
+
+  // Initialize page
+  checkUrlErrorParams();
   loadCartFromDatabase();
 
   // Checkout/Launch Order button logic
   checkoutBtn.addEventListener("click", function () {
     if (!cartData.items || cartData.items.length === 0) return;
-    
+
     // Disable button and show loading state
     checkoutBtn.disabled = true;
     const originalText = checkoutBtn.innerHTML;
-    checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Order...';
-    
+    checkoutBtn.innerHTML =
+      '<i class="fas fa-spinner fa-spin me-2"></i>Creating Order...';
+
     // Send order creation request
-    fetch('?action=create_order', {
-      method: 'POST',
+    fetch("?action=create_order", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      }
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Show success message
-        showOrderSuccessMessage(data);
-        
-        // Direct redirect to order page without passing data
-        setTimeout(() => {
-          window.location.href = '../Order/index.php';
-        }, 2000);
-      } else {
-        console.error('Order creation failed:', data.message);
-        showOrderErrorMessage(data.message);
-        
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Show success message
+          showOrderSuccessMessage(data);
+
+          // Redirect to order page with order ID
+          setTimeout(() => {
+            if (data.order_id) {
+              window.location.href =
+                "../Order/index.php?order_id=" + data.order_id;
+            } else {
+              window.location.href = "../Order/index.php";
+            }
+          }, 2000);
+        } else {
+          console.error("Order creation failed:", data.message);
+
+          // Don't show error notification if it's a silent failure (empty cart)
+          if (!data.silent && data.message) {
+            showOrderErrorMessage(data.message);
+          }
+
+          // Re-enable button
+          checkoutBtn.disabled = false;
+          checkoutBtn.innerHTML = originalText;
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating order:", error);
+        showOrderErrorMessage("Failed to create order. Please try again.");
+
         // Re-enable button
         checkoutBtn.disabled = false;
         checkoutBtn.innerHTML = originalText;
-      }
-    })
-    .catch(error => {
-      console.error('Error creating order:', error);
-      showOrderErrorMessage('Failed to create order. Please try again.');
-      
-      // Re-enable button
-      checkoutBtn.disabled = false;
-      checkoutBtn.innerHTML = originalText;
-    });
+      });
   });
-  
+
   // Show order success message
   function showOrderSuccessMessage(orderData) {
     const toast = document.createElement("div");
@@ -335,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function () {
       max-width: 350px;
     `;
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.style.animation = "slideOutRight 0.3s ease";
       setTimeout(() => {
@@ -345,7 +375,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 300);
     }, 3000);
   }
-  
+
   // Show order error message
   function showOrderErrorMessage(message) {
     const toast = document.createElement("div");
@@ -373,7 +403,7 @@ document.addEventListener("DOMContentLoaded", function () {
       max-width: 350px;
     `;
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.style.animation = "slideOutRight 0.3s ease";
       setTimeout(() => {
