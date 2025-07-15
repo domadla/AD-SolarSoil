@@ -131,8 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                 error_log("[Cart::create_order] Found " . count($cartItems) . " cart items");
 
                 if (empty($cartItems)) {
-                    error_log("[Cart::create_order] Cart is empty, returning error");
-                    echo json_encode(['success' => false, 'message' => 'Cart is empty']);
+                    error_log("[Cart::create_order] Cart is empty, silently returning");
+                    // Don't show error notification for empty cart - just return quietly
+                    echo json_encode(['success' => false, 'message' => '', 'silent' => true]);
                     exit;
                 }
 
@@ -147,7 +148,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
                         'success' => true,
                         'message' => 'Order created successfully',
                         'redirect_url' => '../Order/index.php',
-                        'order_id' => $result['order_id']
+                        'order_id' => $result['order_id'],
+                        'debug_info' => [
+                            'cart_items_count' => count($cartItems),
+                            'user_id' => $userId,
+                            'order_details' => $result
+                        ]
                     ]);
                 } else {
                     error_log("[Cart::create_order] Order creation failed: " . $result['message']);
