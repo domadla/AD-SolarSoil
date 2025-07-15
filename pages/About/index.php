@@ -7,7 +7,7 @@ $body_class = 'about-page';
 // Capture page content
 ob_start();
 ?>
-
+<!-- TODO: Complete Images of Developers -->
 <!-- About page custom CSS -->
 <link rel="stylesheet" href="./assets/css/about.css">
 
