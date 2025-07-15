@@ -1,0 +1,137 @@
+/* Mark Gerard G. Gamboa image style */
+.about-page .all-img {
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+}
+.about-page .section-bg {
+  background: linear-gradient(
+    135deg,
+    rgba(35, 41, 70, 0.85) 70%,
+    rgba(0, 255, 153, 0.08) 100%
+  );
+  border: 1.5px solid #00ff9955;
+  box-shadow: 0 4px 32px #00ff9922, 0 1.5px 8px #000a;
+  backdrop-filter: blur(2px);
+}
+
+.about-page .mission-vision-row {
+  margin-bottom: 2rem;
+}
+.about-page .mission-vision-row .bg-dark {
+  background: rgba(35, 41, 70, 0.7) !important;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px #0006;
+  color: #fff;
+}
+.about-page .mission-vision-row .section-title {
+  color: #00ff99;
+}
+.about-page .mission-vision-row .about-vision {
+  color: #e0ffe6;
+}
+@media (max-width: 767.98px) {
+  .about-page .mission-vision-row .col-md-6 {
+    margin-bottom: 1.5rem;
+  }
+}
+.about-page .about-vision {
+  color: #fff;
+}
+body.about-page {
+  background: radial-gradient(ellipse at top, #232946 60%, #121629 100%) fixed;
+  color: #e0ffe6;
+  min-height: 100vh;
+  position: relative;
+}
+.about-page .display-4,
+.about-page h2,
+.about-page h1 {
+  color: #fff;
+  text-shadow: 0 0 16px #00ff9980, 0 2px 8px #000a;
+}
+.about-page .lead {
+  color: #e0e6f7;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 8px #000a;
+}
+.about-page .about-logo {
+  box-shadow: 0 0 40px #00ff99, 0 0 0 #fff3;
+  border-radius: 50%;
+  background: #232946;
+  padding: 10px;
+  max-width: 110px;
+  width: 100%;
+  height: auto;
+  margin-bottom: 1.5rem;
+}
+.about-page .team-card {
+  background: rgba(35, 41, 70, 0.7);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px #0006;
+  padding: 1.2rem 0.5rem 0.5rem 0.5rem;
+  margin-bottom: 1.5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.about-page .team-card:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 8px 32px #00ff99;
+}
+.about-page .team-card img {
+  border: 3px solid #00ff99;
+  box-shadow: 0 0 16px #00ff9999;
+}
+.about-page .team-card small {
+  color: #00ff99;
+  font-weight: 500;
+}
+.about-page .section-title {
+  color: #00ff99;
+  text-shadow: 0 0 8px #00ff9999;
+}
+.about-page a.text-info {
+  color: #00ff99 !important;
+  text-decoration: underline;
+}
+
+.about-page .footer-note {
+  font-style: italic;
+  font-size: 1rem;
+  color: #aeeec9;
+  margin-top: 2rem;
+  text-shadow: 0 1px 6px #0007;
+  border-top: 1px solid #00ff9955;
+  padding-top: 1.5rem;
+  opacity: 0.85;
+}
+
+.about-page .section-title {
+  position: relative;
+}
+.about-page .section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 8px auto 0;
+  background: #00ff99;
+  box-shadow: 0 0 12px #00ff9977;
+  border-radius: 5px;
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 8px #00ff9944;
+  }
+  50% {
+    box-shadow: 0 0 16px #00ff99cc;
+  }
+  100% {
+    box-shadow: 0 0 8px #00ff9944;
+  }
+}
