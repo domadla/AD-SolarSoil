@@ -104,10 +104,11 @@ ob_start();
 
                     <div class="profile-card-footer">
                         <div class="d-flex gap-3">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                                 <i class="fas fa-edit me-2"></i>Edit Profile
                             </button>
-                            <button class="btn btn-outline-primary">
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#changePasswordModal">
                                 <i class="fas fa-key me-2"></i>Change Password
                             </button>
                             <button class="btn btn-outline-danger">
@@ -124,6 +125,9 @@ ob_start();
 
 <?php
 $content = ob_get_clean();
+// Include the edit profile and change password modal components
+include_once '../../components/profile/profile-edit-modal.component.php';
+include_once '../../components/profile/change-password-modal.component.php';
 // Use the shared page layout
 include '../../layouts/page-layout.php';
 ?>
