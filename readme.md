@@ -15,11 +15,6 @@
 
 <br />
 
-<!-- TODO: Change the zyx-0314 into your github username  -->
-<!-- TODO: Change the WD-Template-Project into the same name of your folder -->
-
-![](https://visit-counter.vercel.app/counter.png?page=domadla/SolarSoil)
-
 ---
 
 <br />
@@ -53,10 +48,7 @@
 
 ## Overview
 
-<!-- TODO: To be changed -->
-<!-- The following are just sample -->
-
-Description of the project in details.
+SolarSoil is an advanced e-commerce platform designed for collectors, gardeners, and enthusiasts of rare intergalactic plants. Our system offers a seamless, secure, and immersive experience for exploring and ordering exotic flora sourced from planets across the known galaxy.
 
 ### Key Components
 
