@@ -130,6 +130,21 @@ class Admin{
         }
     }
 
+    public static function count_plants(PDO $pdo): int{
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                COUNT(plant_id)
+            FROM PLANTS
+            WHERE isDeleted = FALSE");
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (\PDOException $e) {
+            error_log('[Admin::count_plants] PDOException on count: ' . $e->getMessage());
+            return 0;
+        }
+    }
+
 
 }
 ?>
