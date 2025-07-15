@@ -317,10 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="toast-content">
         <i class="fas fa-check-circle"></i>
         <div class="order-details">
-          <h5>Order Created Successfully! 🚀</h5>
-          <p>Order #${orderData.order_id}</p>
-          <p>${orderData.items_count} items • Total: ${orderData.total} GC</p>
-          <p><small>Redirecting to order page...</small></p>
+          <h5>Order created successfully!</h5>
         </div>
       </div>
     `;
@@ -346,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
           document.body.removeChild(toast);
         }
       }, 300);
-    }, 5000);
+    }, 3000);
   }
   
   // Show order error message
