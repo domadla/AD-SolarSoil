@@ -1,7 +1,12 @@
 <?php
+declare(strict_types=1);
+
+require_once '../../bootstrap.php';
+require_once HANDLERS_PATH . '/cartItems.handler.php';
+
 /**
  * Order Handler - Manages order data and operations
- * In a real application, this would interact with a database
+ * Focuses on database operations for storing cart items with inCart = FALSE
  */
 class OrderHandler
 {
@@ -101,6 +106,127 @@ class OrderHandler
         $_SESSION['last_order'] = $order;
 
         return $order;
+    }
+
+    /**
+     * Create an order from the user's current cart
+     * 
+     * @param int $userId User ID
+     * @return array Result with success status and message
+     */
+    public static function createOrderFromCart(int $userId): array
+    {
+        try {
+            // Get database connection
+            global $pgConfig;
+            $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
+            $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]);
+            
+            // Start transaction
+            $pdo->beginTransaction();
+            
+            // Get user's cart items
+            $cartItems = CartItemsHandler::getUserCartItems($userId);
+            
+            if (empty($cartItems)) {
+                $pdo->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'Cannot create order: Cart is empty'
+                ];
+            }
+            
+            // Get user's cart ID
+            $cartStmt = $pdo->prepare("
+                SELECT cart_id 
+                FROM carts 
+                WHERE user_id = :user_id 
+                LIMIT 1
+            ");
+            $cartStmt->execute([':user_id' => $userId]);
+            $cart = $cartStmt->fetch();
+            
+            if (!$cart) {
+                $pdo->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'Cannot create order: Cart not found'
+                ];
+            }
+            
+            $cartId = $cart['cart_id'];
+            
+            // Create the order record
+            $orderStmt = $pdo->prepare("
+                INSERT INTO orders (user_id, cart_id, created_at, completed)
+                VALUES (:user_id, :cart_id, CURRENT_TIMESTAMP, FALSE)
+                RETURNING id
+            ");
+            
+            $orderStmt->execute([
+                ':user_id' => $userId,
+                ':cart_id' => $cartId
+            ]);
+            
+            $order = $orderStmt->fetch();
+            $orderId = $order['id'];
+            
+            // Calculate totals
+            $subtotal = 0;
+            foreach ($cartItems as $item) {
+                $subtotal += $item['price'] * $item['quantity'];
+            }
+            $shipping = 5; // Fixed shipping cost
+            $total = $subtotal + $shipping;
+            
+            // Mark cart items as ordered (incart = FALSE) and assign order_id
+            // This stores the cart items with incart = FALSE and order_id in the database
+            $markOrderedStmt = $pdo->prepare("
+                UPDATE cart_items 
+                SET incart = FALSE, order_id = :order_id 
+                WHERE cart_id = :cart_id AND incart = TRUE
+            ");
+            $markOrderedStmt->execute([
+                ':cart_id' => $cartId,
+                ':order_id' => $orderId
+            ]);
+            $markedItemsCount = $markOrderedStmt->rowCount();
+            
+            // Commit transaction
+            $pdo->commit();
+            
+            return [
+                'success' => true,
+                'message' => 'Order created successfully!',
+                'order_id' => $orderId,
+                'subtotal' => $subtotal,
+                'shipping' => $shipping,
+                'total' => $total,
+                'items_count' => count($cartItems),
+                'items_marked_ordered' => $markedItemsCount
+            ];
+            
+        } catch (PDOException $e) {
+            if (isset($pdo)) {
+                $pdo->rollBack();
+            }
+            error_log('[OrderHandler::createOrderFromCart] Database error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Database error occurred while creating order'
+            ];
+        } catch (Exception $e) {
+            if (isset($pdo)) {
+                $pdo->rollBack();
+            }
+            error_log('[OrderHandler::createOrderFromCart] Error: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'An error occurred while creating order'
+            ];
+        }
     }
 
     /**
