@@ -48,7 +48,7 @@ if ($action === 'update_orders' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $completed = ($statuses[$index] === 'Completed');
         Admin::update_orders($pdo, (int)$id, $completed);
     }
-    header("Location: {$redirect}?success=OrdersUpdated");
+    header("Location: /pages/Admin/index.php?success=OrdersUpdated");
     exit;
 }
 
