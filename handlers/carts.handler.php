@@ -226,36 +226,25 @@ class CartHandler
     }
 
     /**
-     * Mark cart items as ordered
+     * Mark cart items as ordered by creating an order record
      */
     public static function orderCartItems(): void
     {
         try {
             $userId = self::authenticateUser();
-            $cartId = Cart::getCartId($userId);
-
-            if (!$cartId) {
-                self::sendJsonResponse(false, 'Cart not found', null, 404);
+            
+            // Use the OrderHandler to create a proper order
+            require_once __DIR__ . '/order.handler.php';
+            $result = OrderHandler::createOrderFromCart($userId);
+            
+            if ($result['success']) {
+                self::sendJsonResponse(true, $result['message'], [
+                    'order_id' => $result['order_id'],
+                    'items_ordered' => $result['items_marked_ordered']
+                ]);
+            } else {
+                self::sendJsonResponse(false, $result['message'], null, 400);
             }
-
-            global $pgConfig;
-            $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-            $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]);
-
-            // Mark cart items as ordered (set incart = FALSE)
-            $stmt = $pdo->prepare("
-                UPDATE cart_items 
-                SET incart = FALSE 
-                WHERE cart_id = :cart_id AND incart = TRUE
-            ");
-            $stmt->execute([':cart_id' => $cartId]);
-            $updatedCount = $stmt->rowCount();
-
-            self::sendJsonResponse(true, 'Cart items marked as ordered successfully', [
-                'items_ordered' => $updatedCount
-            ]);
 
         } catch (Exception $e) {
             error_log('[CartHandler::orderCartItems] Error: ' . $e->getMessage());
