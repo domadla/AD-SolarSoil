@@ -234,9 +234,6 @@ ob_start();
                             <button class="btn btn-outline-success btn-sm" onclick="addPlant()">
                                 <i class="fas fa-plus"></i> Add Plant
                             </button>
-                            <button class="btn btn-outline-success btn-sm" onclick="editPlant()">
-                                <i class="fas fa-edit"></i> Edit Plant
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -358,8 +355,8 @@ include LAYOUTS_PATH . 'page-layout.php';
             .then(response => response.text())
             .then(html => showAdminModal('Add Plant', html));
     }
-    function editPlant() {
-        fetch('../../components/admin/plant/edit-plant-modal.component.php')
+    function editPlant(id) {
+        fetch('../../components/admin/plant/edit-plant-modal.component.php?id=' + id)
             .then(response => response.text())
             .then(html => showAdminModal('Edit Plant', html));
     }
