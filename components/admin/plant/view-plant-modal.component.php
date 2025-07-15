@@ -38,10 +38,3 @@ $plantTable = '<table class="table table-striped table-bordered">'
 echo $plantTable;
 
 ?>
-<script>
-    function editPlant(id) {
-        fetch('../../components/admin/plant/edit-plant-modal.component.php?id=' + id)
-            .then(response => response.text())
-            .then(html => showAdminModal('Edit Plant', html));
-    }
-</script>
