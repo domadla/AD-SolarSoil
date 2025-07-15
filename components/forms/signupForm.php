@@ -45,11 +45,20 @@
             </label>
             <input type="password" class="form-control" id="signup-password" name="password"
                 placeholder="Create a password (min. 6 characters, 1 special character)" required minlength="6">
-            <small class="form-text text-muted password-requirement" id="password-length-msg" style="display: none;">
+            <small class="form-text password-requirement" id="password-length-msg">
                 Password must be at least 6 characters long.
             </small>
-            <small class="form-text text-muted password-requirement" id="password-special-msg" style="display: none;">
+            <small class="form-text password-requirement" id="password-special-msg">
                 Password must contain at least 1 special character.
+            </small>
+            <small class="form-text password-requirement" id="password-upper-msg">
+                Password must contain at least 1 uppercase letter.
+            </small>
+            <small class="form-text password-requirement" id="password-lower-msg">
+                Password must contain at least 1 lowercase letter.
+            </small>
+            <small class="form-text password-requirement" id="password-number-msg">
+                Password must contain at least 1 number.
             </small>
         </div>
 
@@ -75,34 +84,4 @@
     </form>
 </div>
 
-<script>
-    const passwordInput = document.getElementById('signup-password');
-    const lengthMsg = document.getElementById('password-length-msg');
-    const specialMsg = document.getElementById('password-special-msg');
-
-    passwordInput.addEventListener('input', function () {
-        const value = passwordInput.value;
-        const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
-        let valid = true;
-
-        if (value.length < 6) {
-            lengthMsg.style.display = 'block';
-            valid = false;
-        } else {
-            lengthMsg.style.display = 'none';
-        }
-
-        if (!specialChar.test(value)) {
-            specialMsg.style.display = 'block';
-            valid = false;
-        } else {
-            specialMsg.style.display = 'none';
-        }
-
-        if (!valid) {
-            passwordInput.setCustomValidity('Password must be at least 6 characters and contain at least 1 special character.');
-        } else {
-            passwordInput.setCustomValidity('');
-        }
-    });
-</script>
+<script src="/assets/js/signup.js"></script>
