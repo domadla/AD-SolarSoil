@@ -1,6 +1,8 @@
 <?php
 require_once BASE_PATH . '/bootstrap.php';
 require_once UTILS_PATH . 'auth.util.php';
+require_once UTILS_PATH . 'admin.util.php';
+require_once UTILS_PATH . 'envSetter.util.php';
 
 Auth::init();
 if (!Auth::check()) {
@@ -11,6 +13,18 @@ if (Auth::user()['role'] != 'admin') {
     header('Location: /index.php?error=AccessDenied');
     exit;
 }
+
+$host = $pgConfig['host'];
+$port = $pgConfig['port'];
+$username = $pgConfig['user'];
+$password = $pgConfig['pass'];
+$dbname = $pgConfig['db'];
+
+// Connect to Postgres
+$dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
+$pdo = new PDO($dsn, $username, $password, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+]);
 
 $page_title = 'SolarSoil - Admin Control Center';
 $page_description = 'Administrative dashboard for managing the interstellar agriculture platform.';
@@ -55,7 +69,9 @@ ob_start();
                         <h3>Total Users</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">2,847</div>
+                        <div class="metric-value"><?php
+                        echo htmlspecialchars(Admin::count_users($pdo));
+                        ?></div>
                         <div class="metric-label">Active Farmers</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 85%;"></div>
@@ -75,7 +91,9 @@ ob_start();
                         <h3>Plant Inventory</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">156</div>
+                        <div class="metric-value"><?php
+                        echo htmlspecialchars(Admin::count_plants($pdo));
+                        ?></div>
                         <div class="metric-label">Plant Species</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 92%;"></div>
@@ -95,7 +113,9 @@ ob_start();
                         <h3>Orders</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">4,231</div>
+                        <div class="metric-value"><?php
+                        echo htmlspecialchars(Admin::count_orders($pdo));
+                        ?></div>
                         <div class="metric-label">Total Orders</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 78%;"></div>
