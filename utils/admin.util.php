@@ -217,5 +217,22 @@ class Admin{
             return ['error' => 'DatabaseError'];
         }
     }
+
+    public static function delete_user(PDO $pdo, int $id){
+        try{
+            $stmt = $pdo->prepare("
+                UPDATE USERS
+                SET isDeleted = TRUE
+                WHERE user_id = :id
+            ");
+            $stmt->execute([':id' => $id]);
+            error_log("[Admin::delete_user] User deleted: {$id}");
+            return ['success' => 'UserDeleted'];
+        }catch(PDOException $e){
+            error_log("[Admin::delete_user] Database connection error: " . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
+
 }
 ?>
