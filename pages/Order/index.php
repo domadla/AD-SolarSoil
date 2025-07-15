@@ -88,10 +88,10 @@ ob_start();
                             <i class="fas fa-check-circle fa-4x"></i>
                         </div>
                         <h1 class="order-title">
-                            Order Confirmed!
+                            Your Orders
                         </h1>
                         <p class="order-subtitle">
-                            Thank you for your purchase! Your cosmic plants are being prepared for interstellar delivery.
+                            Here are all your past and current orders. Track your deliveries and view order details below.
                         </p>
                     <?php else: ?>
                         <h1 class="order-title">
@@ -271,28 +271,6 @@ ob_start();
                                 <div class="timeline-content">
                                     <h5>Order Confirmed</h5>
                                     <p><?php echo date('M j, Y g:i A', strtotime($order['date'])); ?></p>
-                                </div>
-                            </div>
-
-                            <div
-                                class="timeline-item">
-                                <div class="timeline-icon">
-                                    <i class="fas fa-cog"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <h5>Processing</h5>
-                                    <p>Plants being prepared</p>
-                                </div>
-                            </div>
-
-                            <div
-                                class="timeline-item">
-                                <div class="timeline-icon">
-                                    <i class="fas fa-rocket"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <h5>Shipped</h5>
-                                    <p>En route to destination</p>
                                 </div>
                             </div>
 
