@@ -234,5 +234,20 @@ class Admin{
         }
     }
 
+    public static function delete_plant(PDO $pdo, int $id){
+        try{
+            $stmt = $pdo->prepare("
+                UPDATE PLANTS
+                SET isDeleted = TRUE
+                WHERE plant_id = :id
+            ");
+            $stmt->execute([':id' => $id]);
+            error_log("[Admin::delete_plant] Plant deleted: {$id}");
+            return ['success' => 'PlantDeleted'];
+        }catch(PDOException $e){
+            error_log("[Admin::delete_plant] Database connection error: " . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
 }
 ?>
