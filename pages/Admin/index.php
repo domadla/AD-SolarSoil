@@ -32,6 +32,7 @@ if (isset($_GET['error'])) {
             break;
         case 'PlantAlreadyExists':
             $message = 'Plant already exists. Please choose another name.';
+            break;
         case 'PasswordComplexityFailed':
             $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
             break;
