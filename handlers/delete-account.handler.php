@@ -25,7 +25,9 @@ try {
         Auth::logout();
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to delete account']);
+        // Log the error for debugging
+        error_log('Delete account failed for user_id: ' . $userId);
+        echo json_encode(['success' => false, 'message' => 'Failed to delete account. Check server logs for details.']);
     }
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
