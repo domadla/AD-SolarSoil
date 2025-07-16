@@ -35,20 +35,21 @@
                 <ul class="navbar-nav ms-auto">
                     <?php if (isset($body_class) && $body_class === 'admin-page'): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="../Logout/index.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                            <a class="nav-link" href="../Logout/index.php"><i
+                                    class="fas fa-sign-out-alt me-1"></i>Logout</a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
                             <a class="nav-link" href="../Home/index.php"><i class="fas fa-home me-1"></i>Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="../About/index.php"><i class="fas fa-info-circle me-1"></i>About</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="../Shop/index.php"><i class="fas fa-store me-1"></i>Shop</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="../Order/index.php"><i class="fas fa-box me-1"></i>Order</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../About/index.php"><i class="fas fa-info-circle me-1"></i>About</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="../Cart/index.php">
@@ -60,7 +61,8 @@
                             <a class="nav-link" href="../Profile/index.php"><i class="fas fa-user me-1"></i>Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../Logout/index.php"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+                            <a class="nav-link" href="../Logout/index.php"><i
+                                    class="fas fa-sign-out-alt me-1"></i>Logout</a>
                         </li>
                     <?php endif; ?>
                 </ul>
