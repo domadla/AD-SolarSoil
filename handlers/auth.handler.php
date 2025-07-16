@@ -47,7 +47,7 @@ elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $address = trim($_POST['address'] ?? '');
     $password = trim($_POST['password'] ?? '');
-    $confirm_password = $_POST['confirm_password'] ?? '';
+    $confirm_password = trim($_POST['confirm_password'] ?? '');
     $role = trim($_POST['role'] ?? 'user');
 
     $redirect = $_SERVER['HTTP_REFERER'] ?? '/index.php';
