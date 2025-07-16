@@ -7,6 +7,17 @@ require_once UTILS_PATH . '/auth.util.php';
 class ProfileHandler
 {
     /**
+     * Soft delete user account (set isDeleted=true)
+     *
+     * @param int $userId
+     * @return bool True on success, false on failure
+     */
+    public static function deleteAccount(int $userId): bool
+    {
+        require_once UTILS_PATH . '/profile.util.php';
+        return ProfileUtil::softDeleteUser($userId);
+    }
+    /**
      * Get current logged-in user data from database
      * 
      * @return array|null User data or null if not found
