@@ -48,6 +48,9 @@
                             <a class="nav-link" href="../Order/index.php"><i class="fas fa-box me-1"></i>Order</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="../About/index.php"><i class="fas fa-info-circle me-1"></i>About</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="../Cart/index.php">
                                 <i class="fas fa-shopping-cart me-1"></i>Cart
                                 <span id="cart-badge" class="badge bg-success ms-1">0</span>

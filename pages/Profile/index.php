@@ -193,4 +193,3 @@ include_once COMPONENTS_PATH . '/profile/profile-edit-modal.component.php';
 include_once COMPONENTS_PATH . '/profile/change-password-modal.component.php';
 // Use the shared page layout
 include LAYOUTS_PATH . '/page-layout.php';
-?>
