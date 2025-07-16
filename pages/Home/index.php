@@ -130,13 +130,13 @@ if (!Auth::check()) {
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
+                            <button class="action-btn" onclick="location.href='../Order/index.php'">
                                 <i class="fas fa-receipt"></i>
                                 <span>View Orders</span>
                             </button>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <button class="action-btn">
+                            <button class="action-btn" onclick="location.href='../Profile/index.php'">
                                 <i class="fas fa-cog"></i>
                                 <span>Settings</span>
                             </button>
