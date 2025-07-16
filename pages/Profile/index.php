@@ -39,9 +39,11 @@ if (isset($_GET['error'])) {
         case 'PasswordComplexityFailed':
             $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
             break;
-        case 'AllFieldsRequired':
-        case 'PasswordsDoNotMatch':
+       case 'AllFieldsRequired':
             $message = 'Please correct the errors on the form and try again.';
+            break;
+        case 'PasswordsDoNotMatch':
+            $message = 'New password does not match.';
             break;
     }
 }
@@ -64,7 +66,6 @@ if (isset($_GET['success'])) {
 // Capture page content for layout
 ob_start();
 ?>
-<!-- TODO: Add checker for confirming new password -->
 <!-- Profile Content -->
 <div class="profile-container">
     <div class="container py-5">
