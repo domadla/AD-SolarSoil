@@ -2,3 +2,4 @@
 .php_tmp
 vendor
 .github
+.env
