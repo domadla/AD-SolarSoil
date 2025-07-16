@@ -188,9 +188,9 @@ ob_start();
 <?php
 $content = ob_get_clean();
 
-include_once '../../components/profile/delete-account-modal.component.php';
-include_once '../../components/profile/profile-edit-modal.component.php';
-include_once '../../components/profile/change-password-modal.component.php';
+include_once COMPONENTS_PATH . '/profile/delete-account-modal.component.php';
+include_once COMPONENTS_PATH . '/profile/profile-edit-modal.component.php';
+include_once COMPONENTS_PATH . '/profile/change-password-modal.component.php';
 // Use the shared page layout
-include '../../layouts/page-layout.php';
+include LAYOUTS_PATH . '/page-layout.php';
 ?>
