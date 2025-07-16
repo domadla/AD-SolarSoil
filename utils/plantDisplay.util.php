@@ -1,7 +1,4 @@
 <?php
-/**
- * Simple Plant Display Utility - Helper functions for rendering plant data
- */
 
 require_once UTILS_PATH . '/htmlEscape.util.php';
 
@@ -9,7 +6,7 @@ class PlantDisplayUtil
 {
 
     /**
-     * Render plant card (simplified version)
+     * Render plant card
      * @param array $plant Plant data
      * @return string HTML for complete plant card
      */
@@ -18,7 +15,7 @@ class PlantDisplayUtil
         $stockStatus = '';
         $buttonDisabled = '';
         $stockClass = '';
-        
+
         // Handle stock display
         if (isset($plant['stock_quantity'])) {
             if ($plant['stock_quantity'] <= 0) {
@@ -67,7 +64,7 @@ class PlantDisplayUtil
     }
 
     /**
-     * Render all plants grid (simplified)
+     * Render all plants grid
      * @param array $plants Array of plant data
      * @return string HTML for plants grid
      */
@@ -94,4 +91,3 @@ class PlantDisplayUtil
         return $html;
     }
 }
-?>
