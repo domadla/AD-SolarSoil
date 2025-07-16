@@ -289,5 +289,38 @@ class ProfileUtil
             return ['error' => 'DatabaseError'];
         }
     }
+
+    public static function edit_password(PDO $pdo, int $id, string $oldPassword, string $newPassword) {
+        try {
+            $stmt = $pdo->prepare("
+            SELECT
+                password
+            FROM USERS
+            WHERE user_id = :id");
+            $stmt->execute([':id' => $id]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!password_verify($oldPassword, $user['password'])) {
+                return ['error' => 'InvalidPassword'];
+            }
+
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+            $stmt = $pdo->prepare("
+            UPDATE USERS
+            SET password = :password
+            WHERE user_id = :id
+            ");
+
+            $stmt->execute([
+                ':id' => $id,
+                ':password' => $hashedPassword
+            ]);
+            return ['success' => 'PasswordUpdatedSuccessfully'];
+        } catch (PDOException $e) {
+            error_log('[ProfileUtil::edit_password] PDOException on update: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
 }
 ?>
