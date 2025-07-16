@@ -1,6 +1,4 @@
-<?php
-declare(strict_types=1);
-
+<?php declare(strict_types=1);
 require_once '../../bootstrap.php';
 require_once UTILS_PATH . '/carts.util.php';
 require_once UTILS_PATH . '/cartItems.util.php';
@@ -16,6 +14,18 @@ Auth::init();
  */
 class CartHandler
 {
+    /**
+     * Get a PDO instance for PostgreSQL using $pgConfig
+     */
+    private static function getPDO(): PDO
+    {
+        global $pgConfig;
+        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
+        return new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        ]);
+    }
+
     private static function sendJsonResponse(bool $success, string $message, $data = null, int $httpCode = 200): void
     {
         http_response_code($httpCode);
@@ -208,12 +218,7 @@ class CartHandler
                 self::sendJsonResponse(true, 'Cart is already empty');
             }
 
-            global $pgConfig;
-            $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-            $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]);
-
+            $pdo = self::getPDO();
             $stmt = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = :cart_id AND incart = TRUE");
             $stmt->execute([':cart_id' => $cartId]);
 
@@ -234,7 +239,7 @@ class CartHandler
             $userId = self::authenticateUser();
             
             // Use the OrderHandler to create a proper order
-            require_once __DIR__ . '/order.handler.php';
+            require_once HANDLERS_PATH. '/order.handler.php';
             $result = OrderHandler::createOrderFromCart($userId);
             
             if ($result['success']) {
@@ -256,12 +261,7 @@ class CartHandler
 
     private static function fetchCartItemsWithDetails(int $cartId): array
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         $stmt = $pdo->prepare("
             SELECT 
                 ci.cart_item_id,
@@ -289,12 +289,7 @@ class CartHandler
 
     private static function isPlantAvailable(int $plantId, int $requestedQuantity): bool
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         // Get available stock (total stock minus all items currently in all carts)
         $stmt = $pdo->prepare("
             SELECT 
@@ -319,12 +314,7 @@ class CartHandler
 
     private static function getCartItemQuantity(int $cartId, int $plantId): int
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         $stmt = $pdo->prepare("
             SELECT quantity 
             FROM cart_items 
@@ -338,12 +328,7 @@ class CartHandler
 
     private static function updateCartItemQuantity(int $cartId, int $plantId, int $quantity): void
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         $stmt = $pdo->prepare("
             UPDATE cart_items 
             SET quantity = :quantity 
@@ -358,12 +343,7 @@ class CartHandler
 
     private static function insertCartItem(int $cartId, int $plantId, int $quantity): void
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         $stmt = $pdo->prepare("
             INSERT INTO cart_items (cart_id, plant_id, quantity, incart)
             VALUES (:cart_id, :plant_id, :quantity, TRUE)
@@ -377,12 +357,7 @@ class CartHandler
 
     private static function removeCartItem(int $cartId, int $plantId): void
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         $stmt = $pdo->prepare("
             DELETE FROM cart_items 
             WHERE cart_id = :cart_id AND plant_id = :plant_id AND incart = TRUE
@@ -395,12 +370,7 @@ class CartHandler
      */
     private static function isPlantAvailableForUpdate(int $plantId, int $requestedQuantity, int $excludeCartId): bool
     {
-        global $pgConfig;
-        $dsn = "pgsql:host={$pgConfig['host']};port={$pgConfig['port']};dbname={$pgConfig['db']}";
-        $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        ]);
-
+        $pdo = self::getPDO();
         // Get available stock (total stock minus all items in other carts)
         $stmt = $pdo->prepare("
             SELECT 
