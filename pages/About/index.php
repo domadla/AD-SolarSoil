@@ -63,7 +63,7 @@ ob_start();
                 </div>
                 <div class="col-6 col-md-2 mb-3 team-card">
                     <img src="./assets/img/Dom.jpg" class="mb-2 border border-light all-img" alt="Dom">
-                    <div>Dominic Edgar A. Madlangbayan<br><small>Quality Assurance</small></div>
+                    <div>Edgar Dominic A. Madlangbayan<br><small>Quality Assurance</small></div>
                 </div>
                 <div class="col-6 col-md-2 mb-3 team-card">
                     <img src="./assets/img/Carl.jpg" class="mb-2 border border-light all-img" alt="Carl">
