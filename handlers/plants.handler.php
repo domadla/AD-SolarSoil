@@ -40,6 +40,7 @@ class PlantsHandler
                     name,
                     price,
                     image_url as img,
+                    description,
                     stock_quantity
                 FROM plants 
                 WHERE isDeleted = FALSE 
@@ -61,7 +62,7 @@ class PlantsHandler
                     'id' => $plant['id'],
                     'name' => $plant['name'],
                     'price' => (float)$plant['price'],
-                    'desc' => self::getPlantDescription($plant['name']),
+                    'desc' => $plant['description'] ?? self::getPlantDescription($plant['name']),
                     'img' => $plant['img'] ?: 'assets/img/plants/default.png',
                     'imgClass' => self::generateImageClass($plant['name']),
                     'stock_quantity' => $plant['stock_quantity']

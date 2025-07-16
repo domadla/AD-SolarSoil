@@ -3,6 +3,9 @@ CREATE TABLE IF NOT EXISTS cart_items (
     cart_id INT NOT NULL,
     plant_id INT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
+    inCart BOOLEAN DEFAULT TRUE,
+    order_id INT NULL,
     FOREIGN KEY (cart_id) REFERENCES Carts(cart_id),
-    FOREIGN KEY (plant_id) REFERENCES Plants(plant_id)
+    FOREIGN KEY (plant_id) REFERENCES Plants(plant_id),
+    FOREIGN KEY (order_id) REFERENCES Orders(id)
 );

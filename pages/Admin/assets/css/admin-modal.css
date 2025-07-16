@@ -60,3 +60,6 @@
   padding: 0.4em 0.7em;
   border-radius: 0.5em;
 }
+#adminInfoModal .btn-close {
+  filter: invert(1) grayscale(1) brightness(2);
+}

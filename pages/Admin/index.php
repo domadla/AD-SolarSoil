@@ -1,15 +1,104 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+require_once BASE_PATH . '/bootstrap.php';
+require_once UTILS_PATH . 'auth.util.php';
+require_once UTILS_PATH . 'admin.util.php';
+require_once UTILS_PATH . 'envSetter.util.php';
+
+Auth::init();
+
+$message = '';
+$message_type = '';
+
+if (!Auth::check()) {
+    header('Location: /index.php?error=LoginRequired');
+    exit;
 }
+if (Auth::user()['role'] != 'admin') {
+    header('Location: /index.php?error=AccessDenied');
+    exit;
+}
+if (isset($_GET['error'])) {
+    $message_type = 'danger';
+    $error_code = $_GET['error'];
+    switch ($error_code) {
+        case 'InvalidCredentials':
+            $message = 'Invalid username or password. Please try again.';
+            break;
+        case 'UsernameAlreadyTaken':
+            $message = 'That username is already taken. Please choose another.';
+            break;
+        case 'DatabaseError':
+            $message = 'An error occurred while processing your request. Please try again later.';
+            break;
+        case 'PlantAlreadyExists':
+            $message = 'Plant already exists. Please choose another name.';
+            break;
+        case 'PasswordComplexityFailed':
+            $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
+            break;
+        case 'AllFieldsRequired':
+        case 'PasswordsDoNotMatch':
+            $message = 'Please correct the errors on the form and try again.';
+            break;
+        case 'NoFieldsToUpdate':
+            $message = 'No fields to update.';
+            break;
+        default:
+            $message = 'An unexpected error occurred. Please try again.';
+            break;
+    }
+}
+if (isset($_GET['success'])) {
+    $message_type = 'success';
+    $success_code = $_GET['success'];
+    switch ($success_code) {
+        case 'SignupComplete':
+            $message = 'Account has been successfully created.';
+            break;
+        case 'OrdersUpdated':
+            $message = 'Orders have been successfully updated.';
+            break;
+        case 'PlantAdded':
+            $message = 'Plant has been successfully added.';
+            break;
+        case 'PlantUpdatedSuccessfully':
+            $message = 'Plant has been successfully updated.';
+            break;
+        case 'UserDeleted':
+            $message = 'User has been successfully deleted.';
+            break;
+        case 'PlantDeleted':
+            $message = 'Plant has been successfully deleted.';
+            break;
+    }
+}
+$host = $pgConfig['host'];
+$port = $pgConfig['port'];
+$username = $pgConfig['user'];
+$password = $pgConfig['pass'];
+$dbname = $pgConfig['db'];
+
+// Connect to Postgres
+$dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
+$pdo = new PDO($dsn, $username, $password, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+]);
+
+
+//Progress bar 
+$user_count = Admin::count_users($pdo);
+$user_goal = 100;
+$plant_count = Admin::count_plants($pdo);
+$plant_goal = 100;
+$order_count = Admin::count_orders($pdo);
+$order_goal = 100;
 
 $page_title = 'SolarSoil - Admin Control Center';
 $page_description = 'Administrative dashboard for managing the interstellar agriculture platform.';
 $body_class = 'admin-page';
 // Capture page content
 ob_start();
-// ...existing code...
-// (Start HTML output here, do not close PHP tag)
+
 ?>
 <!-- Admin Dashboard Content -->
 <div class="admin-dashboard-container">
@@ -35,7 +124,14 @@ ob_start();
                 </div>
             </div>
         </div>
-
+        <!-- Alert Container -->
+        <div id="alert-container">
+            <?php if (isset($message) && $message): ?>
+                <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
+                    <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars($message); ?>
+                </div>
+            <?php endif; ?>
+        </div>
         <!-- Admin Stats Cards -->
         <div class="row g-4 mb-5">
             <!-- Total Users -->
@@ -46,10 +142,12 @@ ob_start();
                         <h3>Total Users</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">2,847</div>
+                        <div class="metric-value" id="user-count"
+                            data-count="<?php echo htmlspecialchars($user_count); ?>"
+                            data-goal="<?php echo $user_goal; ?>"><?php echo htmlspecialchars($user_count); ?></div>
                         <div class="metric-label">Active Farmers</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 85%;"></div>
+                            <div class="progress-fill" id="user-progress"></div>
                         </div>
                         <p class="card-description">
                             Cosmic agriculture pioneers across the galaxy.
@@ -66,10 +164,15 @@ ob_start();
                         <h3>Plant Inventory</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">156</div>
+                        <?php
+
+                        ?>
+                        <div class="metric-value" id="plant-count"
+                            data-count="<?php echo htmlspecialchars($plant_count); ?>"
+                            data-goal="<?php echo $plant_goal; ?>"><?php echo htmlspecialchars($plant_count); ?></div>
                         <div class="metric-label">Plant Species</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 92%;"></div>
+                            <div class="progress-fill" id="plant-progress"></div>
                         </div>
                         <p class="card-description">
                             Quantum-enhanced crops and bio-fusion varieties.
@@ -86,10 +189,12 @@ ob_start();
                         <h3>Orders</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">4,231</div>
+                        <div class="metric-value" id="order-count"
+                            data-count="<?php echo htmlspecialchars($order_count); ?>"
+                            data-goal="<?php echo $order_goal; ?>"><?php echo htmlspecialchars($order_count); ?></div>
                         <div class="metric-label">Total Orders</div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 78%;"></div>
+                            <div class="progress-fill" id="order-progress"></div>
                         </div>
                         <p class="card-description">
                             Galactic commerce transactions processed.
@@ -106,7 +211,7 @@ ob_start();
                         <h3>System Health</h3>
                     </div>
                     <div class="card-body">
-                        <div class="metric-value">98.7%</div>
+                        <div class="metric-value">99.7%</div>
                         <div class="metric-label">Uptime</div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 98.7%;"></div>
@@ -129,7 +234,6 @@ ob_start();
                         <h3>User Management</h3>
                     </div>
                     <div class="card-body">
-                        <p>Manage user accounts, permissions, and access levels across the platform.</p>
                         <div class="action-buttons">
                             <button class="btn btn-primary btn-sm me-2" onclick="manageUsers()">
                                 <i class="fas fa-users"></i> View Users
@@ -150,7 +254,6 @@ ob_start();
                         <h3>Plant Inventory</h3>
                     </div>
                     <div class="card-body">
-                        <p>Control plant species, inventory levels, and pricing across all galactic markets.</p>
                         <div class="action-buttons">
                             <button class="btn btn-success btn-sm me-2" onclick="managePlants()">
                                 <i class="fas fa-seedling"></i> View Plants
@@ -171,7 +274,6 @@ ob_start();
                         <h3>Order Management</h3>
                     </div>
                     <div class="card-body">
-                        <p>Monitor, process, and manage all customer orders and transactions.</p>
                         <div class="action-buttons">
                             <button class="btn btn-warning btn-sm me-2" onclick="manageOrders()">
                                 <i class="fas fa-list"></i> View Orders
@@ -244,50 +346,10 @@ ob_start();
 $content = ob_get_clean();
 
 // Include the admin modal component
-include_once '../../components/admin/admin-modal.component.php';
+include_once COMPONENTS_PATH . 'admin/admin-modal.component.php';
 
 // Use the shared page layout
-include '../../layouts/page-layout.php';
+include LAYOUTS_PATH . 'page-layout.php';
 ?>
 
-<script>
-    // Helper to show the admin modal with custom content
-    function showAdminModal(title, body) {
-        document.getElementById('adminInfoModalLabel').textContent = title;
-        document.getElementById('adminInfoModalBody').innerHTML = body;
-        var modal = new bootstrap.Modal(document.getElementById('adminInfoModal'));
-        modal.show();
-    }
-
-
-    function manageUsers() {
-        fetch('../../components/admin/user/view-user-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('User List', html));
-    }
-    function addUser() {
-        fetch('../../components/admin/user/add-user-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Add User', html));
-    }
-    function managePlants() {
-        fetch('../../components/admin/plant/view-plant-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Plant Inventory', html));
-    }
-    function addPlant() {
-        fetch('../../components/admin/plant/add-plant-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Add Plant', html));
-    }
-    function manageOrders() {
-        fetch('../../components/admin/order/view-order-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Order List', html));
-    }
-    function processOrders() {
-        fetch('../../components/admin/order/process-order-modal.component.php')
-            .then(response => response.text())
-            .then(html => showAdminModal('Process Orders', html));
-    }
-</script>
+<script src="assets/js/admin.js"></script>

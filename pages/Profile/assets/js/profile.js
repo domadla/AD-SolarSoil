@@ -6,32 +6,52 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function initProfileButtons() {
-  // Edit Profile button
   const editBtn = document.querySelector(".btn-primary");
   if (editBtn) {
     editBtn.addEventListener("click", function () {
-      showNotification("Edit Profile feature coming soon!", "info");
+      const userId = editBtn.getAttribute("data-id");
+      document.getElementById("user_id").value = userId;
     });
   }
+}
 
-  // Change Password button
-  const passwordBtn = document.querySelector(".btn-outline-primary");
-  if (passwordBtn) {
-    passwordBtn.addEventListener("click", function () {
-      showNotification("Change Password feature coming soon!", "info");
-    });
-  }
+var deleteBtn = document.getElementById("confirmDeleteAccountBtn");
+if (deleteBtn) {
+  deleteBtn.addEventListener("click", function () {
+    fetch("../../handlers/delete-account.handler.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.href = "../../index.php?message=AccountDeleted";
+        } else {
+          alert(data.message || "Failed to delete account.");
+        }
+      })
+      .catch(() => alert("Failed to delete account."));
+  });
+}
 
-  // Logout button
-  const logoutBtn = document.querySelector(".btn-outline-danger");
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", function () {
-      if (confirm("Are you sure you want to logout?")) {
-        // Clear session and redirect to login
-        window.location.href = "../../index.php";
-      }
-    });
-  }
+// Change Password button
+const passwordBtn = document.querySelector(".btn-outline-primary");
+if (passwordBtn) {
+  passwordBtn.addEventListener("click", function () {
+    showNotification("Change Password feature coming soon!", "info");
+  });
+}
+
+// Logout button
+const logoutBtn = document.querySelector(".btn-outline-danger");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", function () {
+    if (confirm("Are you sure you want to logout?")) {
+      // Clear session and redirect to login
+      window.location.href = "../../index.php";
+    }
+  });
 }
 
 function initAnimations() {

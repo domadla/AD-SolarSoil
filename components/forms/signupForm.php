@@ -44,9 +44,21 @@
                 <i class="fas fa-lock me-2"></i>Password
             </label>
             <input type="password" class="form-control" id="signup-password" name="password"
-                placeholder="Create a password (min. 6 characters)" required minlength="6">
-            <small class="form-text text-muted password-requirement" style="display: none;">
-                Password must be at least 6 characters long
+                placeholder="Create a password (min. 6 characters, 1 special character)" required minlength="6">
+            <small class="form-text password-requirement" id="password-length-msg">
+                Password must be at least 6 characters long.
+            </small>
+            <small class="form-text password-requirement" id="password-special-msg">
+                Password must contain at least 1 special character.
+            </small>
+            <small class="form-text password-requirement" id="password-upper-msg">
+                Password must contain at least 1 uppercase letter.
+            </small>
+            <small class="form-text password-requirement" id="password-lower-msg">
+                Password must contain at least 1 lowercase letter.
+            </small>
+            <small class="form-text password-requirement" id="password-number-msg">
+                Password must contain at least 1 number.
             </small>
         </div>
 
@@ -71,3 +83,5 @@
         </div>
     </form>
 </div>
+
+<script src="/assets/js/signup.js"></script>

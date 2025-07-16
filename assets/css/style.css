@@ -297,10 +297,18 @@ body::before {
   color: white;
 }
 
-/* Password requirement text styling */
 .password-requirement {
-  color: #ff6b6b !important;
-  text-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
+  color: #fff;
+}
+
+.password-requirement {
+  display: none;
+  color: #fff;
+  font-size: 0.95em;
+  margin-top: 0.25rem;
+}
+.password-requirement.show {
+  display: block;
 }
 
 /* Form validation error styling */

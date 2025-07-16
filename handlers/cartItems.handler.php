@@ -1,8 +1,4 @@
 <?php
-/**
- * Cart Items Handler - Manages cart items operations
- * Handles adding, updating, and removing items from user carts
- */
 
 require_once UTILS_PATH . '/envSetter.util.php';
 require_once UTILS_PATH . '/cartItems.util.php';
@@ -73,7 +69,7 @@ class CartItemsHandler
             $stmt = $pdo->prepare("
                 SELECT cart_item_id, quantity 
                 FROM cart_items 
-                WHERE cart_id = :cart_id AND plant_id = :plant_id
+                WHERE cart_id = :cart_id AND plant_id = :plant_id AND incart = TRUE
             ");
             $stmt->execute([
                 ':cart_id' => $cartId,
@@ -121,8 +117,8 @@ class CartItemsHandler
             } else {
                 // Add new item to cart
                 $insertStmt = $pdo->prepare("
-                    INSERT INTO cart_items (cart_id, plant_id, quantity) 
-                    VALUES (:cart_id, :plant_id, :quantity)
+                    INSERT INTO cart_items (cart_id, plant_id, quantity, incart) 
+                    VALUES (:cart_id, :plant_id, :quantity, TRUE)
                 ");
                 $insertStmt->execute([
                     ':cart_id' => $cartId,
@@ -190,6 +186,7 @@ class CartItemsHandler
                 JOIN plants p ON ci.plant_id = p.plant_id
                 WHERE c.user_id = :user_id 
                 AND p.isDeleted = FALSE
+                AND ci.incart = TRUE
                 ORDER BY ci.cart_item_id DESC
             ");
             $stmt->execute([':user_id' => $userId]);
@@ -219,7 +216,7 @@ class CartItemsHandler
                 SELECT ci.quantity 
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.incart = TRUE
             ");
             $selectStmt->execute([
                 ':user_id' => $userId,
@@ -237,7 +234,7 @@ class CartItemsHandler
             $stmt = $pdo->prepare("
                 DELETE FROM cart_items 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND plant_id = :plant_id
+                AND plant_id = :plant_id AND incart = TRUE
             ");
             $stmt->execute([
                 ':user_id' => $userId,
@@ -290,7 +287,7 @@ class CartItemsHandler
                 SELECT ci.quantity 
                 FROM cart_items ci
                 JOIN carts c ON ci.cart_id = c.cart_id
-                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id
+                WHERE c.user_id = :user_id AND ci.plant_id = :plant_id AND ci.incart = TRUE
             ");
             $selectStmt->execute([
                 ':user_id' => $userId,
@@ -325,7 +322,7 @@ class CartItemsHandler
                 UPDATE cart_items 
                 SET quantity = :quantity 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
-                AND plant_id = :plant_id
+                AND plant_id = :plant_id AND incart = TRUE
             ");
             $stmt->execute([
                 ':quantity' => $quantity,
@@ -378,6 +375,7 @@ class CartItemsHandler
                 JOIN carts c ON ci.cart_id = c.cart_id
                 WHERE plants.plant_id = ci.plant_id 
                 AND c.user_id = :user_id
+                AND ci.incart = TRUE
             ");
             $restoreStockStmt->execute([':user_id' => $userId]);
             $stockRestoredCount = $restoreStockStmt->rowCount();
@@ -386,6 +384,7 @@ class CartItemsHandler
             $stmt = $pdo->prepare("
                 DELETE FROM cart_items 
                 WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
+                AND incart = TRUE
             ");
             $stmt->execute([':user_id' => $userId]);
             
@@ -394,6 +393,47 @@ class CartItemsHandler
             
         } catch (PDOException $e) {
             error_log('[CartItemsHandler::clearCart] Database error: ' . $e->getMessage());
+            return ['success' => false, 'message' => 'Database error occurred'];
+        }
+    }
+
+    /**
+     * Mark cart items as ordered (set incart to FALSE) instead of deleting them
+     * 
+     * @param int $userId User ID
+     * @param int|null $orderId Optional order ID to assign to cart items
+     * @return array Response with success/error status
+     */
+    public static function markCartItemsAsOrdered(int $userId, ?int $orderId = null): array
+    {
+        try {
+            $pdo = self::getConnection();
+            
+            // Update all cart items to set incart = FALSE and optionally assign order_id
+            if ($orderId !== null) {
+                $stmt = $pdo->prepare("
+                    UPDATE cart_items 
+                    SET incart = FALSE, order_id = :order_id 
+                    WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
+                    AND incart = TRUE
+                ");
+                $stmt->execute([':user_id' => $userId, ':order_id' => $orderId]);
+            } else {
+                $stmt = $pdo->prepare("
+                    UPDATE cart_items 
+                    SET incart = FALSE 
+                    WHERE cart_id = (SELECT cart_id FROM carts WHERE user_id = :user_id)
+                    AND incart = TRUE
+                ");
+                $stmt->execute([':user_id' => $userId]);
+            }
+            $updatedCount = $stmt->rowCount();
+            
+            error_log("[CartItemsHandler::markCartItemsAsOrdered] Marked {$updatedCount} cart items as ordered for user_id={$userId}" . ($orderId ? " with order_id={$orderId}" : ""));
+            return ['success' => true, 'message' => 'Cart items marked as ordered', 'items_updated' => $updatedCount];
+            
+        } catch (PDOException $e) {
+            error_log('[CartItemsHandler::markCartItemsAsOrdered] Database error: ' . $e->getMessage());
             return ['success' => false, 'message' => 'Database error occurred'];
         }
     }
