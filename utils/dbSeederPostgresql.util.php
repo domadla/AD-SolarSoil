@@ -23,11 +23,11 @@ $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
 // ——— Apply schemas before truncating ———
 echo "📦 Applying schema files...\n";
 $schemaFiles = [
-    'database/users.model.sql',
-    'database/plants.model.sql',
-    'database/carts.model.sql',
-    'database/orders.model.sql',
-    'database/cartItems.model.sql'
+    DATABASE_PATH . '/users.model.sql',
+    DATABASE_PATH . '/plants.model.sql',
+    DATABASE_PATH . '/carts.model.sql',
+    DATABASE_PATH . '/orders.model.sql',
+     DATABASE_PATH . '/cartItems.model.sql',
 ];
 
 foreach ($schemaFiles as $file) {
@@ -61,8 +61,8 @@ $stmtOrders = $pdo->prepare("
 ");
 
 $stmtCartItems = $pdo->prepare("
-    INSERT INTO cart_items (cart_id, plant_id, quantity)
-    VALUES (:c_id, :p_id, :quantity)
+    INSERT INTO cart_items (cart_id, plant_id, quantity, incart, order_id)
+    VALUES (:c_id, :p_id, :quantity, :inc, :o_id)
 ");
 
 
@@ -137,6 +137,8 @@ try {
             ':c_id' => $o['cart_id'],
             ':p_id' => $o['plant_id'],
             ':quantity' => $o['quantity'],
+            ':inc' => $o['incart'] ? 1 : 0,
+            ':o_id' => $o['order_id'],
         ]);
     }
 } catch (PDOException $e) {

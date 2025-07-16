@@ -48,11 +48,16 @@ class Auth
             error_log("[Auth::login] No user found for username='{$username}'");
             return false;
         } else {
-            error_log('[Auth::login] Retrieved user: ' . var_export([
-                'id' => $user['user_id'],
-                'username' => $user['username'],
-                'role' => $user['role'],
-            ], true));
+            if ($user['isdeleted'] === true) {
+                error_log("[Auth::login] User is deleted: {$username}");
+                return false;
+            } else {
+                error_log('[Auth::login] Retrieved user: ' . var_export([
+                    'id' => $user['user_id'],
+                    'username' => $user['username'],
+                    'role' => $user['role'],
+                ], true));
+            }
         }
 
         // 2) Verify password
@@ -86,7 +91,7 @@ class Auth
      * @param string $password
      * @return array ['success' => 'Message'] or ['error' => 'Message']
      */
-    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $address, string $password): array
+    public static function register(PDO $pdo, string $firstname, string $lastname, string $username, string $address, string $password, string $role): array
     {
         // 1) Check if username already exists
         try {
@@ -116,7 +121,7 @@ class Auth
                 ':username' => $username,
                 ':address' => $address,
                 ':password' => $hashedPassword,
-                ':role' => 'user' // Default role
+                ':role' => $role // Default role
             ]);
 
             error_log("[Auth::register] New user created: {$username}");

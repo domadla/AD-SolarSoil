@@ -46,28 +46,30 @@ elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $lastname = trim($_POST['last_name'] ?? '');
     $username = trim($_POST['username'] ?? '');
     $address = trim($_POST['address'] ?? '');
-    $password = $_POST['password'] ?? ''; // Don't trim password
-    $confirm_password = $_POST['confirm_password'] ?? '';
+    $password = trim($_POST['password'] ?? '');
+    $confirm_password = trim($_POST['confirm_password'] ?? '');
+    $role = trim($_POST['role'] ?? 'user');
+
+    $redirect = $_SERVER['HTTP_REFERER'] ?? '/index.php';
 
     // Basic server-side validation
     if (empty($firstname) || empty($lastname) || empty($username) || empty($address) || empty($password)) {
-        header('Location: /index.php?error=AllFieldsRequired');
+        header("Location: {$redirect}?error=AllFieldsRequired");
         exit;
     }
     if ($password !== $confirm_password) {
-        header('Location: /index.php?error=PasswordsDoNotMatch');
+        header("Location: {$redirect}?error=PasswordsDoNotMatch");
         exit;
     }
     // Password complexity validation
     // Requires: 1 uppercase, 1 lowercase, 1 number, 1 special char, min 8 chars
     $passwordRegex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/';
     if (!preg_match($passwordRegex, $password)) {
-        header('Location: /index.php?error=PasswordComplexityFailed');
+        header("Location: {$redirect}?error=PasswordComplexityFailed");
         exit;
     }
-
-    $result = Auth::register($pdo, $firstname, $lastname, $username, $address, $password);
-    header('Location: /index.php?' . http_build_query($result));
+    $result = Auth::register($pdo, $firstname, $lastname, $username, $address, $password, $role);
+    header("Location: {$redirect}?" . http_build_query($result));
     exit;
 }
 

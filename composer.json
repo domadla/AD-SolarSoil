@@ -31,7 +31,9 @@
     "scripts": {
         "start": "php -S localhost:8000 router.php",
         "postgresql:reset": "docker compose exec ad-solarsoil php utils/dbResetPostgresql.util.php",
-         "postgresql:seed": "docker compose exec ad-solarsoil php utils/dbSeederPostgresql.util.php"
+         "postgresql:seed": "docker compose exec ad-solarsoil php utils/dbSeederPostgresql.util.php",
+        "postgresql:migrate": "docker compose exec ad-solarsoil php utils/dbMigratePostgresql.util.php"
+         
 
     },
     "require": {

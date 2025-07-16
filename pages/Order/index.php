@@ -1,13 +1,33 @@
 <?php
+// Include bootstrap first to set up paths
+require_once '../../bootstrap.php';
+
+// Include necessary utilities for authentication
+require_once UTILS_PATH . '/auth.util.php';
+
 // Include handlers
 require_once HANDLERS_PATH . '/order.handler.php';
 require_once HANDLERS_PATH . '/user.handler.php';
 
-// Start session for user authentication
-session_start();
+// Initialize session for user authentication
+Auth::init();
+
+// Check if user is authenticated
+if (!Auth::check()) {
+    header('Location: ../../index.php?error=LoginRequired');
+    exit;
+}
+
+// Get user information
+$user = Auth::user();
+if (!$user || !isset($user['id'])) {
+    header('Location: ../../index.php?error=SessionError');
+    exit;
+}
+$userId = $user['id'];
 
 // Handle order creation from cart
-$order = null;
+$orders = [];
 $order_created = false;
 
 if (isset($_POST['create_order']) && isset($_POST['cart_data'])) {
@@ -21,21 +41,30 @@ if (isset($_POST['create_order']) && isset($_POST['cart_data'])) {
         // Create order
         $order = OrderHandler::createOrder($cart_items, $user_data);
         $order_created = true;
+        $orders = [$order]; // Single order for new creation
     }
-} elseif (isset($_GET['order_id'])) {
-    // Load existing order
-    $order = OrderHandler::getOrderById($_GET['order_id']);
+} else {
+    // Get all user's orders (always show all orders)
+    $orders = OrderHandler::getUserAllOrders($userId);
+    
+    if (!empty($orders)) {
+        // Check if the first (most recent incomplete) order was created recently
+        $firstOrder = $orders[0];
+        if (isset($firstOrder['date'])) {
+            $orderTime = strtotime($firstOrder['date']);
+            $currentTime = time();
+            // If order was created in the last 10 minutes, show as newly created
+            if (($currentTime - $orderTime) < 600) { // 10 minutes
+                $order_created = true;
+            }
+        }
+    }
 }
 
-// If no order found and no order created, check session for last order
-if (!$order && !$order_created) {
-    if (isset($_SESSION['last_order'])) {
-        $order = $_SESSION['last_order'];
-    } else {
-        // Redirect to cart if no order data
-        header('Location: ../Cart/index.php');
-        exit;
-    }
+// If no orders found, redirect to cart
+if (empty($orders)) {
+    header('Location: ../Cart/index.php?error=NoOrderFound');
+    exit;
 }
 
 // Set page variables
@@ -59,10 +88,10 @@ ob_start();
                             <i class="fas fa-check-circle fa-4x"></i>
                         </div>
                         <h1 class="order-title">
-                            Order Confirmed!
+                            Your Orders
                         </h1>
                         <p class="order-subtitle">
-                            Thank you for your purchase! Your cosmic plants are being prepared for interstellar delivery.
+                            Here are all your past and current orders. Track your deliveries and view order details below.
                         </p>
                     <?php else: ?>
                         <h1 class="order-title">
@@ -77,19 +106,30 @@ ob_start();
             </div>
         </div>
 
-        <div class="row">
-            <!-- Order Information -->
-            <div class="col-lg-8">
+        <?php foreach ($orders as $index => $order): ?>
+        <!-- Single Order Container -->
+        <div class="order-container mb-5">
+            <?php if (count($orders) > 1): ?>
+            <div class="order-separator mb-4">
+                <h2 class="text-center">
+                    <span class="badge badge-primary">Order #<?php echo ($index + 1); ?></span>
+                </h2>
+            </div>
+            <?php endif; ?>
+            
+            <div class="row">
+                <!-- Order Information -->
+                <div class="col-lg-8">
                 <!-- Order Summary Card -->
-                <div class="order-card">
+                <div class="order-card mb-4">
                     <div class="order-card-header">
-                        <h3><i class="fas fa-clipboard-list me-2"></i>Order Summary</h3>
+                        <h3><i class="fas fa-clipboard-list me-2"></i>Order Summary <?php echo count($orders) > 1 ? '#' . ($index + 1) : ''; ?></h3>
                         <div class="order-status">
                             <?php
                             $status_info = OrderHandler::getStatusInfo($order['status']);
                             ?>
                             <span class="status-badge status-<?php echo $status_info['class']; ?>"
-                                <?php if ($order['status'] === 'confirmed'): ?>
+                                <?php if (in_array($order['status'], ['confirmed', 'delivered'])): ?>
                                     style="background-color: #28a745; color: #fff;"
                                 <?php endif; ?>
                             >
@@ -124,7 +164,7 @@ ob_start();
                             </div>
                             <div class="order-info-item">
                                 <label>Payment Method</label>
-                                <span><?php echo htmlspecialchars($order['payment_method']); ?></span>
+                                <span><?php echo htmlspecialchars($order['payment_method'] ?? 'Galactic Credit Card'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -141,8 +181,8 @@ ob_start();
                             <?php foreach ($order['items'] as $item): ?>
                                 <div class="order-item">
                                     <?php
-                                    $imagePath = $item['image'];
-                                    $basename = basename($imagePath);
+                                    $imagePath = $item['image_url'] ?? '';
+                                    $basename = !empty($imagePath) ? basename($imagePath) : 'default-plant.jpg';
                                     $imagePath = '../../pages/Shop/assets/img/plants/' . $basename;
                                     ?>
                                     <img src="<?php echo htmlspecialchars($imagePath); ?>"
@@ -186,7 +226,7 @@ ob_start();
                             </div>
                             <div class="total-line">
                                 <span>Galactic Tax</span>
-                                <span><?php echo number_format($order['tax'], 0); ?> GC</span>
+                                <span><?php echo number_format($order['tax'] ?? 0, 0); ?> GC</span>
                             </div>
                             <hr>
                             <div class="total-line total-final">
@@ -224,7 +264,7 @@ ob_start();
                     <div class="order-card-body">
                         <div class="status-timeline">
                             <div
-                                class="timeline-item <?php echo $order['status'] == 'confirmed' ? 'active' : 'completed'; ?>">
+                                class="timeline-item <?php echo !$order['completed'] ? 'active' : ''; ?>">
                                 <div class="timeline-icon">
                                     <i class="fas fa-check"></i>
                                 </div>
@@ -234,29 +274,7 @@ ob_start();
                                 </div>
                             </div>
 
-                            <div
-                                class="timeline-item <?php echo in_array($order['status'], ['processing', 'shipped', 'delivered']) ? 'active' : ''; ?>">
-                                <div class="timeline-icon">
-                                    <i class="fas fa-cog"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <h5>Processing</h5>
-                                    <p>Plants being prepared</p>
-                                </div>
-                            </div>
-
-                            <div
-                                class="timeline-item <?php echo in_array($order['status'], ['shipped', 'in_transit', 'delivered']) ? 'active' : ''; ?>">
-                                <div class="timeline-icon">
-                                    <i class="fas fa-rocket"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <h5>Shipped</h5>
-                                    <p>En route to destination</p>
-                                </div>
-                            </div>
-
-                            <div class="timeline-item <?php echo $order['status'] == 'delivered' ? 'active' : ''; ?>">
+                            <div class="timeline-item <?php echo $order['completed'] ? 'active' : ''; ?>">
                                 <div class="timeline-icon">
                                     <i class="fas fa-home"></i>
                                 </div>
@@ -270,6 +288,9 @@ ob_start();
                 </div>
             </div>
         </div>
+        <!-- End Order Container -->
+        </div>
+        <?php endforeach; ?>
     </div>
 </div>
 
