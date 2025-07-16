@@ -23,11 +23,56 @@ if (!$user_data) {
     header('Location: ../../index.php?error=UserDataNotFound');
     exit;
 }
+if (isset($_GET['error'])) {
+    $message_type = 'danger';
+    $error_code = $_GET['error'];
+    switch ($error_code) {
+        case 'InvalidPassword':
+            $message = 'Invalid password. Please try again.';
+            break;
+        case 'UsernameAlreadyTaken':
+            $message = 'That username is already taken. Please choose another.';
+            break;
+        case 'DatabaseError':
+            $message = 'An error occurred while processing your request. Please try again later.';
+            break;
+        case 'PasswordComplexityFailed':
+            $message = 'Password must be at least 6 characters long and include one uppercase letter (A-Z), one lowercase letter (a-z), one number (0-9)), and one special character (!@#$%^&*).';
+            break;
+        case 'AllFieldsRequired':
+        case 'PasswordsDoNotMatch':
+            $message = 'Please correct the errors on the form and try again.';
+            break;
+    }
+}
+if (isset($_GET['success'])) {
+    $message_type = 'success';
+    $success_code = $_GET['success'];
+    switch ($success_code) {
+        case 'UserUpdatedSuccessfully':
+            $message = 'Profile has been successfully updated.';
+            break;
+        case 'PasswordUpdatedSuccessfully':
+            $message = 'Password has been successfully updated.';
+            break;
+        case 'AccountDeletedSuccessfully':
+            $message = 'Account has been successfully deleted';
+            break;
+    }
+}
 
 // Capture page content for layout
 ob_start();
 ?>
 <!-- TODO: Add checker for confirming new password -->
+ <!-- Alert Container -->
+                    <div id="alert-container">
+                        <?php if (isset($message) && $message): ?>
+                            <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
+                                <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars($message); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
 <!-- Profile Content -->
 <div class="profile-container">
     <div class="container py-5">
