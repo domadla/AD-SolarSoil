@@ -2,7 +2,7 @@ FROM php:8.3.21-fpm-alpine3.20
 
 ENV NODE_ENV=development
 
-RUN addgroup -S developer && adduser -S yourUsernameHere -G developer
+RUN addgroup -S developer && adduser -S domadla -G developer
 
 WORKDIR /var/www/html
 
@@ -15,7 +15,7 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/local/bin/composer
 
 COPY . /var/www/html/
 
-USER yourUsernameHere
+USER domadla
 
 EXPOSE 8000
 
