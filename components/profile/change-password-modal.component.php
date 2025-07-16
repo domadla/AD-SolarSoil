@@ -8,7 +8,9 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="changePasswordForm">
+                <form id="changePasswordForm" method="POST" action="/handlers/profile-edit.handler.php">
+                    <input type="hidden" name="action" value="edit_password">
+                    <input type="hidden" id="user_id" name="user_id" value="<?php echo htmlspecialchars($user_data['user_id']);?>">
                     <div class="mb-3">
                         <label for="currentPassword" class="form-label" style="color:#fff;"><i
                                 class="fas fa-lock me-2"></i>Current Password</label>
@@ -27,10 +29,10 @@
                         <input type="password" class="form-control bg-secondary text-light border-0"
                             id="confirmNewPassword" name="confirm_new_password" autocomplete="new-password">
                     </div>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
                 </form>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-success">Save</button>
             </div>
         </div>
     </div>

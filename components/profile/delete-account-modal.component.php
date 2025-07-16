@@ -13,8 +13,10 @@
             </div>
             <div class="modal-footer border-0 justify-content-center">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteAccountBtn">Delete</button>
+            </div>
             </div>
         </div>
     </div>
 </div>
+<script src="/pages/Profile/assets/js/profile.js"></script>
