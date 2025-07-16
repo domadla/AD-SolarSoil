@@ -26,8 +26,7 @@ foreach ($orders as $order) {
     $orderRows .= '<tr>' .
         '<td>' . htmlspecialchars($order['id']) . '</td>' .
         '<td>' . htmlspecialchars($order['firstname']) . htmlspecialchars($order['lastname']) . '</td>' .
-        '<td>' . htmlspecialchars($order['name']) . '</td>' .
-        '<td>' . htmlspecialchars($order['quantity']) . '</td>' .
+        '<td>' . htmlspecialchars($order['items']) . '</td>' .
         '<td>' .
         '<input type="hidden" name="order_id[]" value="' . htmlspecialchars($order['id']) . '">' .
         '<select class="form-select form-select-sm" name="status[]">' .
@@ -40,7 +39,7 @@ foreach ($orders as $order) {
 $orderTable = '<form id="processOrderTableForm" method="POST" action="/handlers/admin.handler.php">' .
     '<input type="hidden" name="action" value="update_orders">' .
     '<table class="table table-striped table-bordered">' .
-    '<thead><tr><th>Order #</th><th>Customer</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead>' .
+    '<thead><tr><th>Order #</th><th>Customer</th><th>Item</th><th>Status</th></tr></thead>' .
     '<tbody>' . $orderRows . '</tbody></table>' .
     '<button type="submit" class="btn btn-warning mt-2">Save Changes</button>' .
     '</form>';

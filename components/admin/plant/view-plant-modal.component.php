@@ -29,7 +29,8 @@ foreach ($plants as $plant) {
         '<td>' . htmlspecialchars($plant['name']) . '</td>' .
         '<td>' . (isset($plant['stock_quantity']) ? htmlspecialchars($plant['stock_quantity']) : '-') . '</td>' .
         '<td>' . (isset($plant['price']) ? htmlspecialchars($plant['price']) : '-') . '</td>' .
-        '<td><button class="btn btn-primary btn-sm" onclick="editPlant(' . htmlspecialchars($plant['id']) . ')">Edit</button></td>' .
+        '<td><button class="btn btn-sm btn-secondary" onclick="editPlant(' . htmlspecialchars($plant['id']) . ')">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deletePlant(' . htmlspecialchars($plant['id']) . ')">Delete</button></td>' .
         '</tr>';
 }
 $plantTable = '<table class="table table-striped table-bordered">'
@@ -38,10 +39,3 @@ $plantTable = '<table class="table table-striped table-bordered">'
 echo $plantTable;
 
 ?>
-<script>
-    function editPlant(id) {
-        fetch('../../components/admin/plant/edit-plant-modal.component.php?id=' + id)
-            .then(response => response.text())
-            .then(html => showAdminModal('Edit Plant', html));
-    }
-</script>

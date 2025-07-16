@@ -30,15 +30,14 @@ foreach ($orders as $order) {
         $badge = '<span class="badge bg-warning text-dark">Processing</span>';
     else
         $badge = '<span class="badge bg-secondary">Pending</span>';
-    $orderRows .= '<tr>' .
-        '<td>' . htmlspecialchars($order['id']) . '</td>' .
-        '<td>' . htmlspecialchars($order['firstname']) .  " " .htmlspecialchars($order['lastname']) . '</td>' .
-        '<td>' . htmlspecialchars($order['name']) . '</td>' .
-        '<td>' . htmlspecialchars($order['quantity']) . '</td>' .
-        '<td>' . $badge . '</td>' .
-        '</tr>';
+    $orderRows .= '<tr>'
+        . '<td>' . htmlspecialchars($order['id']) . '</td>'
+        . '<td>' . htmlspecialchars($order['firstname']) . ' ' . htmlspecialchars($order['lastname']) . '</td>'
+        . '<td>' . htmlspecialchars($order['items']) . '</td>'
+        . '<td>' . $badge . '</td>'
+        . '</tr>';
 }
-$orderTable = '<table class="table table-striped table-bordered">'
-    . '<thead><tr><th>Order #</th><th>Customer</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead>'
-    . '<tbody>' . $orderRows . '</tbody></table>';
+$orderTable = '<table class="table table-striped table-bordered">' .
+    '<thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Status</th></tr></thead>' .
+    '<tbody>' . $orderRows . '</tbody></table>';
 echo $orderTable;

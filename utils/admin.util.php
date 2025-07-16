@@ -37,6 +37,7 @@ class Admin{
                     price
                 FROM plants
                 WHERE isDeleted = FALSE
+                ORDER BY plant_id
             ");
             $stmt->execute();
             $plants = $stmt->fetchAll();
@@ -57,13 +58,15 @@ class Admin{
                     o.id,
                     u.firstname,
                     u.lastname,
-                    p.name,
-                    ct.quantity,
-                    o.completed
+                    o.completed,
+                    STRING_AGG(p.name || ' (Qty: ' || ct.quantity || ')', '; ') AS items
                 FROM orders o
                 JOIN users u ON o.user_id = u.user_id
-                JOIN cart_items ct ON o.cart_id = ct.cart_id
-                JOIN plants p ON ct.plant_id = p.plant_id;
+                LEFT JOIN cart_items ct ON o.id = ct.order_id
+                LEFT JOIN plants p ON ct.plant_id = p.plant_id
+                WHERE u.isDeleted = FALSE AND p.isDeleted = FALSE
+                GROUP BY o.id, u.firstname, u.lastname, o.completed
+                ORDER BY o.id
             ");
             $stmt->execute();
             $orders = $stmt->fetchAll();
@@ -172,6 +175,79 @@ class Admin{
             ]);
         } catch (\PDOException $e) {
             error_log('[Admin::update_orders] PDOException on update: ' . $e->getMessage());
+        }
+    }
+
+    public static function edit_plant(PDO $pdo, int $id, array $data) {
+        try {
+            $updates = [];
+            $params = [':id' => $id];
+
+            if (isset($data['name'])) {
+                $updates[] = 'name = :name';
+                $params[':name'] = $data['name'];
+            }
+            if (isset($data['description'])) {
+                $updates[] = 'description = :description';
+                $params[':description'] = $data['description'];
+            }
+            if (isset($data['price'])) {
+                $updates[] = 'price = :price';
+                $params[':price'] = $data['price'];
+            }
+            if (isset($data['stock_quantity'])) {
+                $updates[] = 'stock_quantity = :stock_quantity';
+                $params[':stock_quantity'] = $data['stock_quantity'];
+            }
+            if (isset($data['image_url'])) {
+                $updates[] = 'image_url = :image_url';
+                $params[':image_url'] = $data['image_url'];
+            }
+
+            if (empty($updates)) {
+                return ['error' => 'NoFieldsToUpdate'];
+            }
+
+            $sql = "UPDATE plants SET " . implode(', ', $updates) . " WHERE plant_id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+
+            return ['success' => 'PlantUpdatedSuccessfully'];
+        } catch (\PDOException $e) {
+            error_log('[Admin::edit_plant] PDOException on update: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
+
+    public static function delete_user(PDO $pdo, int $id){
+        try{
+            $stmt = $pdo->prepare("
+                UPDATE USERS
+                SET isDeleted = TRUE
+                WHERE user_id = :id
+            ");
+            $stmt->execute([':id' => $id]);
+            error_log("[Admin::delete_user] User deleted: {$id}");
+            return ['success' => 'UserDeleted'];
+        }catch(PDOException $e){
+            error_log("[Admin::delete_user] Database connection error: " . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
+
+    public static function delete_plant(PDO $pdo, int $id){
+        try{
+            $stmt = $pdo->prepare("
+                UPDATE PLANTS
+                SET isDeleted = TRUE
+                WHERE plant_id = :id
+            ");
+            $stmt->execute([':id' => $id]);
+            error_log("[Admin::delete_plant] Plant deleted: {$id}");
+            return ['success' => 'PlantDeleted'];
+        }catch(PDOException $e){
+            error_log("[Admin::delete_plant] Database connection error: " . $e->getMessage());
+            return ['error' => 'DatabaseError'];
         }
     }
 }
