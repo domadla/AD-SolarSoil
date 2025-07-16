@@ -232,5 +232,41 @@ class ProfileUtil
             return 0;
         }
     }
+    public static function edit_profile(PDO $pdo, int $id, array $data) {
+        try {
+            $updates = [];
+            $params = [':id' => $id];
+
+            if (isset($data['first_name'])) {
+                $updates[] = 'firstname = :firstname';
+                $params[':firstname'] = $data['first_name'];
+            }
+            if (isset($data['last_name'])) {
+                $updates[] = 'lastname = :lastname';
+                $params[':lastname'] = $data['last_name'];
+            }
+            if (isset($data['address'])) {
+                $updates[] = 'address = :address';
+                $params[':address'] = $data['address'];
+            }
+            if (isset($data['username'])) {
+                $updates[] = 'username = :username';
+                $params[':username'] = $data['username'];
+            }
+
+            if (empty($updates)) {
+                return ['error' => 'NoFieldsToUpdate'];
+            }
+
+            $sql = "UPDATE users SET " . implode(', ', $updates) . " WHERE user_id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+
+            return ['success' => 'UserUpdatedSuccessfully'];
+        } catch (\PDOException $e) {
+            error_log('[ProfileUtil::edit_user] PDOException on update: ' . $e->getMessage());
+            return ['error' => 'DatabaseError'];
+        }
+    }
 }
 ?>
