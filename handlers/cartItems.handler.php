@@ -1,21 +1,4 @@
 <?php
-/**
- * Cart Items Handler - Updated for incart column functionality
- * 
- * IMPORTANT CHANGES:
- * - Added incart column support to cart_items table
- * - Cart items are no longer deleted when ordered, instead incart is set to FALSE
- * - Only items with incart = TRUE are shown in cart
- * - Items with incart = FALSE represent order history
- * 
- * New Methods:
- * - markCartItemsAsOrdered(): Sets incart = FALSE instead of deleting items
- * 
- * Usage:
- * - To place an order: Call markCartItemsAsOrdered() or use order.handler.php
- * - To view cart: Existing methods now filter by incart = TRUE
- * - To view order history: Use getOrderedItems() from cartItems.util.php
- */
 
 require_once UTILS_PATH . '/envSetter.util.php';
 require_once UTILS_PATH . '/cartItems.util.php';
