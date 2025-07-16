@@ -1,4 +1,16 @@
 <?php
+require_once BASE_PATH . '/bootstrap.php';
+require_once UTILS_PATH . 'auth.util.php';
+require_once UTILS_PATH . 'admin.util.php';
+require_once UTILS_PATH . 'envSetter.util.php';
+
+Auth::init();
+
+if (!Auth::check()) {
+    header('Location: /index.php?error=LoginRequired');
+    exit;
+}
+
 // Page variables
 $page_title = 'SolarSoil - About';
 $page_description = 'Learn about SolarSoil, our cosmic mission, vision, and the team making sustainable agriculture possible across the galaxy.';
