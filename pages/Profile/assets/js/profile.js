@@ -18,12 +18,6 @@ function initProfileButtons() {
 var deleteBtn = document.getElementById("confirmDeleteAccountBtn");
 if (deleteBtn) {
   deleteBtn.addEventListener("click", function () {
-    if (
-      !confirm(
-        "Are you sure you want to delete your account? This action cannot be undone."
-      )
-    )
-      return;
     fetch("../../handlers/delete-account.handler.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
