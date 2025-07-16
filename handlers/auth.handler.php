@@ -46,7 +46,7 @@ elseif ($action === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $lastname = trim($_POST['last_name'] ?? '');
     $username = trim($_POST['username'] ?? '');
     $address = trim($_POST['address'] ?? '');
-    $password = $_POST['password'] ?? ''; // Don't trim password
+    $password = trim($_POST['password'] ?? '');
     $confirm_password = $_POST['confirm_password'] ?? '';
     $role = trim($_POST['role'] ?? 'user');
 
