@@ -15,10 +15,34 @@ class ProfileUtil
     {
         try {
             $pdo = self::getConnection();
+            $pdo->beginTransaction();
+
+
+
+
+            // Delete from cart_items (by cart_id)
+            $stmt = $pdo->prepare("DELETE FROM cart_items WHERE cart_id IN (SELECT cart_id FROM carts WHERE user_id = :user_id)");
+            $stmt->execute([':user_id' => $userId]);
+
+            // Delete from orders
+            $stmt = $pdo->prepare("DELETE FROM orders WHERE user_id = :user_id");
+            $stmt->execute([':user_id' => $userId]);
+
+            // Delete from carts
+            $stmt = $pdo->prepare("DELETE FROM carts WHERE user_id = :user_id");
+            $stmt->execute([':user_id' => $userId]);
+
+            // Soft delete user
             $stmt = $pdo->prepare("UPDATE users SET isDeleted = TRUE WHERE user_id = :user_id");
-            return $stmt->execute([':user_id' => $userId]);
+            $stmt->execute([':user_id' => $userId]);
+
+            $pdo->commit();
+            return true;
         } catch (PDOException $e) {
-            error_log('Error soft deleting user: ' . $e->getMessage());
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            error_log('Error soft deleting user and related data: ' . $e->getMessage());
             return false;
         }
     }
