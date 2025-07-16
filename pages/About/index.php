@@ -58,23 +58,23 @@ ob_start();
             <h2 class="h4 fw-bold mb-4 section-title"><i class="fas fa-users me-2"></i>Meet the Crew</h2>
             <div class="row justify-content-center mb-4">
                 <div class="col-6 col-md-2 mb-3 team-card">
-                    <img src="./assets/img/Mark.png" class="mb-2 border border-light all-img" alt="Mark">
+                    <img src="./assets/img/Mark.jpg" class="mb-2 border border-light all-img" alt="Mark">
                     <div>Mark Gerard G. Gamboa<br><small>Frontend Developer</small></div>
                 </div>
                 <div class="col-6 col-md-2 mb-3 team-card">
-                    <img src="./assets/img/Dom.png" class="mb-2 border border-light all-img" alt="Dom">
-                    <div>Dominic Edgar A. Madlangbayan<br><small>Quality Assurance</small></div>
+                    <img src="./assets/img/Dom.jpg" class="mb-2 border border-light all-img" alt="Dom">
+                    <div>Edgar Dominic A. Madlangbayan<br><small>Quality Assurance</small></div>
                 </div>
                 <div class="col-6 col-md-2 mb-3 team-card">
-                    <img src="./assets/img/Carl.png" class="mb-2 border border-light all-img" alt="Carl">
+                    <img src="./assets/img/Carl.jpg" class="mb-2 border border-light all-img" alt="Carl">
                     <div>Carl Jerome N. Mariño<br><small>Database</small></div>
                 </div>
                 <div class="col-6 col-md-2 mb-3 team-card">
-                    <img src="./assets/img/Ronn.png" class="mb-2 border border-light all-img" alt="Ronn">
+                    <img src="./assets/img/Ronn.jpg" class="mb-2 border border-light all-img" alt="Ronn">
                     <div>Ronn Saimund U. Rosarito<br><small>Backend Developer</small></div>
                 </div>
                 <div class="col-6 col-md-2 mb-3 team-card">
-                    <img src="./assets/img/Marlo.png" class="mb-2 border border-light all-img" alt="Marlo">
+                    <img src="./assets/img/Marlo.jpg" class="mb-2 border border-light all-img" alt="Marlo">
                     <div>Marlo S. Veluz Jr.<br><br><small>Backend Developer</small></div>
                 </div>
             </div>
