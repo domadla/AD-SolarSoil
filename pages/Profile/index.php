@@ -65,7 +65,12 @@ if (isset($_GET['success'])) {
 ob_start();
 ?>
 <!-- TODO: Add checker for confirming new password -->
- <!-- Alert Container -->
+<!-- Profile Content -->
+<div class="profile-container">
+    <div class="container py-5">
+        <div class="row">
+            <!-- Profile Info Card -->
+              <!-- Alert Container -->
                     <div id="alert-container">
                         <?php if (isset($message) && $message): ?>
                             <div class="alert alert-<?php echo $message_type === 'info' ? 'primary' : $message_type; ?>">
@@ -73,11 +78,6 @@ ob_start();
                             </div>
                         <?php endif; ?>
                     </div>
-<!-- Profile Content -->
-<div class="profile-container">
-    <div class="container py-5">
-        <div class="row">
-            <!-- Profile Info Card -->
             <div class="col-lg-8 mx-auto">
                 <div class="profile-card">
                     <div class="profile-card-header">
