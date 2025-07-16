@@ -5,6 +5,23 @@ require_once UTILS_PATH . "/envSetter.util.php";
 
 class ProfileUtil
 {
+    /**
+     * Soft delete user (set isDeleted=true)
+     *
+     * @param int $userId
+     * @return bool True on success, false on failure
+     */
+    public static function softDeleteUser(int $userId): bool
+    {
+        try {
+            $pdo = self::getConnection();
+            $stmt = $pdo->prepare("UPDATE users SET isDeleted = TRUE WHERE user_id = :user_id");
+            return $stmt->execute([':user_id' => $userId]);
+        } catch (PDOException $e) {
+            error_log('Error soft deleting user: ' . $e->getMessage());
+            return false;
+        }
+    }
     private static $pdo = null;
 
     /**
