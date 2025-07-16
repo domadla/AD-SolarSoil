@@ -155,6 +155,8 @@ class ProfileHandler
         return self::getCurrentUser();
     }
 
+    
+
 
 }
 ?>
