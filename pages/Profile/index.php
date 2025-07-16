@@ -120,7 +120,7 @@ ob_start();
 
                     <div class="profile-card-footer">
                         <div class="d-flex gap-3">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal" data-id="<?php echo htmlspecialchars($user_data['user_id']); ?>">
                                 <i class="fas fa-edit me-2"></i>Edit Profile
                             </button>
                             <button class="btn btn-outline-primary" data-bs-toggle="modal"
