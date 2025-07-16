@@ -61,8 +61,8 @@ $stmtOrders = $pdo->prepare("
 ");
 
 $stmtCartItems = $pdo->prepare("
-    INSERT INTO cart_items (cart_id, plant_id, quantity)
-    VALUES (:c_id, :p_id, :quantity)
+    INSERT INTO cart_items (cart_id, plant_id, quantity, incart, order_id)
+    VALUES (:c_id, :p_id, :quantity, :inc, :o_id)
 ");
 
 
@@ -137,6 +137,8 @@ try {
             ':c_id' => $o['cart_id'],
             ':p_id' => $o['plant_id'],
             ':quantity' => $o['quantity'],
+            ':inc' => $o['incart'] ? 1 : 0,
+            ':o_id' => $o['order_id'],
         ]);
     }
 } catch (PDOException $e) {
