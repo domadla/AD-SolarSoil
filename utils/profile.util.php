@@ -233,25 +233,27 @@ class ProfileUtil
         }
     }
     public static function edit_profile(PDO $pdo, int $id, array $data) {
-        try {
-            $stmt = $pdo->prepare("
-                SELECT
-                    *
-                FROM USERS
-                WHERE username = :username;
-            ");
-            $stmt->execute([':username' => $data['username']]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        } catch (\PDOException $e) {
-            // Log any SQL errors
-            error_log('[Auth::login] PDOException: ' . $e->getMessage());
-            return false;
-        }
-
-        if ($user && $user['user_id'] != $id) {
-            error_log("[ProfileUtil::edit_profile] Username already taken: {$data['username']}");
-            return ['error' => 'UsernameAlreadyTaken'];
+        // Only check for username uniqueness if username is being updated
+        if (isset($data['username'])) {
+            try {
+                $stmt = $pdo->prepare("
+                    SELECT
+                        *
+                    FROM USERS
+                    WHERE username = :username;
+                ");
+                $stmt->execute([':username' => $data['username']]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (\PDOException $e) {
+                // Log any SQL errors
+                error_log('[Auth::login] PDOException: ' . $e->getMessage());
+                return false;
+            }
+            if ($user && $user['user_id'] != $id) {
+                error_log("[ProfileUtil::edit_profile] Username already taken: {$data['username']}");
+                return ['error' => 'UsernameAlreadyTaken'];
+            }
         }
 
         try {
