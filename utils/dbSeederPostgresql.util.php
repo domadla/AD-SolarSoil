@@ -23,11 +23,11 @@ $pdo = new PDO($dsn, $pgConfig['user'], $pgConfig['pass'], [
 // ——— Apply schemas before truncating ———
 echo "📦 Applying schema files...\n";
 $schemaFiles = [
-    'database/users.model.sql',
-    'database/plants.model.sql',
-    'database/carts.model.sql',
-    'database/orders.model.sql',
-    'database/cartItems.model.sql'
+    DATABASE_PATH . '/users.model.sql',
+    DATABASE_PATH . '/plants.model.sql',
+    DATABASE_PATH . '/carts.model.sql',
+    DATABASE_PATH . '/orders.model.sql',
+     DATABASE_PATH . '/cartItems.model.sql',
 ];
 
 foreach ($schemaFiles as $file) {
