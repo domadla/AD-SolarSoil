@@ -1,8 +1,6 @@
 FROM php:8.3.21-fpm-alpine3.20
 
-ENV NODE_ENV=development
-
-RUN addgroup -S developer && adduser -S domadla -G developer
+ENV NODE_ENV=production
 
 WORKDIR /var/www/html
 
@@ -15,10 +13,8 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/local/bin/composer
 
 COPY . /var/www/html/
 
-USER domadla
-
 EXPOSE 8000
 
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
 
-CMD ["php", "-S", "0.0.0.0:8000", "router.php"]
+CMD ["php", "-S", "0.0.0.0:${PORT:-8000}", "router.php"]

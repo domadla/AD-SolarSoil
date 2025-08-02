@@ -1,5 +1,40 @@
-.qodo
-.php_tmp
-vendor
-.github
+# Environment files
 .env
+.env.local
+.env.production
+
+# Composer
+/vendor/
+composer.phar
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# SSL certificates
+ssl/
+*.pem
+*.key
+*.crt
+
+# Uploads (if any)
+uploads/
+*.upload
+
+# Cache
+cache/
+*.cache

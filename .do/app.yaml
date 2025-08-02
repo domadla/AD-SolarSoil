@@ -1,0 +1,26 @@
+name: solarsoil-app
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: your-username/SolarSoil
+    branch: main
+  run_command: php -S 0.0.0.0:$PORT router.php
+  environment_slug: php
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  envs:
+  - key: APP_ENV
+    value: production
+  - key: APP_DEBUG
+    value: false
+  - key: BASE_URL
+    value: https://your-app-name.ondigitalocean.app
+
+databases:
+- name: postgresql-db
+  engine: PG
+  version: "15"
+- name: mongodb-db
+  engine: MONGODB
+  version: "6.0" 
